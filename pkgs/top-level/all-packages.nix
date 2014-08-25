@@ -1822,6 +1822,8 @@ let
 
   opendylan_bin = callPackage ../development/compilers/opendylan/bin.nix { };
 
+  nfs-ganesha = callPackage ../os-specific/linux/nfs-ganesha { };
+
   openjade = callPackage ../tools/text/sgml/openjade { };
 
   openntpd = callPackage ../tools/networking/openntpd { };
