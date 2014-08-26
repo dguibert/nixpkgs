@@ -5116,6 +5116,8 @@ let
 
   gss = callPackage ../development/libraries/gss { };
 
+  gssglue = callPackage ../development/libraries/gss-glue { };
+
   gtkimageview = callPackage ../development/libraries/gtkimageview { };
 
   gtkmathview = callPackage ../development/libraries/gtkmathview { };
@@ -7236,6 +7238,8 @@ let
   portmap = callPackage ../servers/portmap { };
 
   rpcbind = callPackage ../servers/rpcbind { };
+
+  rpcsecgss = callPackage ../servers/rpcsecgss { };
 
   #monetdb = callPackage ../servers/sql/monetdb { };
 
