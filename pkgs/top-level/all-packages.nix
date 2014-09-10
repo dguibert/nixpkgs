@@ -7855,6 +7855,7 @@ let
     klibcShrunk = lowPrio (callPackage ../os-specific/linux/klibc/shrunk.nix { });
 
 
+    lustre = callPackage ../os-specific/linux/lustre { };
     /* compiles but has to be integrated into the kernel somehow
        Let's have it uncommented and finish it..
     */
