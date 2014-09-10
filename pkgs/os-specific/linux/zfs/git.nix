@@ -1,7 +1,8 @@
 { stdenv, fetchgit, kernel, spl_git, perl, autoconf, automake, libtool, zlib, libuuid, coreutils, utillinux }:
 
-stdenv.mkDerivation {
-  name = "zfs-0.6.3-${kernel.version}";
+stdenv.mkDerivation rec {
+  version = "0.6.3";
+  name = "zfs-${version}-${kernel.version}";
 
   src = fetchgit {
     url = git://github.com/zfsonlinux/zfs.git;
@@ -17,6 +18,7 @@ stdenv.mkDerivation {
   NIX_CFLAGS_LINK = "-lgcc_s";
 
   preConfigure = ''
+    find -name Makefile.am | xargs sed -i -e "s@/usr/src/zfs-$(VERSION)@$dev/@"
     ./autogen.sh
 
     substituteInPlace ./module/zfs/zfs_ctldir.c    --replace "umount -t zfs"     "${utillinux}/bin/umount -t zfs"
@@ -32,12 +34,22 @@ stdenv.mkDerivation {
     "--disable-systemd"
     "--with-linux=${kernel.dev}/lib/modules/${kernel.modDirVersion}/source"
     "--with-linux-obj=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
-    "--with-spl=${spl_git}/libexec/spl"
+    "--with-spl=${spl_git.dev}/${spl_git.version}"
     "--with-dracutdir=$(out)/lib/dracut"
     "--with-udevdir=$(out)/lib/udev"
   ];
 
+  outputs = [ "out" "dev" ];
+
+  preInstall = ''
+    mkdir $dev
+  '';
+
   enableParallelBuilding = true;
+
+  passthru = {
+    inherit version;
+  };
 
   meta = {
     description = "ZFS Filesystem Linux Kernel module";

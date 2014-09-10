@@ -1,7 +1,8 @@
 { stdenv, fetchgit, kernel, perl, autoconf, automake, libtool, coreutils, gawk }:
 
-stdenv.mkDerivation {
-  name = "spl-0.6.3-${kernel.version}";
+stdenv.mkDerivation rec {
+  version = "0.6.3";
+  name = "spl-${version}-${kernel.version}";
   src = fetchgit {
     url = git://github.com/zfsonlinux/spl.git;
     rev = "31cb5383bff0fddc5058973e32a6f2c446d45e59";
@@ -13,6 +14,7 @@ stdenv.mkDerivation {
   buildInputs = [ perl autoconf automake libtool ];
 
   preConfigure = ''
+    find -name Makefile.am | xargs sed -i -e "s@/usr/src/spl-$(VERSION)@$dev/@"
     ./autogen.sh
 
     substituteInPlace ./module/spl/spl-generic.c --replace /usr/bin/hostid hostid
@@ -29,6 +31,16 @@ stdenv.mkDerivation {
   '';
 
   enableParallelBuilding = true;
+
+  outputs = [ "out" "dev" ];
+
+  preInstall = ''
+    mkdir $dev
+  '';
+
+  passthru = {
+    inherit version;
+  };
 
   meta = {
     description = "Kernel module driver for solaris porting layer (needed by in-kernel zfs)";

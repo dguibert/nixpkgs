@@ -1,7 +1,8 @@
 { stdenv, fetchurl, kernel, spl, perl, autoconf, automake, libtool, zlib, libuuid, coreutils, utillinux }:
 
-stdenv.mkDerivation {
-  name = "zfs-0.6.3-${kernel.version}";
+stdenv.mkDerivation rec {
+  version = "0.6.3";
+  name = "zfs-${version}-${kernel.version}";
 
   src = fetchurl {
     url = http://archive.zfsonlinux.org/downloads/zfsonlinux/zfs/zfs-0.6.3.tar.gz;
@@ -16,6 +17,7 @@ stdenv.mkDerivation {
   NIX_CFLAGS_LINK = "-lgcc_s";
 
   preConfigure = ''
+    find -name Makefile.am | xargs sed -i -e "s@/usr/src/zfs-$(VERSION)@$dev/@"
     ./autogen.sh
 
     substituteInPlace ./module/zfs/zfs_ctldir.c    --replace "umount -t zfs"     "${utillinux}/bin/umount -t zfs"
@@ -31,19 +33,29 @@ stdenv.mkDerivation {
     "--disable-systemd"
     "--with-linux=${kernel.dev}/lib/modules/${kernel.modDirVersion}/source"
     "--with-linux-obj=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
-    "--with-spl=${spl}/libexec/spl"
+    "--with-spl=${spl.dev}/${spl.version}"
     "--with-dracutdir=$(out)/lib/dracut"
     "--with-udevdir=$(out)/lib/udev"
   ];
 
+  outputs = [ "out" "dev" ];
+
+  preInstall = ''
+    mkdir $dev
+  '';
+
   enableParallelBuilding = true;
+
+  passthru = {
+    inherit version;
+  };
 
   meta = {
     description = "ZFS Filesystem Linux Kernel module";
     longDescription = ''
       ZFS is a filesystem that combines a logical volume manager with a
       Copy-On-Write filesystem with data integrity detection and repair,
-      snapshotting, cloning, block devices, deduplication, and more. 
+      snapshotting, cloning, block devices, deduplication, and more.
       '';
     homepage = http://zfsonlinux.org/;
     license = stdenv.lib.licenses.cddl;
