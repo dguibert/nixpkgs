@@ -12675,6 +12675,8 @@ let
     boost = boost155;
   };
 
+  kakoune = callPackage ../applications/editors/kakoune {  };
+
   keepnote = callPackage ../applications/office/keepnote {
     pygtk = pyGtkGlade;
   };
