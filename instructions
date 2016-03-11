@@ -1,21 +1,4 @@
-base master
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+base github/master
 
 merge paraview
 merge kerberos
@@ -23,12 +6,11 @@ merge kerberos
   # Conflicts:
   #	nixos/modules/services/system/kerberos.nix
 
-merge xpra
 merge doxygen
 merge bup
 merge kakoune
 merge build-fhs
-merge undefined
+merge github/pr/13834
 
   # Conflicts:
   #	nixos/modules/security/pam.nix
