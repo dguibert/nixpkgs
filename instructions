@@ -1,1 +1,37 @@
 base master
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+merge paraview
+merge kerberos
+
+  # Conflicts:
+  #	nixos/modules/services/system/kerberos.nix
+
+merge xpra
+merge doxygen
+merge bup
+merge kakoune
+merge build-fhs
+merge undefined
+
+  # Conflicts:
+  #	nixos/modules/security/pam.nix
+  #	nixos/modules/services/x11/display-managers/gdm.nix
+  #	nixos/modules/services/x11/display-managers/lightdm.nix
+
