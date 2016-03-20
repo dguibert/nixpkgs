@@ -10,10 +10,5 @@ merge kerberos
 merge bup
 merge kakoune
 merge build-fhs
-merge github/pr/13834
-
-  # Conflicts:
-  #	nixos/modules/security/pam.nix
-  #	nixos/modules/services/x11/display-managers/gdm.nix
-  #	nixos/modules/services/x11/display-managers/lightdm.nix
+merge github/pr/9250
 
