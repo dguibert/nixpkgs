@@ -1,4 +1,5 @@
-base github/master
+base master
+merge github/master
 
 merge paraview
 merge kerberos
