@@ -7,7 +7,6 @@ merge kerberos
   # Conflicts:
   #	nixos/modules/services/system/kerberos.nix
 
-merge doxygen
 merge bup
 merge kakoune
 merge build-fhs
