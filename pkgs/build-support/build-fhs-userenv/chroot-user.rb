@@ -135,9 +135,12 @@ if $cpid == 0
   Dir.chroot root
   Dir.chdir '/'
 
+  cwd = ENV['PWD']
   # New environment
   new_env = Hash[ envvars.map { |x| [x, ENV[x]] } ]
 
+  # Restore the user working directory
+  Dir.chdir cwd
   # Finally, exec!
   exec(new_env, *execp, close_others: true, unsetenv_others: true)
 end
