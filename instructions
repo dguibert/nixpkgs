@@ -12,3 +12,5 @@ merge kakoune
 merge build-fhs
 merge github/pr/9250
 
+merge fix/skype
+
