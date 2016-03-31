@@ -3,6 +3,7 @@
 { name, profile ? ""
 , pkgs ? null, targetPkgs ? pkgs: [], multiPkgs ? pkgs: []
 , extraBuildCommands ? "", extraBuildCommandsMulti ? ""
+, __noChroot ? false
 }:
 
 # HOWTO:
@@ -188,6 +189,7 @@ let
 
 in nixpkgs.stdenv.mkDerivation {
   name         = "${name}-fhs";
+  inherit __noChroot;
   buildCommand = ''
     mkdir -p $out
     cd $out
