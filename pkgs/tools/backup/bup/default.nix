@@ -5,7 +5,7 @@
 
 assert par2Support -> par2cmdline != null;
 
-let version = "0.26"; in
+let version = "0.27"; in
 
 with stdenv.lib;
 
@@ -16,10 +16,11 @@ stdenv.mkDerivation rec {
     repo = "bup";
     owner = "bup";
     rev = version;
-    sha256 = "0g7b0xl3kg0z6rn81fvzl1xnvva305i7pjih2hm68mcj0adk3v0d";
+    sha256 = "15a6zwz1nkjj019a9bacmvizbfzml7alq31316ari6axiggp23gx";
   };
 
   buildInputs = [ git pythonPackages.python ];
+ 
   nativeBuildInputs = [ pandoc perl makeWrapper ];
 
   patches = optional stdenv.isDarwin (fetchurl {
