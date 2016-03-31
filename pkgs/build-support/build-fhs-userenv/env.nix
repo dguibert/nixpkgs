@@ -4,6 +4,7 @@
 , targetPkgs ? pkgs: [], multiPkgs ? pkgs: []
 , extraBuildCommands ? "", extraBuildCommandsMulti ? ""
 , extraOutputsToInstall ? []
+, __noChroot ? false
 }:
 
 # HOWTO:
@@ -64,6 +65,7 @@ let
   # Compose /etc for the chroot environment
   etcPkg = stdenv.mkDerivation {
     name         = "${name}-chrootenv-etc";
+    inherit __noChroot;
     buildCommand = ''
       mkdir -p $out/etc
       cd $out/etc
@@ -181,6 +183,7 @@ let
 
 in stdenv.mkDerivation {
   name         = "${name}-fhs";
+  inherit __noChroot;
   buildCommand = ''
     mkdir -p $out
     cd $out
