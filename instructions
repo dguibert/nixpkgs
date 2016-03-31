@@ -2,15 +2,8 @@ base master
 merge github/master
 
 merge paraview
-merge kerberos
-
-  Conflicts:
-  	nixos/modules/services/system/kerberos.nix
-
 merge bup
 merge kakoune
 merge build-fhs
 merge github/pr/9250
-
-merge fix/skype
 
