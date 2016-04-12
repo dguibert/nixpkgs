@@ -1,6 +1,7 @@
 base master
 merge github/master
 
+merge hdf5
 merge paraview
 merge bup
 merge kakoune
