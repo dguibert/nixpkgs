@@ -11,8 +11,10 @@
 }:
 
 # cpp and mpi options are mutually exclusive
-# (--enable-unsupported could be used to force the build)
+# CMake Error at CMakeLists.txt:897 (message):
+#   **** Parallel and C++ options are mutually exclusive **** 
 assert !cpp || mpi == null;
+assert (mpi != null) -> !cpp;
 
 with { inherit (stdenv.lib) optional optionals; };
 
@@ -49,7 +51,8 @@ stdenv.mkDerivation rec {
     "-DHDF5_INSTALL_DATA_DIR=share/hdf5"
     "-DHDF5_INSTALL_CMAKE_DIR=share/cmake/hdf5"
   ]
-    ++ stdenv.lib.optional (mpi != null)  "-DHDF5_ENABLE_PARALLEL=ON -DHDF5_BUILD_CPP_LIB:BOOL=OFF"
+    ++ stdenv.lib.optional (mpi != null)  "-DHDF5_ENABLE_PARALLEL=ON"
+    ++ stdenv.lib.optional (!cpp)  "-DHDF5_BUILD_CPP_LIB:BOOL=OFF"
     ++ stdenv.lib.optional (zlib != null) "-DHDF5_ENABLE_Z_LIB_SUPPORT:BOOL=ON"
     ++ stdenv.lib.optionals (gfortran != null) [
       "-DHDF5_BUILD_FORTRAN=ON"
