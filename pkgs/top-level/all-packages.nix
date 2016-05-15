@@ -13975,6 +13975,8 @@ in
     gtk = gtk3;
   };
 
+  silo = callPackage ../development/libraries/silo { };
+
   simple-scan = callPackage ../applications/graphics/simple-scan { };
 
   siproxd = callPackage ../applications/networking/siproxd { };
