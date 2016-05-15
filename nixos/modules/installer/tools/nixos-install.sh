@@ -217,6 +217,7 @@ NIX_PATH="nixpkgs=/tmp/root/$nixpkgs:nixos-config=$NIXOS_CONFIG" NIXOS_CONFIG= \
 # Copy the NixOS/Nixpkgs sources to the target as the initial contents
 # of the NixOS channel.
 mkdir -m 0755 -p $mountPoint/nix/var/nix/profiles
+mkdir -m 1777 -p $mountPoint/nix/var/nix/profiles/nixup
 mkdir -m 1777 -p $mountPoint/nix/var/nix/profiles/per-user
 mkdir -m 0755 -p $mountPoint/nix/var/nix/profiles/per-user/root
 srcs=$(nix-env "${extraBuildFlags[@]}" -p /nix/var/nix/profiles/per-user/root/channels -q nixos --no-name --out-path 2>/dev/null || echo -n "")

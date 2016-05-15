@@ -1,4 +1,5 @@
 # This module provides configuration for the PAM (Pluggable
+
 # Authentication Modules) system.
 
 { config, lib, pkgs, ... }:
@@ -90,6 +91,19 @@ let
           against the keys in the calling user's
           <filename>~/.ssh/authorized_keys</filename>.  This is useful
           for <command>sudo</command> on password-less remote systems.
+        '';
+      };
+
+      pamExec = mkOption {
+        type = types.nullOr types.lines;
+        default = null;
+        description = ''
+          Content of a BASH script that gets executed when the user
+          session is started. The scripts gets executed right
+          before the systemd user session is started, but after
+          the environment variables have been set through PAM.
+          The script is executed as root! The output of the script
+          is dumped into /dev/null.
         '';
       };
 
@@ -284,7 +298,7 @@ let
               "password optional ${pkgs.samba}/lib/security/pam_smbpass.so nullok use_authtok try_first_pass"}
 
           # Session management.
-          session required pam_env.so envfile=${config.system.build.pamEnvironment}
+          session required pam_env.so readenv=0 conffile=${config.system.build.pamEnvironment}
           session required pam_unix.so
           ${optionalString cfg.setLoginUid
               "session ${
@@ -302,6 +316,10 @@ let
               "session optional ${pam_krb5}/lib/security/pam_krb5.so"}
           ${optionalString cfg.otpwAuth
               "session optional ${pkgs.otpw}/lib/security/pam_otpw.so"}
+          ${optionalString cfg.oathAuth
+              "session optional ${pkgs.oathToolkit}/lib/security/pam_oath.so window=5 usersfile=/etc/users.oath"}
+          ${optionalString (cfg.pamExec != null)
+              "session optional ${pkgs.pam}/lib/security/pam_exec.so type=open_session ${writePamExec cfg.pamExec}"}
           ${optionalString cfg.startSession
               "session optional ${pkgs.systemd}/lib/security/pam_systemd.so"}
           ${optionalString cfg.forwardXAuth
@@ -332,6 +350,12 @@ let
          limits);
 
   motd = pkgs.writeText "motd" config.users.motd;
+
+  writePamExec = content: pkgs.writeScript "pam-exec-script.sh" ''
+    #!${pkgs.stdenv.shell} -eux
+
+    ${content}
+    '';
 
   makePAMService = pamService:
     { source = pkgs.writeText "${pamService.name}.pam" pamService.text;
