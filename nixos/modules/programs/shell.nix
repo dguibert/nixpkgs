@@ -6,7 +6,7 @@ with lib;
 
 let
 
-  cfg = config.environment;
+  cfg = config;
 
 in
 
@@ -29,6 +29,7 @@ in
         fi
 
         if test -w $HOME; then
+          ${if ! cfg.nixup.enable then ''
           if ! test -L $HOME/.nix-profile; then
               if test "$USER" != root; then
                   ln -s $NIX_USER_PROFILE_DIR/profile $HOME/.nix-profile
@@ -37,6 +38,28 @@ in
                   ln -s /nix/var/nix/profiles/default $HOME/.nix-profile
               fi
           fi
+          '' else ''
+          # Create default nixup configuration directory
+          if ! test -e $XDG_CONFIG_HOME/nixup; then
+              mkdir -m 0755 -p $XDG_CONFIG_HOME/nixup
+          fi
+          if [ -d $XDG_CONFIG_HOME/nixup -a ! -e $XDG_CONFIG_HOME/nixup/profile.nix ]; then
+              echo "# NixUP configuration root file"  >  $XDG_CONFIG_HOME/nixup/profile.nix
+              echo ""                                 >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo "{config, lib, pkgs, ...}:"        >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo ""                                 >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo "with lib;"                        >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo ""                                 >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo "{"                                >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo "  config = {"                     >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo ""                                 >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo "    imperativeNix.enable = true;" >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo ""                                 >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo "  };"                             >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo ""                                 >> $XDG_CONFIG_HOME/nixup/profile.nix
+              echo "}"                                >> $XDG_CONFIG_HOME/nixup/profile.nix
+          fi
+          ''}
 
           # Subscribe the root user to the NixOS channel by default.
           if [ "$USER" = root -a ! -e $HOME/.nix-channels ]; then

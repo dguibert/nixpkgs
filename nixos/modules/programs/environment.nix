@@ -8,7 +8,7 @@ with lib;
 
 let
 
-  cfg = config.environment;
+  cfg = config;
 
 in
 
@@ -21,6 +21,8 @@ in
         NIXPKGS_CONFIG = "/etc/nix/nixpkgs-config.nix";
         PAGER = mkDefault "less -R";
         EDITOR = mkDefault "nano";
+        XDG_CONFIG_HOME = "$HOME/.config";
+        XDG_DATA_HOME = "$HOME/.local/share";
       };
 
     environment.profiles =
@@ -53,14 +55,15 @@ in
          export TERM=$TERM
 
          unset ASPELL_CONF
-         for i in ${concatStringsSep " " (reverseList cfg.profiles)} ; do
+         for i in ${concatStringsSep " " (reverseList cfg.environment.profiles)} ; do
            if [ -d "$i/lib/aspell" ]; then
              export ASPELL_CONF="dict-dir $i/lib/aspell"
            fi
          done
 
          export NIX_USER_PROFILE_DIR="/nix/var/nix/profiles/per-user/$USER"
-         export NIX_PROFILES="${concatStringsSep " " (reverseList cfg.profiles)}"
+         export NIX_PROFILES="${concatStringsSep " " (reverseList cfg.environment.profiles)}"
+         ${optionalString cfg.nixup.enable "export NIXUP_CONFIG=\"$XDG_CONFIG_HOME/nixup/profile.nix\""}
       '';
 
   };

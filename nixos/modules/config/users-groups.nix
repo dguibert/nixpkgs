@@ -239,6 +239,13 @@ let
         '';
       };
 
+      profile = mkOption {
+        default = null;
+        description = ''
+          Nix User Profile (NixUP) managed by NixOS.
+        '';
+        type = types.nullOr (types.submodule ({ ... }: { options = { }; }));
+      };
     };
 
     config = mkMerge

@@ -96,6 +96,8 @@ in
 
   nixpkgs-lint = callPackage ../../maintainers/scripts/nixpkgs-lint.nix { };
 
+  nixup = (callPackage ../../nixup/modules/nixup/tools.nix { }).config.nixup.build.nixup;
+
 
   ### BUILD SUPPORT
 
