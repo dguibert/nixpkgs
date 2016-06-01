@@ -6337,6 +6337,8 @@ in
 
   oprofile = callPackage ../development/tools/profiling/oprofile { };
 
+  pajeng = callPackage ../development/tools/profiling/pajeng { };
+
   parse-cli-bin = callPackage ../development/tools/parse-cli-bin { };
 
   patchelf = callPackage ../development/tools/misc/patchelf { };
