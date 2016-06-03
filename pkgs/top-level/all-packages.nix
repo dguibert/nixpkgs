@@ -6426,6 +6426,8 @@ in
 
   sauce-connect = callPackage ../development/tools/sauce-connect { };
 
+  scorep = callPackage ../development/tools/profiling/scorep { };
+
   # couldn't find the source yet
   seleniumRCBin = callPackage ../development/tools/selenium/remote-control {
     jre = jdk;
