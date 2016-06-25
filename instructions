@@ -1,11 +1,11 @@
 base master
 merge github/master
 
-merge hdf5
-merge paraview
-merge bup
-merge kakoune
-merge build-fhs
-merge github/pr/9250
-merge displaylink
+merge dg/hdf5
+merge dg/paraview
+merge dg/bup
+merge dg/kakoune
+merge dg/build-fhs
+merge pr/9250
+merge dg/displaylink
 
