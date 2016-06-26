@@ -8,4 +8,5 @@ merge dg/kakoune
 merge dg/build-fhs
 merge pr/9250
 merge dg/displaylink
+merge dg/zerotierone-debug
 
