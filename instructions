@@ -4,7 +4,6 @@ merge github/master
 merge dg/hdf5
 merge dg/paraview
 merge dg/bup
-merge dg/kakoune
 merge dg/build-fhs
 merge dg/displaylink
 
