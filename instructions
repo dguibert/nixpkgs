@@ -7,8 +7,6 @@ merge dg/bup
 merge dg/build-fhs
 merge dg/displaylink
 
-merge dg/rclone
-
 merge dg/wpsoffice
 
 merge pr/16697
