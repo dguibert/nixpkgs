@@ -3,10 +3,7 @@ merge github/master
 
 merge dg/hdf5
 merge dg/paraview
-merge dg/bup
 merge dg/build-fhs
 
 merge dg/wpsoffice
-
-merge pr/16697
 
