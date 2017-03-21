@@ -6,6 +6,15 @@
 , szip ? null
 , mpi ? null
 , enableShared ? true
+
+, jq
+, writeScript
+, common-updater-scripts
+, xidel
+, coreutils
+, gnused
+, gnugrep
+, curl
 }:
 
 # cpp and mpi options are mutually exclusive
@@ -25,6 +34,11 @@ stdenv.mkDerivation rec {
   passthru = {
     mpiSupport = (mpi != null);
     inherit mpi;
+    updateScript = import ./update.nix {
+      inherit writeScript common-updater-scripts xidel coreutils gnused gnugrep curl jq;
+      lib=stdenv.lib;
+    };
+
   };
 
   buildInputs = []
