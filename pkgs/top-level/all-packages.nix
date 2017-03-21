@@ -9972,6 +9972,8 @@ with pkgs;
     gnutls = gnutls;
   });
 
+  ushare = callPackage ../applications/misc/ushare { };
+
   v8_3_14 = callPackage ../development/libraries/v8/3.14.nix {
     inherit (python2Packages) python gyp;
   };
