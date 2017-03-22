@@ -17529,6 +17529,8 @@ with pkgs;
 
   caffe = callPackage ../applications/science/math/caffe {
     cudaSupport = config.caffe.cudaSupport or config.cudaSupport or true;
+    # doesn't build with gcc5
+    stdenv = overrideCC stdenv gcc49;
   };
 
   ecm = callPackage ../applications/science/math/ecm { };
