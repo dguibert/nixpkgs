@@ -31,8 +31,6 @@ stdenv.mkDerivation rec {
     sha256 = "1fnzdw0ay5mm9v2vjxfhpjkwrkf9ccfah62lhlcfpp2kv16jcwpp";
   };
 
-  patches = [ ./hl-H5LDpublic.patch ];
-
   passthru = {
     mpiSupport = (mpi != null);
     inherit mpi;
