@@ -15,6 +15,13 @@ stdenv.mkDerivation rec {
     sha256 = "03hl40dy15n23mzsvpsfz0fs7ipnl8axwvws861nwrdl3vy1v42b";
   };
 
+  # pydbfile.cpp:789:20: error: format not a string literal and no format arguments [-Werror=format-security]
+  # fprintf(fp, str);
+  preConfigure = ''
+    sed -i -e 's/fprintf(fp, str);/fprintf(fp, "%s", str);/' tools/python/pydbfile.cpp
+    sed -i -e 's/fprintf(fp, str);/fprintf(fp, "%s", str);/' tools/python/pydbtoc.cpp
+  '';
+
   configureFlags = [
     "--with-hdf=${hdf5}/include,${hdf5}/lib"
     "--enable-pythonmodule"
