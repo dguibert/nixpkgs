@@ -10,3 +10,5 @@ merge dg/wpsoffice
 
 merge new/ushare
 merge dg/displaylink
+
+merge fix/skylighting
