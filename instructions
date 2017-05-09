@@ -2,6 +2,7 @@ base master
 merge github/master
 
 merge dg/hdf5
+merge update/hdf5
 merge dg/paraview
 merge dg/build-fhs
 
