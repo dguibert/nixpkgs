@@ -11,3 +11,5 @@ merge dg/wpsoffice
 merge new/ushare
 
 merge fix/skylighting
+merge dg/gfortran7
+
