@@ -6,7 +6,9 @@ merge update/hdf5
 merge dg/paraview
 merge dg/build-fhs
 
-merge dg/wpsoffice
+. merge dg/wpsoffice
+
+  Submitted elsewhere
 
 merge new/ushare
 
