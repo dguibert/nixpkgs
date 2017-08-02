@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchurl, unzip, utillinux, libusb1, evdi, systemd, makeWrapper }:
+{ stdenv, lib, requireFile, unzip, utillinux, libusb1, evdi, systemd, makeWrapper }:
 
 let
   arch =
@@ -10,12 +10,12 @@ let
 
 in stdenv.mkDerivation rec {
   name = "displaylink-${version}";
-  version = "1.3.52";
+  version = "1.3.54";
 
-  src = fetchurl {
+  src = requireFile {
     name = "displaylink.zip";
-    url = "http://www.displaylink.com/downloads/file?id=744";
-    sha256 = "0ridpsxcf761vym0nlpq702qa46ynddzci17bjmyax2pph7khr0k";
+    url = "http://www.displaylink.com/downloads/file?id=993";
+    sha256 = "1wnsj7lwm3smkmnmwd5ykfmws52xsic6165adn36q3kx10k9yml7";
   };
 
   nativeBuildInputs = [ unzip makeWrapper ];
