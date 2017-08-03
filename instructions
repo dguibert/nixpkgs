@@ -3,12 +3,13 @@ merge github/master
 
 merge dg/hdf5
 merge update/hdf5
-merge dg/paraview
+merge dg/paraview^
+
+  paraview 5.4
+  silo support (via visitbridge)
+  catalyst with fortran support
+  
 merge dg/build-fhs
-
-. merge dg/wpsoffice
-
-  Submitted elsewhere
 
 merge new/ushare
 
