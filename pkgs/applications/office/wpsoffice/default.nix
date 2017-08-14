@@ -6,16 +6,16 @@ let
   bits = if stdenv.hostPlatform.system == "x86_64-linux" then "x86_64"
          else "x86";
 
-  version = "10.1.0.5672";
+  version = "10.1.0.5707";
 in stdenv.mkDerivation rec{
   name = "wpsoffice-${version}";
 
   src = fetchurl {
     name = "${name}.tar.xz";
-    url = "http://kdl.cc.ksosoft.com/wps-community/download/a21/wps-office_${version}~a21_${bits}.tar.xz";
-    sha256 = if bits == "x86_64" then
-      "0mi3n9kplf82gd0g2m0np957agy53p4g1qh81pbban49r4n0ajcz" else
-      "1dk400ap5qwdhjvn8lnk602f5akayr391fkljxdkrpn5xac01m97";
+    url = "http://kdl1.cache.wps.com/ksodl/download/linux/a21//wps-office_${version}~a21_${bits}.tar.xz";
+    sha1 = if bits == "x86_64" then
+      "1970df8c0e6a03649b6809472b89628a685188dc" else
+      "1736e84c405e4548978d27e0ea5071ab73cfc424";
   };
 
   meta = {
