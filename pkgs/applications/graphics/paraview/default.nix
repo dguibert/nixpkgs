@@ -9,10 +9,10 @@
 }:
 
 stdenv.mkDerivation rec {
-  name = "paraview-5.4.0";
+  name = "paraview-5.4.1";
   src = fetchurl {
-    url = "http://paraview.org/files/v5.4/ParaView-v5.4.0.tar.gz";
-    sha256 = "1aclkx8jy12yinmbsv2fzsk0bbf84rk3hzlnw4p6sa5iad5di27l";
+    url = "http://paraview.org/files/v5.4/ParaView-v5.4.1.tar.gz";
+    sha256 = "1r40gah8wxz2ln7k6m93mn5bzx1s34s1z6x30bi35x3bqrfhy39r";
   };
 
   # [  5%] Generating vtkGLSLShaderLibrary.h
