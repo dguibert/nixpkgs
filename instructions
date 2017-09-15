@@ -19,3 +19,5 @@ merge dg/displaylink
 
 merge dg/wpsoffice
 
+merge dg/openmpi-3.0
+
