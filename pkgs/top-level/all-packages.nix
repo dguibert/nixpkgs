@@ -4002,6 +4002,8 @@ with pkgs;
 
   openmpi = callPackage ../development/libraries/openmpi { };
 
+  openmpi_3_0 = lowPrio (callPackage ../development/libraries/openmpi/3.0.nix { });
+
   openmodelica = callPackage ../applications/science/misc/openmodelica { };
 
   qarte = callPackage ../applications/video/qarte { };
