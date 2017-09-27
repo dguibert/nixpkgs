@@ -3,11 +3,14 @@ merge github/master
 
 merge dg/hdf5
 merge update/hdf5
-merge dg/paraview^
 
-  paraview 5.4
-  silo support (via visitbridge)
-  catalyst with fortran support
+
+. merge dg/paraview^
+ 
+   (update in commit 274333e22299f1bef44b2044b296dc9e07780ce4)
+   paraview 5.4
+   silo support (via visitbridge)
+   catalyst with fortran support
   
 merge dg/build-fhs
 
