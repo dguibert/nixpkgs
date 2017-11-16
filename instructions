@@ -16,7 +16,7 @@ merge dg/build-fhs
 
 merge new/ushare
 
-merge fix/skylighting
+. merge fix/skylighting
 
 merge dg/displaylink
 
