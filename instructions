@@ -12,8 +12,6 @@ merge update/hdf5
    silo support (via visitbridge)
    catalyst with fortran support
   
-merge dg/build-fhs
-
 merge new/ushare
 
 . merge fix/skylighting
