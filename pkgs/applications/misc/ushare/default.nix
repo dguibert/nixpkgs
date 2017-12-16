@@ -1,5 +1,31 @@
-{ stdenv, fetchurl, libupnp, pkgconfig }:
+{ stdenv, fetchurl, libupnp, pkgconfig, ffmpeg }:
 
+let
+	libdlna = stdenv.mkDerivation {
+		name = "libdlna-0.2.4";
+		src = fetchurl {
+			url = "http://libdlna.geexbox.org/releases/libdlna-0.2.4.tar.bz2";
+			sha256 = "1ibqfv8xv335863nbd90bmckvj5202xs1fkb0p063zx55qwqf9sb";
+		};
+		patches = [
+			(fetchurl {
+				name = "libdlna-avformat.patch";
+				url = "https://git.archlinux.org/svntogit/community.git/plain/trunk/libdlna-avformat.patch?h=packages/libdlna";
+				sha256 = "15k4bsn2zaalyc2h494341y4nqp4yl62d2mccz17g86wrx8s0imb";
+			})
+			(fetchurl {
+				name = "libdlna-ffmpeg3.patch";
+				url = "https://git.archlinux.org/svntogit/community.git/plain/trunk/libdlna-ffmpeg3.patch?h=packages/libdlna";
+				sha256 = "0nxdnlpv2b8rciz7y9vhsaypxq5yfca2l6glx0ipn0ibrfwkz6af";
+			})
+
+		];
+		preConfigure = ''
+		  sed -i -e "s:/usr/bin/install:install:" configure
+		'';
+		propagatedBuildInputs = [ ffmpeg ];
+	};
+in
 stdenv.mkDerivation {
   name = "ushare-1.1a";
 
@@ -8,12 +34,14 @@ stdenv.mkDerivation {
     sha256 = "0rc6wwpcw773g7mgmn21kn7zagx3qqrrxa821xbg9m38k73qb6vv";
   };
 
-  buildInputs = [ libupnp pkgconfig ];
+  buildInputs = [ libupnp pkgconfig libdlna ];
 
+  configureFlags = "--enable-dlna";
   #configureFlags = "--enable-dlna --with-libdlna-dir=/usr/include/libavformat";
 
   preConfigure = ''
     sed -i -e 's/sprintf (protocol, mime->mime_protocol);/sprintf (protocol, "%s", mime->mime_protocol);/' src/mime.c
+    sed -i -e "s:--atleast=:--atleast-version=:" configure
   '';
 
   patches = [
