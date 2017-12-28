@@ -24,3 +24,4 @@ merge dg/openmpi-3.0
 
 merge dg/rtl8723bs-broken-on-4_12
 
+merge fix/spl-compilation
