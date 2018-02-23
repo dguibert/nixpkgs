@@ -1,5 +1,8 @@
-base master
-merge github/master
+base github/nix-2.0
+
+   Try nix-2.0 instead of
+   base master
+   merge github/master
 
 merge dg/hdf5
 merge update/hdf5
@@ -23,3 +26,7 @@ merge dg/wpsoffice
 merge dg/openmpi-3.0
 
 merge dg/rtl8723bs-broken-on-4_12
+#
+#
+#
+#
