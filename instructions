@@ -1,11 +1,7 @@
 base github/master
 
-   Try nix-2.0 instead of
-   base github/nix-2.0
-
 merge dg/hdf5
 merge update/hdf5
-
 
 . merge dg/paraview^
 
