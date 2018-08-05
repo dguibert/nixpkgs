@@ -25,3 +25,5 @@ merge dg/rtl8723bs-broken-on-4_12
 merge update/davmail
 merge dg/fix-dysnomia
 
+merge update/udftools
+
