@@ -66,7 +66,7 @@ let
     (assertOnlyFields [
       "PublicKey" "PresharedKey" "AllowedIPs" "Endpoint" "PersistentKeepalive"
     ])
-    (assertRange "PersistentKeepalive" 1 65535)
+    # (assertRange "PersistentKeepalive" 1 65535) # defined as "nullOr int"
   ];
 
   checkVlan = checkUnitConfig "VLAN" [
@@ -340,18 +340,18 @@ let
       type = types.addCheck (types.attrsOf unitOption) checkWireGuard;
       description = ''
         Each attribute in this set specifies an option in the
-        <literal>[WIREGUARD]</literal> section of the unit.  See
+        <literal>[WireGuard]</literal> section of the unit.  See
         <citerefentry><refentrytitle>systemd.netdev</refentrytitle>
         <manvolnum>5</manvolnum></citerefentry> for details.
       '';
     };
 
     wireguardPeers = mkOption {
-      default = { };
-      type = with types; attrsOf (submodule wireguardPeerOptions);
+      default = [ ];
+      type = with types; listOf (submodule wireguardPeerOptions);
       description = ''
         Each attribute in this set specifies an option in the
-        <literal>[WIREGUARDPEER]</literal> section of the unit.  See
+        <literal>[WireGuardPeer]</literal> section of the unit.  See
         <citerefentry><refentrytitle>systemd.netdev</refentrytitle>
         <manvolnum>5</manvolnum></citerefentry> for details.
       '';
@@ -495,7 +495,7 @@ let
         type = types.addCheck (types.attrsOf unitOption) checkWireGuardPeer;
         description = ''
           Each attribute in this set specifies an option in the
-          <literal>[Route]</literal> section of the unit.  See
+          <literal>[WireGuardPeer]</literal> section of the unit.  See
           <citerefentry><refentrytitle>systemd.network</refentrytitle>
           <manvolnum>5</manvolnum></citerefentry> for details.
         '';
@@ -791,9 +791,9 @@ let
             ${attrsToSection def.wireguardConfig}
 
           ''}
-          ${flip concatMapStrings (builtins.attrNames def.wireguardPeers) (x: ''
+          ${flip concatMapStrings def.wireguardPeers (x: ''
             [WireGuardPeer]
-            ${attrsToSection def.wireguardPeers.${x}.wireguardPeerConfig}
+            ${attrsToSection x.wireguardPeerConfig}
 
           '')}
           ${def.extraConfig}

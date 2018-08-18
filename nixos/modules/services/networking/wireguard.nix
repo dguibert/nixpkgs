@@ -191,7 +191,6 @@ let
 
   };
 
-
   generatePathUnit = name: values:
     assert (values.privateKey == null);
     assert (values.privateKeyFile != null);
@@ -229,6 +228,31 @@ let
         '';
       };
 
+  generatePeer = peer: [ {wireguardPeerConfig = {
+    Endpoint = peer.endpoint;
+    AllowedIPs = peer.allowedIPs;
+    PublicKey = peer.publicKey;
+    PresharedKey = mkIf (peer.presharedKey != null) peer.presharedKey;
+    PersistentKeepalive = mkIf (peer.persistentKeepalive != null) peer.persistentKeepalive;
+  };}];
+
+  generateNetDev = name: values:
+    nameValuePair "41-${name}" {
+      netdevConfig.Name = "${name}";
+      netdevConfig.Kind = "wireguard";
+
+      wireguardConfig.PrivateKey = mkIf (values.privateKey != null) values.privateKey;
+      wireguardConfig.ListenPort = mkIf (values.listenPort != null) values.listenPort;
+      wireguardConfig.FwMark = mkIf (values ? FwMark) values.FwMark;
+      wireguardPeers = concatMap generatePeer values.peers;
+    };
+
+  generateNetwork = name: values:
+    nameValuePair "41-${name}" {
+      networkConfig.Description = "WireGuard Tunnel - ${name}";
+      matchConfig.Name = "${name}";
+      address = values.ips;
+    };
 
   generateSetupServiceUnit = name: values:
     # exactly one way to specify the private key must be set
@@ -238,8 +262,8 @@ let
     nameValuePair "wireguard-${name}"
       {
         description = "WireGuard Tunnel - ${name}";
-        requires = [ "network-online.target" ];
-        after = [ "network.target" "network-online.target" ];
+        requires = [ "network-online.target" "sys-subsystem-net-devices-${name}.device" ];
+        after = [ "network.target" "network-online.target" "sys-subsystem-net-devices-${name}.device" ];
         wantedBy = [ "multi-user.target" ];
         environment.DEVICE = name;
         path = with pkgs; [ kmod iproute wireguard-tools ];
@@ -250,38 +274,12 @@ let
         };
 
         script = ''
-          ${optionalString (!config.boot.isContainer) "modprobe wireguard"}
-
-          ${values.preSetup}
-
-          ip link add dev ${name} type wireguard
-
-          ${concatMapStringsSep "\n" (ip:
-            "ip address add ${ip} dev ${name}"
-          ) values.ips}
-
-          wg set ${name} private-key ${privKey} ${
-            optionalString (values.listenPort != null) " listen-port ${toString values.listenPort}"}
-
+          wg set ${name} private-key ${values.privateKeyFile}
           ${concatMapStringsSep "\n" (peer:
-            assert (peer.presharedKeyFile == null) || (peer.presharedKey == null); # at most one of the two must be set
-            let psk = if peer.presharedKey != null then pkgs.writeText "wg-psk" peer.presharedKey else peer.presharedKeyFile;
-            in
-              "wg set ${name} peer ${peer.publicKey}" +
-              optionalString (psk != null) " preshared-key ${psk}" +
-              optionalString (peer.endpoint != null) " endpoint ${peer.endpoint}" +
-              optionalString (peer.persistentKeepalive != null) " persistent-keepalive ${toString peer.persistentKeepalive}" +
-              optionalString (peer.allowedIPs != []) " allowed-ips ${concatStringsSep "," peer.allowedIPs}"
+              optionalString (peer.presharedKeyFile != null) "wg set ${name} peer  preshared-key ${peer.presharedKeyFile}"
             ) values.peers}
 
           ip link set up dev ${name}
-
-          ${optionalString (values.allowedIPsAsRoutes != false) (concatStringsSep "\n" (concatMap (peer:
-              (map (allowedIP:
-                "ip route replace ${allowedIP} dev ${name} table ${values.table}"
-              ) peer.allowedIPs)
-            ) values.peers))}
-
           ${values.postSetup}
         '';
 
@@ -348,6 +346,13 @@ in
 
     systemd.paths = mapAttrs' generatePathUnit
       (filterAttrs (name: value: value.privateKeyFile != null) cfg.interfaces);
+
+    # enable Networkd to care about the wireguard interfaces
+    systemd.network.enable = mkDefault true;
+
+    systemd.network.netdevs = mapAttrs' generateNetDev cfg.interfaces;
+    systemd.network.networks = mapAttrs' generateNetwork cfg.interfaces;
+
 
   };
 
