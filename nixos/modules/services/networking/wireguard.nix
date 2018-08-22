@@ -274,9 +274,9 @@ let
         };
 
         script = ''
-          wg set ${name} private-key ${values.privateKeyFile}
+          ${optionalString (values.privateKeyFile != null) "wg set ${name} private-key ${values.privateKeyFile}"}
           ${concatMapStringsSep "\n" (peer:
-              optionalString (peer.presharedKeyFile != null) "wg set ${name} peer  preshared-key ${peer.presharedKeyFile}"
+              optionalString (peer.presharedKeyFile != null) "wg set ${name} peer preshared-key ${peer.presharedKeyFile}"
             ) values.peers}
 
           ip link set up dev ${name}
@@ -284,7 +284,7 @@ let
         '';
 
         postStop = ''
-          ip link del dev ${name}
+          ip link set down dev ${name}
           ${values.postShutdown}
         '';
       };
