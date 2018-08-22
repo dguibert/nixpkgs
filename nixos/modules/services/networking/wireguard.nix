@@ -283,7 +283,7 @@ let
 
           ${optionalString (values.allowedIPsAsRoutes != false) (concatStringsSep "\n" (concatMap (peer:
               (map (allowedIP:
-                "ip route replace ${allowedIP} dev ${name} table ${values.table}"
+                "ip route replace ${allowedIP} dev ${name} table ${values.table} proto static"
               ) peer.allowedIPs)
             ) values.peers))}
 
