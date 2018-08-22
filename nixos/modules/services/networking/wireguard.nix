@@ -280,6 +280,13 @@ let
             ) values.peers}
 
           ip link set up dev ${name}
+
+          ${optionalString (values.allowedIPsAsRoutes != false) (concatStringsSep "\n" (concatMap (peer:
+              (map (allowedIP:
+                "ip route replace ${allowedIP} dev ${name} table ${values.table}"
+              ) peer.allowedIPs)
+            ) values.peers))}
+
           ${values.postSetup}
         '';
 
