@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, utils, ... }:
 
 with lib;
 
@@ -262,10 +262,14 @@ let
     nameValuePair "wireguard-${name}"
       {
         description = "WireGuard Tunnel - ${name}";
-        requires = [ "network-online.target" "sys-subsystem-net-devices-${name}.device" ];
-        after = [ "network.target" "network-online.target" "sys-subsystem-net-devices-${name}.device" ];
+        requires = [ "network-online.target" "sys-subsystem-net-devices-${utils.escapeSystemdPath name}.device" "systemd-networkd.service" ];
+        after = [ "network.target" "network-online.target" "sys-subsystem-net-devices-${utils.escapeSystemdPath name}.device" ];
+        bindsTo = [ "systemd-networkd.service" ];
         wantedBy = [ "multi-user.target" ];
         environment.DEVICE = name;
+
+        unitConfig.ConditionPathExists = remove null ([values.privateKeyFile] ++ map (peer: peer.presharedKeyFile) values.peers);
+
         path = with pkgs; [ kmod iproute wireguard-tools ];
 
         serviceConfig = {
@@ -274,12 +278,16 @@ let
         };
 
         script = ''
+          ip link set up dev ${name}
+
+          # wait for ${name} to be configured
+          ${config.systemd.package}/lib/systemd/systemd-networkd-wait-online -i ${name}
+          sleep 2
+
           ${optionalString (values.privateKeyFile != null) "wg set ${name} private-key ${values.privateKeyFile}"}
           ${concatMapStringsSep "\n" (peer:
               optionalString (peer.presharedKeyFile != null) "wg set ${name} peer preshared-key ${peer.presharedKeyFile}"
             ) values.peers}
-
-          ip link set up dev ${name}
 
           ${optionalString (values.allowedIPsAsRoutes != false) (concatStringsSep "\n" (concatMap (peer:
               (map (allowedIP:
