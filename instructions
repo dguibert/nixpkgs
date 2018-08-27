@@ -1,7 +1,8 @@
 base github/master
 
-merge dg/hdf5
-merge update/hdf5
+. merge dg/hdf5
+. merge update/hdf5
+   20180826 keep upstream package (as nix-update handles the update process)
 
 . merge dg/paraview^
 
@@ -18,7 +19,8 @@ merge new/ushare
 
 merge dg/wpsoffice
 
-merge dg/openmpi-3.0
+. merge dg/openmpi-3.0
+  default.nix is already 3.1.0 (20180826)
 
 merge dg/rtl8723bs-broken-on-4_12
 
@@ -27,3 +29,7 @@ merge update/udftools
 
 merge dg/wireguard
 
+#
+#
+#
+#
