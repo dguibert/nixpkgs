@@ -10,6 +10,8 @@ stdenv.mkDerivation {
     sha256 = "170f365rnik62fp9wllbqlspr8lf1yb96pmn2z708i2wjlkdnrny";
   };
 
+  patches = [ ./support-nix-2.1.patch ];
+
   nativeBuildInputs = [ cmake pkgconfig ];
 
   buildInputs = [ nix boost ];
