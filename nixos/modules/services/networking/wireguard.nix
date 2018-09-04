@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, utils, ... }:
 
 with lib;
 
@@ -191,18 +191,6 @@ let
 
   };
 
-
-  generatePathUnit = name: values:
-    assert (values.privateKey == null);
-    assert (values.privateKeyFile != null);
-    nameValuePair "wireguard-${name}"
-      {
-        description = "WireGuard Tunnel - ${name} - Private Key";
-        requiredBy = [ "wireguard-${name}.service" ];
-        before = [ "wireguard-${name}.service" ];
-        pathConfig.PathExists = values.privateKeyFile;
-      };
-
   generateKeyServiceUnit = name: values:
     assert values.generatePrivateKeyFile;
     nameValuePair "wireguard-${name}-key"
@@ -229,19 +217,45 @@ let
         '';
       };
 
+  generatePeer = peer: [ {wireguardPeerConfig = {
+    Endpoint = peer.endpoint;
+    AllowedIPs = peer.allowedIPs;
+    PublicKey = peer.publicKey;
+    PresharedKey = mkIf (peer.presharedKey != null) peer.presharedKey;
+    PersistentKeepalive = mkIf (peer.persistentKeepalive != null) peer.persistentKeepalive;
+  };}];
+
+  generateNetDev = name: values:
+    nameValuePair "41-${name}" {
+      netdevConfig.Name = "${name}";
+      netdevConfig.Kind = "wireguard";
+
+      wireguardConfig.PrivateKey = mkIf (values.privateKey != null) values.privateKey;
+      wireguardConfig.PrivateKeyFile = mkIf (values.privateKeyFile != null) values.privateKeyFile;
+      wireguardConfig.ListenPort = mkIf (values.listenPort != null) values.listenPort;
+      wireguardConfig.FwMark = mkIf (values ? FwMark) values.FwMark;
+      wireguardPeers = concatMap generatePeer values.peers;
+    };
+
+  generateNetwork = name: values:
+    nameValuePair "41-${name}" {
+      networkConfig.Description = "WireGuard Tunnel - ${name}";
+      matchConfig.Name = "${name}";
+      address = values.ips;
+    };
 
   generateSetupServiceUnit = name: values:
-    # exactly one way to specify the private key must be set
-    #assert (values.privateKey != null) != (values.privateKeyFile != null);
-    let privKey = if values.privateKeyFile != null then values.privateKeyFile else pkgs.writeText "wg-key" values.privateKey;
-    in
     nameValuePair "wireguard-${name}"
       {
         description = "WireGuard Tunnel - ${name}";
-        requires = [ "network-online.target" ];
-        after = [ "network.target" "network-online.target" ];
+        requires = [ "network-online.target" "sys-subsystem-net-devices-${utils.escapeSystemdPath name}.device" "systemd-networkd.service" ];
+        after = [ "network.target" "network-online.target" "sys-subsystem-net-devices-${utils.escapeSystemdPath name}.device" ];
+        bindsTo = [ "systemd-networkd.service" ];
         wantedBy = [ "multi-user.target" ];
         environment.DEVICE = name;
+
+        unitConfig.ConditionPathExists = remove null ([values.privateKeyFile] ++ map (peer: peer.presharedKeyFile) values.peers);
+
         path = with pkgs; [ kmod iproute wireguard-tools ];
 
         serviceConfig = {
@@ -250,35 +264,19 @@ let
         };
 
         script = ''
-          ${optionalString (!config.boot.isContainer) "modprobe wireguard"}
+          ip link set up dev ${name}
 
-          ${values.preSetup}
-
-          ip link add dev ${name} type wireguard
-
-          ${concatMapStringsSep "\n" (ip:
-            "ip address add ${ip} dev ${name}"
-          ) values.ips}
-
-          wg set ${name} private-key ${privKey} ${
-            optionalString (values.listenPort != null) " listen-port ${toString values.listenPort}"}
+          # wait for ${name} to be configured
+          ${config.systemd.package}/lib/systemd/systemd-networkd-wait-online -i ${name}
+          sleep 2
 
           ${concatMapStringsSep "\n" (peer:
-            assert (peer.presharedKeyFile == null) || (peer.presharedKey == null); # at most one of the two must be set
-            let psk = if peer.presharedKey != null then pkgs.writeText "wg-psk" peer.presharedKey else peer.presharedKeyFile;
-            in
-              "wg set ${name} peer ${peer.publicKey}" +
-              optionalString (psk != null) " preshared-key ${psk}" +
-              optionalString (peer.endpoint != null) " endpoint ${peer.endpoint}" +
-              optionalString (peer.persistentKeepalive != null) " persistent-keepalive ${toString peer.persistentKeepalive}" +
-              optionalString (peer.allowedIPs != []) " allowed-ips ${concatStringsSep "," peer.allowedIPs}"
+              optionalString (peer.presharedKeyFile != null) "wg set ${name} peer preshared-key ${peer.presharedKeyFile}"
             ) values.peers}
-
-          ip link set up dev ${name}
 
           ${optionalString (values.allowedIPsAsRoutes != false) (concatStringsSep "\n" (concatMap (peer:
               (map (allowedIP:
-                "ip route replace ${allowedIP} dev ${name} table ${values.table}"
+                "ip route replace ${allowedIP} dev ${name} table ${values.table} proto static"
               ) peer.allowedIPs)
             ) values.peers))}
 
@@ -286,7 +284,7 @@ let
         '';
 
         postStop = ''
-          ip link del dev ${name}
+          ip link set down dev ${name}
           ${values.postShutdown}
         '';
       };
@@ -346,8 +344,12 @@ in
       // (mapAttrs' generateKeyServiceUnit
       (filterAttrs (name: value: value.generatePrivateKeyFile) cfg.interfaces));
 
-    systemd.paths = mapAttrs' generatePathUnit
-      (filterAttrs (name: value: value.privateKeyFile != null) cfg.interfaces);
+    # enable Networkd to care about the wireguard interfaces
+    systemd.network.enable = mkDefault true;
+
+    systemd.network.netdevs = mapAttrs' generateNetDev cfg.interfaces;
+    systemd.network.networks = mapAttrs' generateNetwork cfg.interfaces;
+
 
   };
 
