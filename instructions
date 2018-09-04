@@ -28,3 +28,5 @@ merge update/davmail
 merge update/udftools
 
 merge dg/wireguard
+merge dg/nix-plugins
+
