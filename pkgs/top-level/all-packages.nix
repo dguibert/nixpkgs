@@ -13443,6 +13443,8 @@ in
     gnutls = gnutls;
   });
 
+  ushare = callPackage ../applications/misc/ushare { };
+
   # 3.14 is needed for R V8 module in ../development/r-modules/default.nix
   v8_3_14 = callPackage ../development/libraries/v8/3.14.nix {
     inherit (python2Packages) python gyp;
