@@ -20083,6 +20083,8 @@ in
     jre = openjdk11;
   };
 
+  smartsvn = callPackage ../applications/version-management/smartsvn { };
+
   slimThemes = recurseIntoAttrs (callPackage ../applications/display-managers/slim/themes.nix {});
 
   smartdeblur = callPackage ../applications/graphics/smartdeblur { };
