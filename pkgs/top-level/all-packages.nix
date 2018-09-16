@@ -30213,6 +30213,10 @@ with pkgs;
     jre = openjdk11;
   };
 
+  slimThemes = recurseIntoAttrs (callPackage ../applications/display-managers/slim/themes.nix {});
+
+  smartsvn = callPackage ../applications/version-management/smartsvn { };
+
   smartdeblur = callPackage ../applications/graphics/smartdeblur { };
 
   snapper = callPackage ../tools/misc/snapper { };
