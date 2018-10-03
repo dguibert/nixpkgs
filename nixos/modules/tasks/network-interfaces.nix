@@ -921,6 +921,14 @@ in
       '';
     };
 
+    networking.networkdUnmanagedInterfaces = mkOption {
+      default = ""; # none
+      type = types.separatedString " ";
+      description = ''
+        Whether we should not use netword to managed these interfaces.
+      '';
+    };
+
   };
 
 
