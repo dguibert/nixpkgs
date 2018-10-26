@@ -65,7 +65,9 @@ in
           };
       in mkMerge [ {
         enable = true;
-        networks."99-main" = genericNetwork mkDefault;
+        networks."99-main" = genericNetwork mkDefault // optionalAttrs (cfg.notNetworkdManagedInterfaces != "") {
+          name = "!${cfg.notNetworkdManagedInterfaces}";
+        };
       }
       (mkMerge (flip map interfaces (i: {
         netdevs = mkIf i.virtual ({
