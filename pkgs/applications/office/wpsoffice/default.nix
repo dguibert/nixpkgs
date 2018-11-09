@@ -1,21 +1,31 @@
 { stdenv, fetchurl
 , libX11, glib, xorg, fontconfig, freetype
-, zlib, libpng12, libICE, libXrender, cups }:
+, zlib, libpng12, libICE, libXrender, cups
+, lzma
+, fetchFromGitHub
+}:
 
 let
+  ttf-wps-fonts = fetchFromGitHub {
+    owner = "iamdh4";
+    repo = "ttf-wps-fonts";
+    rev = "master";
+    sha256 = "1bwn54mx0zh8yigf5f16wypwfmnp88hx6mjxh8wckaipf49525d1";
+  };
+
   bits = if stdenv.hostPlatform.system == "x86_64-linux" then "x86_64"
          else "x86";
 
-  version = "10.1.0.5707";
+  version = "10.1.0.6757";
 in stdenv.mkDerivation rec{
   name = "wpsoffice-${version}";
 
   src = fetchurl {
-    name = "${name}.tar.xz";
-    url = "http://kdl1.cache.wps.com/ksodl/download/linux/a21//wps-office_${version}~a21_${bits}.tar.xz";
-    sha1 = if bits == "x86_64" then
-      "1970df8c0e6a03649b6809472b89628a685188dc" else
-      "1736e84c405e4548978d27e0ea5071ab73cfc424";
+    url = "http://kdl.cc.ksosoft.com/wps-community/download/6757/wps-office_10.1.0.6757_x86_64.tar.xz";
+    #sha1 = if bits == "x86_64" then
+    #  "03a781599dfcf001fc3bcf1d49699bd1a44aaceb" else
+    #  "";
+    sha256 = "0zk2shi3ciyjnmwvixkmj2qnivkg9a86mnvn83sj9idhlgjx7002";
   };
 
   meta = {
@@ -32,6 +42,8 @@ in stdenv.mkDerivation rec{
     glib
     xorg.libSM
     xorg.libXext
+    xorg.libxcb
+    lzma
     fontconfig
     zlib
     freetype
@@ -47,6 +59,7 @@ in stdenv.mkDerivation rec{
   noAuditTmpdir = true;
 
   installPhase = ''
+    set -x
     prefix=$out/opt/kingsoft/wps-office
     mkdir -p $prefix
     cp -r . $prefix
@@ -71,9 +84,11 @@ in stdenv.mkDerivation rec{
 
     # China fonts
     mkdir -p $prefix/resource/fonts/wps-office $out/etc/fonts/conf.d
-    ln -s $prefix/fonts/* $prefix/resource/fonts/wps-office
-    ln -s $prefix/fontconfig/*.conf $out/etc/fonts/conf.d
+    #ln -s $prefix/fonts/* $prefix/resource/fonts/wps-office
+    ln -s ${ttf-wps-fonts}/*.ttf $prefix/resource/fonts/wps-office/
+    #ln -s $prefix/fontconfig/*.conf $out/etc/fonts/conf.d
 
     ln -s $prefix/resource $out/share
+    set +x
   '';
 }
