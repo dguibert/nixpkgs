@@ -2,6 +2,7 @@
 
 { owner, repo, rev, name ? "source"
 , fetchSubmodules ? false, private ? false
+, leaveDotGit ? false
 , githubBase ? "github.com", varPrefix ? null
 , ... # For hash agility
 }@args: assert private -> !fetchSubmodules;
@@ -11,7 +12,7 @@ let
   varBase = "NIX${if varPrefix == null then "" else "_${varPrefix}"}_GITHUB_PRIVATE_";
   # We prefer fetchzip in cases we don't need submodules as the hash
   # is more stable in that case.
-  fetcher = if fetchSubmodules then fetchgit else fetchzip;
+  fetcher = if fetchSubmodules || leaveDotGit then fetchgit else fetchzip;
   privateAttrs = lib.optionalAttrs private {
     netrcPhase = ''
       if [ -z "''$${varBase}USERNAME" -o -z "''$${varBase}PASSWORD" ]; then
@@ -26,7 +27,7 @@ let
     '';
     netrcImpureEnvVars = [ "${varBase}USERNAME" "${varBase}PASSWORD" ];
   };
-  fetcherArgs = (if fetchSubmodules
+  fetcherArgs = (if fetchSubmodules || leaveDotGit
     then { inherit rev fetchSubmodules; url = "${baseUrl}.git"; }
     else ({ url = "${baseUrl}/archive/${rev}.tar.gz"; } // privateAttrs)
   ) // passthruAttrs // { inherit name; };

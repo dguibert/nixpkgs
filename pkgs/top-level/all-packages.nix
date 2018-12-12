@@ -4526,6 +4526,8 @@ in
 
   libevdev = callPackage ../development/libraries/libevdev { };
 
+  libfabric = callPackage ../development/libraries/libfabric { };
+
   libfann = callPackage ../development/libraries/libfann { };
 
   libfsm = callPackage ../development/libraries/libfsm { };
@@ -5264,6 +5266,8 @@ in
   opentracker = callPackage ../applications/networking/p2p/opentracker { };
 
   opentsdb = callPackage ../tools/misc/opentsdb {};
+
+  openucx = callPackage ../development/libraries/openucx { };
 
   openvpn = callPackage ../tools/networking/openvpn {};
 
