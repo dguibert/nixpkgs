@@ -1,5 +1,7 @@
 { stdenv, fetchurl, fetchpatch, gfortran, perl, libnl
 , rdma-core, zlib, numactl, libevent, hwloc
+, openucx
+, libfabric
 
 # Enable the Sun Grid Engine bindings
 , enableSGE ? false
@@ -31,7 +33,7 @@ in stdenv.mkDerivation rec {
     patchShebangs ./
   '';
 
-  buildInputs = with stdenv; [ gfortran zlib ]
+  buildInputs = with stdenv; [ gfortran zlib openucx libfabric ]
     ++ lib.optionals isLinux [ libnl numactl libevent hwloc ]
     ++ lib.optional (isLinux || isFreeBSD) rdma-core;
 
@@ -41,6 +43,7 @@ in stdenv.mkDerivation rec {
     ++ lib.optional isLinux  "--with-libnl=${libnl.dev}"
     ++ lib.optional enableSGE "--with-sge"
     ++ lib.optional enablePrefix "--enable-mpirun-prefix-by-default"
+    ##++ [ "--enable-mpi1-compatibility" ] # to avoid porting libraries (https://www.open-mpi.org/faq/?category=mpi-removed)
     ;
 
   enableParallelBuilding = true;
