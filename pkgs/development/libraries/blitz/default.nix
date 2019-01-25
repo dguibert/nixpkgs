@@ -1,4 +1,6 @@
-{ stdenv, fetchurl, pkgconfig, gfortran, texinfo
+{ stdenv, fetchFromGitHub, pkgconfig, gfortran, texinfo
+, autoreconfHook
+, python2
 
 # Select SIMD alignment width (in bytes) for vectorization.
 , simdWidth ? 1
@@ -23,15 +25,19 @@ let
 in
 
 stdenv.mkDerivation rec {
-  name = "blitz++-0.10";
-  src = fetchurl {
-    url = mirror://sourceforge/blitz/blitz-0.10.tar.gz;
-    sha256 = "153g9sncir6ip9l7ssl6bhc4qzh0qr3lx2d15qm68hqxj7kg0kl0";
+  name = "blitz++-1.0.1";
+  src = fetchFromGitHub {
+    owner = "blitzpp";
+    repo = "blitz";
+    #rev = "refs/tags/1.0.1";
+    #sha256 = "1s77n0s7j23nipwh8kzi6j6f5dgdg6qpz3gf0zdi4s8cxw9r11ap";
+    rev = "refs/heads/master";
+    sha256 = "1nr0z0c8mb4finjsacdzzhy3hpqm057mqzw7fmdyda80vph3halm";
   };
 
-  patches = [ ./blitz-gcc47.patch ./blitz-testsuite-stencil-et.patch ];
+  patches = [ ./blitz-testsuite-stencil-et.patch ];
 
-  nativeBuildInputs = [ pkgconfig ];
+  nativeBuildInputs = [ pkgconfig autoreconfHook python2 ];
   buildInputs = [ gfortran texinfo ]
     ++ optional (boost != null) boost;
 
@@ -44,7 +50,6 @@ stdenv.mkDerivation rec {
       "--enable-html-docs"
       "--disable-doxygen"
       "--disable-dot"
-      "--disable-latex-docs"
       "--enable-simd-width=${toString simdWidth}"
     ]
     ++ optional enablePadding "--enable-array-length-padding"
@@ -54,10 +59,10 @@ stdenv.mkDerivation rec {
     ++ optional stdenv.is64bit "--enable-64bit"
     ;
 
-  enableParallelBuilding = true;
+  enableParallelBuilding = false;
 
-  buildFlags = "lib info pdf html";
-  installTargets = [ "install" "install-info" "install-pdf" "install-html" ];
+  buildFlags = "lib info ";
+  installTargets = [ "install" "install-info" ];
 
   inherit doCheck;
   checkTarget = "check-testsuite check-examples";
@@ -77,6 +82,6 @@ stdenv.mkDerivation rec {
       multicomponent or vector fields).
     '';
 
-    broken = true; # failing test, ancient version, no library user in nixpkgs => if you care to fix it, go ahead
+    #broken = true; # failing test, ancient version, no library user in nixpkgs => if you care to fix it, go ahead
   };
 }
