@@ -1679,6 +1679,10 @@ in
 
   bliss = callPackage ../applications/science/math/bliss { };
 
+  blitz = callPackage ../development/libraries/blitz {
+    boost = boost160;
+  };
+
   blobfuse = callPackage ../tools/filesystems/blobfuse { };
 
   blockdiag = with python3Packages; toPythonApplication blockdiag;
