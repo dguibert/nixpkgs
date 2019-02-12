@@ -45,7 +45,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "1cxprzsr826d888ha4zxx28i9jfj1k74q9kfv3v2rf603460iha9";
+    outputHash = "0qvmcw31lhvg652mzc2xc1b558p84gqnk2xwak2qsgb5sbhj2258";
     inherit meta;
   };
 
