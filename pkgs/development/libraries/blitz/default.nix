@@ -29,10 +29,10 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "blitzpp";
     repo = "blitz";
-    #rev = "refs/tags/1.0.1";
+    rev = "refs/tags/1.0.1";
     #sha256 = "1s77n0s7j23nipwh8kzi6j6f5dgdg6qpz3gf0zdi4s8cxw9r11ap";
-    rev = "refs/heads/master";
-    sha256 = "1nr0z0c8mb4finjsacdzzhy3hpqm057mqzw7fmdyda80vph3halm";
+    #rev = "refs/heads/master";
+    sha256 = "0dl9m6fz06w0w5h4p5zbdak0drh996siv1fkxy7kq15hg31slh49";
   };
 
   patches = [ ./blitz-testsuite-stencil-et.patch ];
