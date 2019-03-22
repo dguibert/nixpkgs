@@ -14,11 +14,11 @@ let
   xf86videodummy = callPackage ./xf86videodummy { };
 in buildPythonApplication rec {
   pname = "xpra";
-  version = "2.3.4";
+  version = "2.5";
 
   src = fetchurl {
     url = "https://xpra.org/src/${pname}-${version}.tar.xz";
-    sha256 = "0wa3kx54himy3i1b2801hlzfilh3cf4kjk40k1cjl0ds28m5hija";
+    sha256 = "0q6c7ijgpp2wk6jlh0pzqki1w60i36wyl2zfwkg0gpdh40ypab3x";
   };
 
   patches = [
@@ -85,8 +85,6 @@ in buildPythonApplication rec {
     description = "Persistent remote applications for X";
     platforms = platforms.linux;
     license = licenses.gpl2;
-    # https://github.com/NixOS/nixpkgs/pull/48872#issuecomment-433559636
-    broken = true;
     maintainers = with maintainers; [ tstrobel offline numinit ];
   };
 }
