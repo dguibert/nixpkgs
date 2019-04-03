@@ -3,6 +3,16 @@
 , zlib, libpng12, libICE, libXrender, cups
 , lzma
 , fetchFromGitHub
+, nss
+, alsaLib
+, pango
+, cairo
+, dbus
+, atk
+, gtk2
+, gdk_pixbuf
+, nspr
+, rpmextract
 }:
 
 let
@@ -16,16 +26,15 @@ let
   bits = if stdenv.hostPlatform.system == "x86_64-linux" then "x86_64"
          else "x86";
 
-  version = "10.1.0.6757";
+  version = "11.1.0.8372";
 in stdenv.mkDerivation rec{
   name = "wpsoffice-${version}";
 
   src = fetchurl {
-    url = "http://kdl.cc.ksosoft.com/wps-community/download/6757/wps-office_10.1.0.6757_x86_64.tar.xz";
-    #sha1 = if bits == "x86_64" then
-    #  "03a781599dfcf001fc3bcf1d49699bd1a44aaceb" else
-    #  "";
-    sha256 = "0zk2shi3ciyjnmwvixkmj2qnivkg9a86mnvn83sj9idhlgjx7002";
+    url = "http://kdl.cc.ksosoft.com/wps-community/download/8372/wps-office-11.1.0.8372-1.${bits}.rpm";
+    sha1 = if bits == "x86_64" then
+      "d3abdfe94a579083c8bd5e0c817de877e7531e48" else
+      "9deb3908d8edad310258de0e31bcafdb5ff6bc5c";
   };
 
   meta = {
@@ -42,6 +51,14 @@ in stdenv.mkDerivation rec{
     glib
     xorg.libSM
     xorg.libXext
+    xorg.libXcomposite
+    xorg.libXcursor
+    xorg.libXdamage
+    xorg.libXfixes
+    xorg.libXi
+    xorg.libXtst
+    xorg.libXrandr
+    xorg.libXScrnSaver
     xorg.libxcb
     lzma
     fontconfig
@@ -50,6 +67,16 @@ in stdenv.mkDerivation rec{
     libICE
     cups
     libXrender
+    nss
+    stdenv.cc.cc.lib
+    alsaLib
+    pango
+    cairo
+    dbus
+    atk
+    gtk2
+    nspr
+    gdk_pixbuf
   ];
 
   dontPatchELF = true;
@@ -58,27 +85,29 @@ in stdenv.mkDerivation rec{
   # references to nix own build directory
   noAuditTmpdir = true;
 
+  buildInputs = [ rpmextract ];
+
+  unpackPhase = ''
+   :
+  '';
+
   installPhase = ''
-    set -x
+    mkdir $out
+    (cd $out ; rpmextract $src; mv usr/* .; rmdir usr)
+
     prefix=$out/opt/kingsoft/wps-office
-    mkdir -p $prefix
-    cp -r . $prefix
 
-    # Avoid forbidden reference error due use of patchelf
-    rm -r $PWD
-
-    mkdir $out/bin
     for i in wps wpp et; do
       patchelf \
         --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
         --force-rpath --set-rpath "$prefix/office6:$libPath" \
         $prefix/office6/$i
 
-      substitute $prefix/$i $out/bin/$i \
+      substituteInPlace $out/bin/$i \
         --replace /opt/kingsoft/wps-office $prefix
       chmod +x $out/bin/$i
 
-      substituteInPlace $prefix/resource/applications/wps-office-$i.desktop \
+      substituteInPlace $out/share/applications/wps-office-$i.desktop \
         --replace /usr/bin $out/bin
     done
 
@@ -87,8 +116,5 @@ in stdenv.mkDerivation rec{
     #ln -s $prefix/fonts/* $prefix/resource/fonts/wps-office
     ln -s ${ttf-wps-fonts}/*.ttf $prefix/resource/fonts/wps-office/
     #ln -s $prefix/fontconfig/*.conf $out/etc/fonts/conf.d
-
-    ln -s $prefix/resource $out/share
-    set +x
   '';
 }
