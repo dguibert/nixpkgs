@@ -20,18 +20,23 @@ use File::Path;
 use File::Slurp;
 use JSON;
 use Net::Amazon::S3;
+use Nix::SSH;
+use Nix::CopyClosure;
 use Nix::Store;
+use Nix::Config
 
-isValidPath("/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-foo"); # FIXME: forces Nix::Store initialisation
+isValidPath($Nix::Config::storeDir."/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-foo"); # FIXME: forces Nix::Store initialisation
 
 sub usage {
-    die "Syntax: $0 [--dry-run] [--exclude REGEXP] [--expr EXPR | --file FILES...]\n";
+    die "Syntax: $0 [--dry-run] [--ssh HOST] [--exclude REGEXP] [--expr EXPR | --file FILES...]\n";
 }
 
 my $dryRun = 0;
 my $expr;
 my @fileNames;
 my $exclude;
+my $sshUpload = 0;
+my $sshHost;
 
 while (@ARGV) {
     my $flag = shift @ARGV;
@@ -43,6 +48,9 @@ while (@ARGV) {
         last;
     } elsif ($flag eq "--dry-run") {
         $dryRun = 1;
+    } elsif ($flag eq "--ssh") {
+        $sshHost = shift @ARGV or die "--expr requires an argument";
+	$sshUpload = 1;
     } elsif ($flag eq "--exclude") {
         $exclude = shift @ARGV or die "--exclude requires an argument";
     } else {
@@ -52,17 +60,22 @@ while (@ARGV) {
 
 
 # S3 setup.
-my $aws_access_key_id = $ENV{'AWS_ACCESS_KEY_ID'} or die "AWS_ACCESS_KEY_ID not set\n";
-my $aws_secret_access_key = $ENV{'AWS_SECRET_ACCESS_KEY'} or die "AWS_SECRET_ACCESS_KEY not set\n";
+my $bucket = 0;
+if(!$sshUpload) {
+    my $aws_access_key_id = $ENV{'AWS_ACCESS_KEY_ID'} or die "AWS_ACCESS_KEY_ID not set\n";
+    my $aws_secret_access_key = $ENV{'AWS_SECRET_ACCESS_KEY'} or die "AWS_SECRET_ACCESS_KEY not set\n";
 
-my $s3 = Net::Amazon::S3->new(
-    { aws_access_key_id     => $aws_access_key_id,
-      aws_secret_access_key => $aws_secret_access_key,
-      retry                 => 1,
-      host                  => "s3-eu-west-1.amazonaws.com",
-    });
+    my $s3 = Net::Amazon::S3->new(
+        { aws_access_key_id     => $aws_access_key_id,
+          aws_secret_access_key => $aws_secret_access_key,
+          retry                 => 1,
+          host                  => "s3-eu-west-1.amazonaws.com",
+        });
 
-my $bucket = $s3->bucket("nixpkgs-tarballs") or die;
+    $bucket = $s3->bucket("nixpkgs-tarballs") or die;
+}
+# Connect to the remote host.
+my ($from, $to) = connectToRemoteNix($sshHost, []) if $sshUpload;
 
 my $doWrite = 0;
 my $cacheFile = ($ENV{"HOME"} or die "\$HOME is not set") . "/.cache/nix/copy-tarballs";
@@ -73,15 +86,20 @@ $doWrite = 1;
 END() {
     File::Path::mkpath(dirname($cacheFile), 0, 0755);
     write_file($cacheFile, map { "$_\n" } keys %cache) if $doWrite;
+    close $to if defined($to);
 }
 
 sub alreadyMirrored {
-    my ($algo, $hash) = @_;
-    my $key = "$algo/$hash";
-    return 1 if defined $cache{$key};
-    my $res = defined $bucket->get_key($key);
-    $cache{$key} = 1 if $res;
-    return $res;
+    if(!$sshUpload) {
+        my ($algo, $hash) = @_;
+        my $key = "$algo/$hash";
+        return 1 if defined $cache{$key};
+        my $res = defined $bucket->get_key($key);
+        $cache{$key} = 1 if $res;
+        return $res;
+    } else {
+        return 0;
+    }
 }
 
 sub uploadFile {
@@ -127,10 +145,17 @@ if (scalar @fileNames) {
     my $res = 0;
     foreach my $fn (@fileNames) {
         eval {
-            if (alreadyMirrored("sha512", hashFile("sha512", 0, $fn))) {
-                print STDERR "$fn is already mirrored\n";
+            if ($sshUpload) {
+                my $includeOutputs = 0;
+                my $useSubstitutes = 0;
+                my @storePaths = ( $fn );
+                Nix::CopyClosure::copyToOpen($from, $to, $sshHost, \@storePaths, $includeOutputs, $dryRun, $useSubstitutes);
             } else {
-                uploadFile($fn, basename $fn);
+                if (alreadyMirrored("sha512", hashFile("sha512", 0, $fn))) {
+                    print STDERR "$fn is already mirrored\n";
+                } else {
+        	        uploadFile($fn, basename $fn);
+                }
             }
         };
         if ($@) {
@@ -228,7 +253,14 @@ elsif (defined $expr) {
             }
         }
 
-        uploadFile($storePath, $url);
+        if ($sshUpload) {
+	        my $includeOutputs = 0;
+	        my $useSubstitutes = 0;
+	        my @storePaths = ( $storePath );
+            Nix::CopyClosure::copyToOpen($from, $to, $sshHost, \@storePaths, $includeOutputs, $dryRun, $useSubstitutes);
+        } else {
+	        uploadFile($storePath, $url);
+        }
         $mirrored++;
     }
 
