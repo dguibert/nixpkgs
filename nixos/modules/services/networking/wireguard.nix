@@ -191,17 +191,6 @@ let
 
   };
 
-  generatePathUnit = name: values:
-    assert (values.privateKey == null);
-    assert (values.privateKeyFile != null);
-    nameValuePair "wireguard-${name}"
-      {
-        description = "WireGuard Tunnel - ${name} - Private Key";
-        requiredBy = [ "wireguard-${name}.service" ];
-        before = [ "wireguard-${name}.service" ];
-        pathConfig.PathExists = values.privateKeyFile;
-      };
-
   generateKeyServiceUnit = name: values:
     assert values.generatePrivateKeyFile;
     nameValuePair "wireguard-${name}-key"
@@ -242,6 +231,7 @@ let
       netdevConfig.Kind = "wireguard";
 
       wireguardConfig.PrivateKey = mkIf (values.privateKey != null) values.privateKey;
+      wireguardConfig.PrivateKeyFile = mkIf (values.privateKeyFile != null) values.privateKeyFile;
       wireguardConfig.ListenPort = mkIf (values.listenPort != null) values.listenPort;
       wireguardConfig.FwMark = mkIf (values ? FwMark) values.FwMark;
       wireguardPeers = concatMap generatePeer values.peers;
@@ -255,10 +245,6 @@ let
     };
 
   generateSetupServiceUnit = name: values:
-    # exactly one way to specify the private key must be set
-    #assert (values.privateKey != null) != (values.privateKeyFile != null);
-    let privKey = if values.privateKeyFile != null then values.privateKeyFile else pkgs.writeText "wg-key" values.privateKey;
-    in
     nameValuePair "wireguard-${name}"
       {
         description = "WireGuard Tunnel - ${name}";
@@ -284,7 +270,6 @@ let
           ${config.systemd.package}/lib/systemd/systemd-networkd-wait-online -i ${name}
           sleep 2
 
-          ${optionalString (values.privateKeyFile != null) "wg set ${name} private-key ${values.privateKeyFile}"}
           ${concatMapStringsSep "\n" (peer:
               optionalString (peer.presharedKeyFile != null) "wg set ${name} peer preshared-key ${peer.presharedKeyFile}"
             ) values.peers}
@@ -358,9 +343,6 @@ in
     systemd.services = (mapAttrs' generateSetupServiceUnit cfg.interfaces)
       // (mapAttrs' generateKeyServiceUnit
       (filterAttrs (name: value: value.generatePrivateKeyFile) cfg.interfaces));
-
-    systemd.paths = mapAttrs' generatePathUnit
-      (filterAttrs (name: value: value.privateKeyFile != null) cfg.interfaces);
 
     # enable Networkd to care about the wireguard interfaces
     systemd.network.enable = mkDefault true;

@@ -57,7 +57,7 @@ let
 
   checkWireGuard = checkUnitConfig "WireGuard" [
     (assertOnlyFields [
-      "PrivateKey" "ListenPort" "FwMark"
+      "PrivateKey" "PrivateKeyFile" "ListenPort" "FwMark"
     ])
     #(assertRange "ListenPort" 1 65535) # Or "auto"
   ];
