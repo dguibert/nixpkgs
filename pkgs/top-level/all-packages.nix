@@ -7796,6 +7796,14 @@ in
     profiledCompiler = false;
   });
 
+  gfortran9 = wrapCC (gcc9.cc.override {
+    name = "gfortran";
+    langFortran = true;
+    langCC = false;
+    langC = false;
+    profiledCompiler = false;
+  });
+
   gcj = gcj6;
   gcj6 = wrapCC (gcc6.cc.override {
     name = "gcj";
