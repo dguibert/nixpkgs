@@ -10501,7 +10501,13 @@ in
     inherit (darwin.apple_sdk.frameworks) Cocoa Kernel;
   };
 
-  glibc = callPackage ../development/libraries/glibc { };
+  glibc_2_26 = callPackage ../development/libraries/glibc {
+    installLocales = config.glibc.locales or false;
+  };
+  glibc_2_27 = callPackage ../development/libraries/glibc/2.27.nix {
+    installLocales = config.glibc.locales or false;
+  };
+  glibc = if hostPlatform.isRiscV then glibc_2_27 else glibc_2_26;
 
   # Provided by libc on Operating Systems that use the Extensible Linker Format.
   elf-header =
@@ -10516,7 +10522,12 @@ in
   };
 
   # Being redundant to avoid cycles on boot. TODO: find a better way
-  glibcCross = callPackage ../development/libraries/glibc {
+  glibcCross = let
+    expr = if hostPlatform.isRiscV
+             then ../development/libraries/glibc/2.27.nix
+           else ../development/libraries/glibc;
+  in callPackage expr {
+    installLocales = config.glibc.locales or false;
     stdenv = crossLibcStdenv;
   };
 
