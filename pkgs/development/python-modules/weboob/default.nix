@@ -8,12 +8,12 @@
 
 buildPythonPackage rec {
   pname = "weboob";
-  version = "1.3";
+  version = "1.5";
   disabled = ! isPy27;
 
   src = fetchurl {
-    url = "https://symlink.me/attachments/download/356/${pname}-${version}.tar.gz";
-    sha256 = "0m5yh49lplvb57dfilczh65ky35fshp3g7ni31pwfxwqi1f7i4f9";
+    url = "https://git.weboob.org/weboob/weboob/-/archive/1.5/weboob-1.5.tar.gz";
+    sha256 = "sha256:0l6q5nm5g0zn6gmf809059kddrbds27wgygxsfkqja9blks5vq7z";
   };
 
   postPatch = ''
