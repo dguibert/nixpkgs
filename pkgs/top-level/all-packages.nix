@@ -12977,6 +12977,7 @@ in
 
   opencv = callPackage ../development/libraries/opencv {
     inherit (darwin.apple_sdk.frameworks) Cocoa QTKit;
+    pythonPackages = python27Packages;
   };
 
   opencv3 = callPackage ../development/libraries/opencv/3.x.nix {
