@@ -11,8 +11,25 @@ stdenv.mkDerivation rec {
     sha256 = "1599j2lbsygy3883x9si7rbad1pkjhl6y72aimaapcv90ga5kxkm";
     # Remove unicode file names which leads to different checksums on HFS+
     # vs. other filesystems because of unicode normalisation.
-    extraPostFetch = ''
-      rm -r $out/test/e2e/unicode-pwd
+    postFetch = ''
+      unpackDir="$TMPDIR/unpack"
+      mkdir "$unpackDir"
+      cd "$unpackDir"
+
+      renamed="$TMPDIR/${pname}-${version}.tar.gz"
+      mv "$downloadedFile" "$renamed"
+      unpackFile "$renamed"
+      if [ $(ls "$unpackDir" | wc -l) != 1 ]; then
+        echo "error: zip file must contain a single file or directory."
+        echo "hint: Pass stripRoot=false; to fetchzip to assume flat list of files."
+        exit 1
+      fi
+      fn=$(cd "$unpackDir" && echo *)
+      if [ -f "$unpackDir/$fn" ]; then
+        mkdir $out
+      fi
+      rm -r $unpackDir/$fn/test/e2e/unicode-pwd
+      mv "$unpackDir/$fn" "$out"
     '';
   };
 
