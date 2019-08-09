@@ -2,6 +2,7 @@
 
   # Content-addressable Nix mirrors.
   hashedMirrors = [
+    file:///var/lib/hydra/tarballs
     http://tarballs.nixos.org
   ];
 
