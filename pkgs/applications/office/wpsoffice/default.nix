@@ -26,17 +26,17 @@ let
   bits = if stdenv.hostPlatform.system == "x86_64-linux" then "x86_64"
          else "x86";
 
-  version = "11.1.0.8372";
+  version = "11.1.0.8722";
 in stdenv.mkDerivation rec{
   pname = "wpsoffice";
   inherit version;
 
   src = fetchurl {
-    name = "${pname}-${version}.tar.xz";
-    url = "http://kdl.cc.ksosoft.com/wps-community/download/8372/wps-office-11.1.0.8372-1.${bits}.rpm";
+    name = "${pname}-${version}.rpm";
+    url = "http://kdl.cc.ksosoft.com/wps-community/download/8722/wps-office-11.1.0.8722-1.x86_64.rpm";
     sha1 = if bits == "x86_64" then
-      "d3abdfe94a579083c8bd5e0c817de877e7531e48" else
-      "9deb3908d8edad310258de0e31bcafdb5ff6bc5c";
+      "sha1:bhdcil6rkpngp6msmhc95f1wabj0gh87" else
+      throw "no x86 version at http://wps-community.org/downloads";
   };
 
   meta = {
