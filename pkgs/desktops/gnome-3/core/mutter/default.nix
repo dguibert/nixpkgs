@@ -9,6 +9,7 @@
 , wrapGAppsHook
 , sysprof
 , desktop-file-utils
+, egl-wayland
 }:
 
 stdenv.mkDerivation rec {
@@ -25,6 +26,8 @@ stdenv.mkDerivation rec {
   mesonFlags = [
     "-Dxwayland-path=${xwayland}/bin/Xwayland"
     "-Dinstalled_tests=false" # TODO: enable these
+    "-Dwayland_eglstream=true"
+    "-Degl_device=true"
   ];
 
   propagatedBuildInputs = [
