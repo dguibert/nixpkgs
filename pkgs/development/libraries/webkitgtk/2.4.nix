@@ -14,6 +14,7 @@ assert stdenv.isDarwin -> !enableCredentialStorage;
 
 with stdenv.lib;
 stdenv.mkDerivation rec {
+  name="${pname}-${version}";
   pname = "webkitgtk";
   version = "2.4.11";
 
