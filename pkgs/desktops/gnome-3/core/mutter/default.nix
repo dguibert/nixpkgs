@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
     gnome-desktop cairo pango cogl clutter zenity libstartup_notification
     geocode-glib libinput libgudev libwacom
     libcanberra-gtk3 zenity xkeyboard_config libxkbfile
-    libxkbcommon pipewire xwayland
+    libxkbcommon pipewire xwayland egl-wayland
     gnome-settings-daemon sysprof
   ];
 
