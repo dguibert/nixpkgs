@@ -207,6 +207,7 @@ self: super: {
   xmlgen = dontCheck super.xmlgen;
   HerbiePlugin = dontCheck super.HerbiePlugin;
   wai-cors = dontCheck super.wai-cors;
+  pandoc-pyplot = dontCheck super.pandoc-pyplot;
 
   # base bound
   digit = doJailbreak super.digit;
