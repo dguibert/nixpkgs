@@ -9,6 +9,7 @@
 , wrapGAppsHook
 , sysprof
 , desktop-file-utils
+, egl-wayland
 }:
 
 stdenv.mkDerivation rec {
@@ -25,6 +26,8 @@ stdenv.mkDerivation rec {
   mesonFlags = [
     "-Dxwayland-path=${xwayland}/bin/Xwayland"
     "-Dinstalled_tests=false" # TODO: enable these
+    "-Dwayland_eglstream=true"
+    "-Degl_device=true"
   ];
 
   propagatedBuildInputs = [
@@ -49,7 +52,7 @@ stdenv.mkDerivation rec {
     gnome-desktop cairo pango cogl clutter zenity libstartup_notification
     geocode-glib libinput libgudev libwacom
     libcanberra-gtk3 zenity xkeyboard_config libxkbfile
-    libxkbcommon pipewire xwayland
+    libxkbcommon pipewire xwayland egl-wayland
     gnome-settings-daemon sysprof
   ];
 
