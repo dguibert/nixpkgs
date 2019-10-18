@@ -20,6 +20,12 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ perl bc ] ++ kernel.moduleBuildDependencies;
 
+  makeFlags = []
+  ++ stdenv.lib.optionals (stdenv.hostPlatform != stdenv.buildPlatform) [
+    "CROSS_COMPILE=${stdenv.cc.targetPrefix}"
+    "ARCH=${stdenv.hostPlatform.platform.kernelArch}" # Normally not needed, but the Makefile sets ARCH in a broken way.
+  ];
+
   preBuild = "cd src";
   buildFlags = [ "module" ];
 
