@@ -1,0 +1,13 @@
+--- XML-Parser-2.46/Makefile.PL	2019-11-04 13:26:48.027778911 +0100
++++ XML-Parser-2.46/Makefile.PL	2019-11-04 13:26:43.469898859 +0100
+@@ -1,7 +1,8 @@
+ use 5.004005;    #Devel::CheckLib
+ use ExtUtils::MakeMaker;
+-use lib qw(inc);
+-use Devel::CheckLib;
++#use lib qw(inc);
++#use Devel::CheckLib;
++sub check_lib { return 1; }
+ 
+ use Config;
+ 
