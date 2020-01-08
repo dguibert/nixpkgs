@@ -23,9 +23,6 @@ let
     "test_npn_select_error"
     "test_npn_client_fail"
     "test_npn_success"
-    "test_use_certificate_chain_file_unicode"
-    "test_use_certificate_chain_file_bytes"
-    "test_add_extra_chain_cert"
     "test_set_session_id_fail"
     "test_verify_with_revoked"
     "test_set_notAfter"
@@ -48,6 +45,10 @@ let
     "test_fallback_default_verify_paths"
     # https://github.com/pyca/pyopenssl/issues/768
     "test_wantWriteError"
+
+    "test_use_certificate_chain_file_unicode"
+    "test_use_certificate_chain_file_bytes"
+    "test_add_extra_chain_cert"
   ] ++ (
     optionals (hasPrefix "libressl" openssl.meta.name) failingLibresslTests
   ) ++ (
