@@ -1,4 +1,4 @@
-{ stdenv, substituteAll, fetchFromGitHub, python3Packages, glfw, libunistring,
+{ stdenv, substituteAll, fetchFromGitHub, python3Packages, libunistring,
   harfbuzz, fontconfig, pkgconfig, ncurses, imagemagick, xsel,
   libstartup_notification, libGL, libX11, libXrandr, libXinerama, libXcursor,
   libxkbcommon, libXi, libXext, wayland-protocols, wayland,
@@ -45,7 +45,7 @@ buildPythonApplication rec {
     python3
     zlib
   ] ++ stdenv.lib.optionals stdenv.isLinux [
-    fontconfig glfw libunistring libcanberra libX11
+    fontconfig libunistring libcanberra libX11
     libXrandr libXinerama libXcursor libxkbcommon libXi libXext
     wayland-protocols wayland dbus
   ];
@@ -79,9 +79,9 @@ buildPythonApplication rec {
   '';
 
   buildPhase = if stdenv.isDarwin then ''
-    make app
+    ${python.interpreter} setup.py kitty.app --update-check-interval=0
   '' else ''
-    ${python.interpreter} setup.py linux-package
+    ${python.interpreter} setup.py linux-package --update-check-interval=0
   '';
 
   installPhase = ''

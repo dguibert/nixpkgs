@@ -25,11 +25,11 @@ let
   gcc = if stdenv.cc.isGNU then stdenv.cc.cc else stdenv.cc.cc.gcc;
 in stdenv.mkDerivation rec {
   pname = "thunderbird";
-  version = "68.1.1";
+  version = "68.3.0";
 
   src = fetchurl {
     url = "mirror://mozilla/thunderbird/releases/${version}/source/thunderbird-${version}.source.tar.xz";
-    sha512 = "2ng5wwd7fn9247ggzlxx96scc2nalaahzvxkzvb87mp9fbfcsi3v9dh370cm42px8hrknnsp2lrfk9hqx4287zyn9pl3k9vr6a9cswl";
+    sha512 = "3aqr3dj5laws516k6jf8f35a1964p0s75sp682yy87xnzgd8m1iha55z79dcavis2ma9hiyacjnznjz04qhqd4q8swjgfg7lj8lyiwl";
   };
 
   # from firefox, but without sound libraries
@@ -53,7 +53,7 @@ in stdenv.mkDerivation rec {
     # Remove buildconfig.html to prevent a dependency on clang etc.
     ./no-buildconfig.patch
   ]
-  ++ lib.optional (lib.versionOlder version "69")
+  ++ lib.optional (lib.versionOlder version "68.3")
     (fetchpatch { # https://bugzilla.mozilla.org/show_bug.cgi?id=1500436#c29
       name = "write_error-parallel_make.diff";
       url = "https://hg.mozilla.org/mozilla-central/raw-diff/562655fe/python/mozbuild/mozbuild/action/node.py";
@@ -136,6 +136,9 @@ in stdenv.mkDerivation rec {
       gappsWrapperArgs+=(
         --argv0 "$target"
         --set MOZ_APP_LAUNCHER thunderbird
+        # See commit 87e261843c4236c541ee0113988286f77d2fa1ee
+        --set MOZ_LEGACY_PROFILES 1
+        --set MOZ_ALLOW_DOWNGRADE 1
         # https://github.com/NixOS/nixpkgs/pull/61980
         --set SNAP_NAME "thunderbird"
       )
