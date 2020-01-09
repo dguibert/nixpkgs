@@ -19,6 +19,13 @@ stdenv.mkDerivation rec {
       "threadpool_multiple_event_loops" # times out on slow machines
       "get_passwd" # passed on NixOS but failed on other Linuxes
       "tcp_writealot" # times out sometimes
+      /*not ok 333 -*/ "udp_multicast_join"
+      # timeout
+      # Output from process `udp_multicast_join`: (no output)
+      /*not ok 334 -*/ "udp_multicast_join6"
+      # timeout
+      # Output from process `udp_multicast_join6`: (no output)
+
     ] ++ stdenv.lib.optionals stdenv.isDarwin [
         # Sometimes: timeout (no output), failed uv_listen. Someone
         # should report these failures to libuv team. There tests should
