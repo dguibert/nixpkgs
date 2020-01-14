@@ -2,6 +2,7 @@
 , csmSupport ? false, seabios ? null
 , secureBoot ? false
 , httpSupport ? false
+, tpmSupport ? false
 }:
 
 assert csmSupport -> seabios != null;
@@ -33,6 +34,11 @@ edk2.mkDerivation projectDscPath {
     lib.optional secureBoot "-DSECURE_BOOT_ENABLE=TRUE"
     ++ lib.optionals csmSupport [ "-D CSM_ENABLE" "-D FD_SIZE_2MB" ]
     ++ lib.optionals httpSupport [ "-DNETWORK_HTTP_ENABLE=TRUE" "-DNETWORK_HTTP_BOOT_ENABLE=TRUE" ];
+    # Please build the Debian packages with TPM2_ENABLE=TRUE in order for TPMs to be
+    # used with OVMF, either with host passthrough or emulation via swtpm and
+    # libtpms.
+    ++ lib.optional tpmSupport "-DTPM2_ENABLE=TRUE"
+    ++ lib.optionals csmSupport [ "-D CSM_ENABLE" "-D FD_SIZE_2MB" ];
 
   postPatch = lib.optionalString csmSupport ''
     cp ${seabios}/Csm16.bin OvmfPkg/Csm/Csm16/Csm16.bin
