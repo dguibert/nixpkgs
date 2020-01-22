@@ -30,7 +30,7 @@ edk2.mkDerivation projectDscPath {
   hardeningDisable = [ "format" "stackprotector" "pic" "fortify" ];
 
   buildFlags =
-    lib.optional secureBoot "-DSECURE_BOOT_ENABLE=TRUE"
+    lib.optional secureBoot "-DSECURE_BOOT_ENABLE=TRUE -DSMM_REQUIRE "
     # Please build the Debian packages with TPM2_ENABLE=TRUE in order for TPMs to be
     # used with OVMF, either with host passthrough or emulation via swtpm and
     # libtpms.
