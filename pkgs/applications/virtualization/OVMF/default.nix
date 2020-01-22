@@ -31,7 +31,7 @@ edk2.mkDerivation projectDscPath {
   hardeningDisable = [ "format" "stackprotector" "pic" "fortify" ];
 
   buildFlags =
-    lib.optional secureBoot "-DSECURE_BOOT_ENABLE=TRUE"
+    lib.optional secureBoot "-DSECURE_BOOT_ENABLE=TRUE -DSMM_REQUIRE "
     ++ lib.optionals csmSupport [ "-D CSM_ENABLE" "-D FD_SIZE_2MB" ]
     ++ lib.optionals httpSupport [ "-DNETWORK_HTTP_ENABLE=TRUE" "-DNETWORK_HTTP_BOOT_ENABLE=TRUE" ];
     # Please build the Debian packages with TPM2_ENABLE=TRUE in order for TPMs to be
