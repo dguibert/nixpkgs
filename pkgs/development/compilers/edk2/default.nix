@@ -35,6 +35,17 @@ buildType = if stdenv.isDarwin then
   else
     "GCC5";
 
+  edk2-non-osi = fetchgit {
+    url = "https://github.com/tianocore/edk2-non-osi";
+    rev = "cf4fdbe1023f0e0cc8e22be17addf779d75074d0";
+    sha256 = "sha256-2SSoSFhlSUZsDLyEArb4VJju/HqNfQNKztqNNqGtX04=";
+  };
+  edk2-platforms = fetchgit {
+    url = "https://github.com/tianocore/edk2-platforms";
+    rev = "92daaf2b276eca2cfe3b07380d3bb7a3853271df";
+    sha256 = "sha256-1k6zf36o/8PwASlNFT8j8djO8I/26lJlTq64GxSEXQA=";
+  };
+
 edk2 = buildStdenv.mkDerivation {
   pname = "edk2";
   version = "202011";
@@ -57,8 +68,13 @@ edk2 = buildStdenv.mkDerivation {
 
   installPhase = ''
     mkdir -vp $out
-    mv -v BaseTools $out
-    mv -v edksetup.sh $out
+    mv -v BaseTools $out/
+    mv -v edksetup.sh $out/
+
+    mkdir -vp $out/edk2-platforms
+    cp -av ${edk2-platforms}/* $out/edk2-platforms/
+    mkdir -vp $out/edk2-non-osi
+    cp -av ${edk2-non-osi}/* $out/edk2-non-osi/
   '';
 
   enableParallelBuilding = true;
@@ -79,11 +95,14 @@ edk2 = buildStdenv.mkDerivation {
       prePatch = ''
         rm -rf BaseTools
         ln -sv ${edk2}/BaseTools BaseTools
+        ln -sv ${edk2}/edk2-platforms edk2-platforms
+        ln -sv ${edk2}/edk2-non-osi edk2-non-osi
       '';
 
       configurePhase = ''
         runHook preConfigure
         export WORKSPACE="$PWD"
+        export PACKAGES_PATH=$WORKSPACE:$WORKSPACE/edk2-platforms:$WORKSPACE/edk2-non-osi
         . ${edk2}/edksetup.sh BaseTools
         runHook postConfigure
       '';
