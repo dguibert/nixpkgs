@@ -1295,6 +1295,8 @@ with pkgs;
 
   iconConvTools = callPackage ../build-support/icon-conv-tools { };
 
+  isBroken = callPackage ../build-support/is-broken {};
+
   validatePkgConfig = makeSetupHook
     { name = "validate-pkg-config"; propagatedBuildInputs = [ findutils pkg-config ]; }
     ../build-support/setup-hooks/validate-pkg-config.sh;
