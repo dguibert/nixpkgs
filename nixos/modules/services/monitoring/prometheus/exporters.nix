@@ -46,6 +46,7 @@ let
     "redis"
     "rspamd"
     "rtl_433"
+    "slurm"
     "snmp"
     "sql"
     "surfboard"
