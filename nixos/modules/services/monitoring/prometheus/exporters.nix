@@ -60,6 +60,7 @@ let
     "rspamd"
     "rtl_433"
     "script"
+    "slurm"
     "snmp"
     "smokeping"
     "sql"
