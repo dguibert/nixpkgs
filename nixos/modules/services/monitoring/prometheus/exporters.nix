@@ -66,6 +66,7 @@ let
     "rtl_433"
     "script"
     "shelly"
+    "slurm"
     "snmp"
     "smartctl"
     "smokeping"
