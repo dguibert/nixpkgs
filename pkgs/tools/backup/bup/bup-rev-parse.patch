@@ -1,0 +1,26 @@
+diff --git a/lib/bup/git.py b/lib/bup/git.py
+index 2cf1c91..8d4141b 100644
+--- a/lib/bup/git.py
++++ b/lib/bup/git.py
+@@ -927,11 +927,16 @@ def list_refs(patterns=None, repo_dir=None,
+ 
+ def read_ref(refname, repo_dir = None):
+     """Get the commit id of the most recent commit made on a given ref."""
+-    refs = list_refs(patterns=[refname], repo_dir=repo_dir, limit_to_heads=True)
+-    l = tuple(islice(refs, 2))
+-    if l:
+-        assert(len(l) == 1)
+-        return l[0][1]
++    argv = ['git', 'rev-parse', '--verify', '--quiet', refname]
++    p = subprocess.Popen(argv, preexec_fn=_gitenv(repo_dir), stdout=subprocess.PIPE)
++    out = p.stdout.read().strip()
++    rv = p.wait()  # not fatal
++    if rv:
++        assert(not out)
++
++    if out:
++        sha = out.split(b'\n')[0]
++        return unhexlify(sha)
+     else:
+         return None
+ 
