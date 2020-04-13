@@ -25914,6 +25914,7 @@ with pkgs;
     mopidy
     mopidy-iris
     mopidy-local
+    mopidy-jellyfin
     mopidy-moped
     mopidy-mopify
     mopidy-mpd
