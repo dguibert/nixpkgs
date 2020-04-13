@@ -16,6 +16,8 @@ let
 
     mopidy-local = callPackage ./local.nix { };
 
+    mopidy-jellyfin = callPackage ./jellyfin.nix { };
+
     mopidy-spotify = callPackage ./spotify.nix { };
 
     mopidy-moped = callPackage ./moped.nix { };
