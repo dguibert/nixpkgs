@@ -30286,6 +30286,7 @@ with pkgs;
   inherit (mopidyPackages)
     mopidy
     mopidy-bandcamp
+    mopidy-beets
     mopidy-iris
     mopidy-jellyfin
     mopidy-local
