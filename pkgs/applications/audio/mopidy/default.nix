@@ -9,6 +9,8 @@ lib.makeScope newScope (self: with self; {
 
   mopidy-bandcamp = callPackage ./bandcamp.nix { };
 
+  mopidy-beets = callPackage ./beets.nix { };
+
   mopidy-iris = callPackage ./iris.nix { };
 
   mopidy-jellyfin = callPackage ./jellyfin.nix { };
