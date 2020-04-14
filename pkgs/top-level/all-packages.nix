@@ -26858,6 +26858,7 @@ with pkgs;
 
   inherit (mopidyPackages)
     mopidy
+    mopidy-beets
     mopidy-iris
     mopidy-local
     mopidy-jellyfin
