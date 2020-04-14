@@ -12774,6 +12774,7 @@ with pkgs;
     mopidy
     mopidy-listenbrainz
     mopidy-bandcamp
+    mopidy-beets
     mopidy-iris
     mopidy-jellyfin
     mopidy-local

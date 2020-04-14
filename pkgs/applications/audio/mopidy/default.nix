@@ -16,6 +16,8 @@ lib.makeScope newScope (
 
     mopidy-listenbrainz = callPackage ./listenbrainz.nix { };
 
+    mopidy-beets = callPackage ./beets.nix { };
+
     mopidy-iris = callPackage ./iris.nix { };
 
     mopidy-jellyfin = callPackage ./jellyfin.nix { };
