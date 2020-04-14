@@ -1,12 +1,14 @@
-{ stdenv, fetchurl, python3Packages, mopidy }:
+{ stdenv, fetchFromGitHub, python3Packages, mopidy }:
 
 python3Packages.buildPythonApplication rec {
   pname = "mopidy-jellyfin";
-  version = "0.7.1";
+  version = "v0.7.1-5-gf939247";
 
-  src = fetchurl {
-    url = "https://github.com/jellyfin/mopidy-jellyfin/archive/v${version}.tar.gz";
-    sha256 = "sha256-MhpaZ60Vy3pds271n3b7rX2gi6hdiwLDtT6Osf68DWQ=";
+  src = fetchFromGitHub {
+    owner = "jellyfin";
+    repo = "mopidy-jellyfin";
+    rev = "f939247d85ef5a1c5d976ea782a30f35a3c7d0b0";
+    sha256 = "sha256-c3Pm67/54AYjdz/fi3rrop5b4lNHbRvn/ADVk3uHzbY=";
   };
 
   propagatedBuildInputs = [
