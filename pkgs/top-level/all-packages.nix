@@ -23480,6 +23480,7 @@ in
 
   inherit (mopidyPackages)
     mopidy
+    mopidy-beets
     mopidy-gmusic
     mopidy-iris
     mopidy-local
