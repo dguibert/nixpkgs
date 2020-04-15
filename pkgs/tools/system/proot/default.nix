@@ -3,14 +3,20 @@
 
 stdenv.mkDerivation {
   pname = "proot";
-  version = "20190510";
+  version = "20200301";
 
   src = fetchFromGitHub {
     repo = "proot";
-    owner = "proot-me";
-    rev = "803e54d8a1b3d513108d3fc413ba6f7c80220b74";
-    sha256 = "0gwzqm5wpscj3fchlv3qggf3zzn0v00s4crb5ciwljan1zrqadhy";
+    owner = "termux";
+    rev = "0782d176818ed9865a2148605561eae6e1be9352";
+    sha256 = "sha256-ISNK9Wjo4MDndeQpE5dC1ILap89k6uuPyaWm6U3abcI=";
   };
+  #src = fetchFromGitHub {
+  #  repo = "proot";
+  #  owner = "proot-me";
+  #  rev = "e35d15834b71822c36e0080cfe4c8cc722f211d2";
+  #  sha256 = "sha256-zP6A/50sorglsu+r4sG4uii0SG14OvQViqJIe7bN/7I=";
+  #};
 
   postPatch = ''
     substituteInPlace src/GNUmakefile \
