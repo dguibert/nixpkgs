@@ -23570,6 +23570,10 @@ with pkgs;
 
   unicon-lang = callPackage ../development/interpreters/unicon-lang {};
 
+  upmpdcli = callPackage ../tools/networking/upmpdcli {
+    python = python3;
+  };
+
   tsocks = callPackage ../development/libraries/tsocks { };
 
   unixODBC = callPackage ../development/libraries/unixODBC { };
