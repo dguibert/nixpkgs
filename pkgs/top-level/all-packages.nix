@@ -17663,6 +17663,8 @@ with pkgs;
 
   libupnp = callPackage ../development/libraries/pupnp { };
 
+  libupnpp = callPackage ../development/libraries/libupnpp { };
+
   libwhereami = callPackage ../development/libraries/libwhereami { };
 
   giflib     = callPackage ../development/libraries/giflib { };
