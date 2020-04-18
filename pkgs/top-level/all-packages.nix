@@ -8627,6 +8627,10 @@ with pkgs;
 
   libunistring = callPackage ../development/libraries/libunistring { };
 
+  libnpupnp = callPackage ../development/libraries/npupnp { };
+
+  libupnp = callPackage ../development/libraries/pupnp { };
+
   libunique = callPackage ../development/libraries/libunique { };
   libunique3 = callPackage ../development/libraries/libunique/3.x.nix { };
 
