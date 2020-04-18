@@ -23127,6 +23127,8 @@ with pkgs;
 
   libunistring = callPackage ../development/libraries/libunistring { };
 
+  libnpupnp = callPackage ../development/libraries/npupnp { };
+
   libupnp = callPackage ../development/libraries/pupnp { };
 
   libwhereami = callPackage ../development/libraries/libwhereami { };
