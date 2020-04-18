@@ -8631,6 +8631,8 @@ with pkgs;
 
   libupnp = callPackage ../development/libraries/pupnp { };
 
+  libupnpp = callPackage ../development/libraries/libupnpp { };
+
   libunique = callPackage ../development/libraries/libunique { };
   libunique3 = callPackage ../development/libraries/libunique/3.x.nix { };
 
