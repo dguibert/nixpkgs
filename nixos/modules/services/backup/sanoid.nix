@@ -121,6 +121,16 @@ let
 
   configDir = pkgs.writeTextDir "sanoid.conf" configFile;
 
+  # from nixos/modules/tasks/filesystems/zfs.nix
+  packages = if config.boot.zfs.enableUnstable then {
+    zfs = kernel.zfsUnstable;
+    zfsUser = pkgs.zfsUnstable;
+  } else {
+    zfs = kernel.zfs;
+    zfsUser = pkgs.zfs;
+  };
+
+
 in {
 
     # Interface
@@ -195,7 +205,7 @@ in {
         description = "Sanoid snapshot service";
         serviceConfig = {
           ExecStartPre = map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "allow"
+            "+${packages.zfsUser}/bin/zfs" "allow"
             "sanoid" "snapshot,mount,destroy" pool
           ]) pools;
           ExecStart = lib.escapeShellArgs ([
@@ -204,7 +214,7 @@ in {
             "--configdir" configDir
           ] ++ cfg.extraArgs);
           ExecStopPost = map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "unallow" "sanoid" pool
+            "+${packages.zfsUser}/bin/zfs" "unallow" "sanoid" pool
           ]) pools;
           User = "sanoid";
           Group = "sanoid";
