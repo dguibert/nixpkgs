@@ -190,16 +190,17 @@ in {
             ++ (optional c.recursive "-r")
             ++ (optionals (c.sshKey != null) [ "--sshkey" c.sshKey ])
             ++ c.extraArgs
-            ++ [ "--sendoptions" c.sendOptions
-                 "--recvoptions" c.recvOptions
-                 "--no-privilege-elevation"
-                 c.source c.target
+            ++ (optionals (c.sendOptions != "") [ "--sendoptions" c.sendOptions ])
+            ++ (optionals (c.recvOptions != "") [ "--recvoptions" c.recvOptions ])
+            ++ [
+              "--no-privilege-elevation"
+              c.source c.target
                ])) (attrValues cfg.commands);
         after = [ "zfs.target" ];
         serviceConfig = {
           ExecStartPre = (map (pool: lib.escapeShellArgs [
             "+/run/booted-system/sw/bin/zfs" "allow"
-            cfg.user "hold,send" pool
+            cfg.user "hold,send,bookmark" pool
           ]) (getPools "source")) ++
           (map (pool: lib.escapeShellArgs [
             "+/run/booted-system/sw/bin/zfs" "allow"
