@@ -13,6 +13,12 @@ let
   # Default values from https://github.com/jimsalterjrs/sanoid/blob/master/sanoid.defaults.conf
 
   commonOptions = {
+    frequently = mkOption {
+      description = "Number of frequently snapshots.";
+      type = types.ints.unsigned;
+      default = 0;
+    };
+
     hourly = mkOption {
       description = "Number of hourly snapshots.";
       type = types.ints.unsigned;
@@ -61,6 +67,7 @@ let
 
   commonConfig = config: {
     settings = {
+      frequently = mkDefault config.frequently;
       hourly = mkDefault config.hourly;
       daily = mkDefault config.daily;
       monthly = mkDefault config.monthly;
