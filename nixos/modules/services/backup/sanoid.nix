@@ -144,7 +144,10 @@ in {
       datasets = mkOption {
         type = types.attrsOf (types.submodule ({ config, ... }: {
           options = commonOptions // datasetOptions;
-          config = mkMerge [ (commonConfig config) (datasetConfig config) ];
+          config = mkMerge [
+            (mkIf (config.useTemplate == []) (commonConfig config))
+            (datasetConfig config)
+          ];
         }));
         default = {};
         description = "Datasets to snapshot.";
