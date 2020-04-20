@@ -190,10 +190,11 @@ in {
             ++ (optional c.recursive "-r")
             ++ (optionals (c.sshKey != null) [ "--sshkey" c.sshKey ])
             ++ c.extraArgs
-            ++ [ "--sendoptions" c.sendOptions
-                 "--recvoptions" c.recvOptions
-                 "--no-privilege-elevation"
-                 c.source c.target
+            ++ (optionals (c.sendOptions != "") [ "--sendoptions" c.sendOptions ])
+            ++ (optionals (c.recvOptions != "") [ "--recvoptions" c.recvOptions ])
+            ++ [
+              "--no-privilege-elevation"
+              c.source c.target
                ])) (attrValues cfg.commands);
         after = [ "zfs.target" ];
         serviceConfig = {
