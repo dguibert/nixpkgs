@@ -11,6 +11,12 @@ let
     };
 
   commonOptions = {
+    frequently = mkOption {
+      description = "Number of frequently snapshots.";
+      type = types.ints.unsigned;
+      default = 0;
+    };
+
     hourly = mkOption {
       description = "Number of hourly snapshots.";
       type = with types; nullOr ints.unsigned;
