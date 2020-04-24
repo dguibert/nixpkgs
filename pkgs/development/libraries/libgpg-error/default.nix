@@ -54,6 +54,8 @@ in stdenv.mkDerivation (rec {
   depsBuildBuild = [ buildPackages.stdenv.cc ];
   nativeBuildInputs = [ gettext ];
 
+  configureFlags = [ "--host=${stdenv.hostPlatform.config}" ];
+
   postConfigure =
     lib.optionalString stdenv.isSunOS
     # For some reason, /bin/sh on OpenIndiana leads to this at the end of the
