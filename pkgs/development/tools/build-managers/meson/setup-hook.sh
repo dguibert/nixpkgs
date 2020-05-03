@@ -5,6 +5,14 @@ mesonConfigurePhase() {
         mesonFlags="--prefix=$prefix $mesonFlags"
     fi
 
+    # Build release by default.
+    if [ -n "@isCross@" ]; then
+      if [ -n "$PKG_CONFIG_PATH" ]; then
+        pkg_config_path="$(echo $PKG_CONFIG_PATH | sed -e "s/:/,/g")"
+        crossMesonFlags+=" -Dpkg_config_path=$pkg_config_path"
+      fi
+    fi
+
     # See multiple-outputs.sh and meson’s coredata.py
     mesonFlags="\
         --libdir=${!outputLib}/lib --libexecdir=${!outputLib}/libexec \

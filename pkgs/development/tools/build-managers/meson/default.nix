@@ -77,6 +77,8 @@ python3.pkgs.buildPythonApplication rec {
     rm $out/nix-support/propagated-build-inputs
   '';
 
+  isCross = stdenv.targetPlatform != stdenv.hostPlatform;
+
   meta = with lib; {
     homepage = "https://mesonbuild.com";
     description = "SCons-like build system that use python as a front-end language and Ninja as a building backend";
