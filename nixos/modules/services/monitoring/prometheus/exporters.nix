@@ -77,6 +77,7 @@ let
     "shelly"
     "smartctl"
     "smokeping"
+    "slurm"
     "snmp"
     "sql"
     "statsd"
