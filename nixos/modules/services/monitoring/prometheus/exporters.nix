@@ -63,6 +63,7 @@ let
     "rspamd"
     "rtl_433"
     "script"
+    "slurm"
     "snmp"
     "smartctl"
     "smokeping"
