@@ -11,6 +11,12 @@ let
     };
 
   commonOptions = {
+    frequently = mkOption {
+      description = "Number of frequently snapshots.";
+      type = types.ints.unsigned;
+      default = 0;
+    };
+
     hourly = mkOption {
       description = "Number of hourly snapshots.";
       type = with types; nullOr ints.unsigned;
@@ -83,6 +89,16 @@ let
       else if k == "useTemplate" then ""
       else generators.mkKeyValueDefault { inherit mkValueString; } "=" k v;
   in generators.toINI { inherit mkKeyValue; } cfg.settings;
+
+  # from nixos/modules/tasks/filesystems/zfs.nix
+  packages = if config.boot.zfs.enableUnstable then {
+    zfs = kernel.zfsUnstable;
+    zfsUser = pkgs.zfsUnstable;
+  } else {
+    zfs = kernel.zfs;
+    zfsUser = pkgs.zfs;
+  };
+
 
 in {
 
@@ -157,7 +173,7 @@ in {
         description = "Sanoid snapshot service";
         serviceConfig = {
           ExecStartPre = map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "allow"
+            "+${packages.zfsUser}/bin/zfs" "allow"
             "sanoid" "snapshot,mount,destroy" pool
           ]) pools;
           ExecStart = lib.escapeShellArgs ([
@@ -166,7 +182,7 @@ in {
             "--configdir" (pkgs.writeTextDir "sanoid.conf" configFile)
           ] ++ cfg.extraArgs);
           ExecStopPost = map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "unallow" "sanoid" pool
+            "+${packages.zfsUser}/bin/zfs" "unallow" "sanoid" pool
           ]) pools;
           User = "sanoid";
           Group = "sanoid";
