@@ -1,15 +1,15 @@
-{ stdenv, pythonPackages, mopidy }:
+{ stdenv, python3Packages, mopidy }:
 
-pythonPackages.buildPythonApplication rec {
+python3Packages.buildPythonApplication rec {
   pname = "Mopidy-Mopify";
-  version = "1.6.1";
+  version = "1.7.0";
 
-  src = pythonPackages.fetchPypi {
+  src = python3Packages.fetchPypi {
     inherit pname version;
-    sha256 = "93ad2b3d38b1450c8f2698bb908b0b077a96b3f64cdd6486519e518132e23a5c";
+    sha256 = "sha256-gdXm7nKvZ01uu2hIRIDmmJWgnI2evUo8yC6txWnZAwY=";
   };
 
-  propagatedBuildInputs = with pythonPackages; [ mopidy configobj ];
+  propagatedBuildInputs = with python3Packages; [ mopidy configobj ];
 
   # no tests implemented
   doCheck = false;
