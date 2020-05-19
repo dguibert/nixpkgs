@@ -108,6 +108,14 @@ in {
       '';
     };
 
+    qemuOvmfPackage = mkOption {
+      type = types.package;
+      default = pkgs.OVMF;
+      description = ''
+        OVMF package to use with qemu.
+      '';
+    };
+
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -217,8 +225,8 @@ in {
         done
 
         ${optionalString cfg.qemuOvmf ''
-          ln -s --force ${pkgs.OVMF.fd}/FV/${ovmfFilePrefix}_CODE.fd /run/${dirName}/nix-ovmf/
-          ln -s --force ${pkgs.OVMF.fd}/FV/${ovmfFilePrefix}_VARS.fd /run/${dirName}/nix-ovmf/
+          ln -s --force ${cfg.qemuOvmfPackage.fd}/FV/${ovmfFilePrefix}_CODE.fd /run/${dirName}/nix-ovmf/
+          ln -s --force ${cfg.qemuOvmfPackage.fd}/FV/${ovmfFilePrefix}_VARS.fd /run/${dirName}/nix-ovmf/
         ''}
       '';
 
