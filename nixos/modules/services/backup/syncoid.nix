@@ -338,11 +338,9 @@ in
                 ++ optional c.recursive "-r"
                 ++ optionals (c.sshKey != null) [ "--sshkey" c.sshKey ]
                 ++ c.extraArgs
+                ++ (optionals (c.sendOptions != "") [ "--sendoptions" c.sendOptions ])
+                ++ (optionals (c.recvOptions != "") [ "--recvoptions" c.recvOptions ])
                 ++ [
-                "--sendoptions"
-                c.sendOptions
-                "--recvoptions"
-                c.recvOptions
                 "--no-privilege-elevation"
                 c.source
                 c.target
