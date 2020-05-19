@@ -23570,7 +23570,11 @@ with pkgs;
 
   libunistring = callPackage ../development/libraries/libunistring { };
 
+  libnpupnp = callPackage ../development/libraries/npupnp { };
+
   libupnp = callPackage ../development/libraries/pupnp { };
+
+  libupnpp = callPackage ../development/libraries/libupnpp { };
 
   libwhereami = callPackage ../development/libraries/libwhereami { };
 
@@ -25394,6 +25398,10 @@ with pkgs;
   unicon-lang = callPackage ../development/interpreters/unicon-lang { };
 
   updfparser = callPackage ../development/libraries/updfparser { };
+
+  upmpdcli = callPackage ../tools/networking/upmpdcli {
+    python = python3;
+  };
 
   tsocks = callPackage ../development/libraries/tsocks { };
 
@@ -33789,6 +33797,7 @@ with pkgs;
   inherit (mopidyPackages)
     mopidy
     mopidy-bandcamp
+    mopidy-beets
     mopidy-iris
     mopidy-jellyfin
     mopidy-local
