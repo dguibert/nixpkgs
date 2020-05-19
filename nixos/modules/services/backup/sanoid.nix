@@ -13,6 +13,12 @@ let
   # Default values from https://github.com/jimsalterjrs/sanoid/blob/master/sanoid.defaults.conf
 
   commonOptions = {
+    frequently = mkOption {
+      description = "Number of frequently snapshots.";
+      type = types.ints.unsigned;
+      default = 0;
+    };
+
     hourly = mkOption {
       description = "Number of hourly snapshots.";
       type = types.ints.unsigned;
@@ -61,6 +67,7 @@ let
 
   commonConfig = config: {
     settings = {
+      frequently = mkDefault config.frequently;
       hourly = mkDefault config.hourly;
       daily = mkDefault config.daily;
       monthly = mkDefault config.monthly;
@@ -114,6 +121,16 @@ let
 
   configDir = pkgs.writeTextDir "sanoid.conf" configFile;
 
+  # from nixos/modules/tasks/filesystems/zfs.nix
+  packages = if config.boot.zfs.enableUnstable then {
+    zfs = kernel.zfsUnstable;
+    zfsUser = pkgs.zfsUnstable;
+  } else {
+    zfs = kernel.zfs;
+    zfsUser = pkgs.zfs;
+  };
+
+
 in {
 
     # Interface
@@ -137,7 +154,10 @@ in {
       datasets = mkOption {
         type = types.attrsOf (types.submodule ({ config, ... }: {
           options = commonOptions // datasetOptions;
-          config = mkMerge [ (commonConfig config) (datasetConfig config) ];
+          config = mkMerge [
+            (mkIf (config.useTemplate == []) (commonConfig config))
+            (datasetConfig config)
+          ];
         }));
         default = {};
         description = "Datasets to snapshot.";
@@ -185,7 +205,7 @@ in {
         description = "Sanoid snapshot service";
         serviceConfig = {
           ExecStartPre = map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "allow"
+            "+${packages.zfsUser}/bin/zfs" "allow"
             "sanoid" "snapshot,mount,destroy" pool
           ]) pools;
           ExecStart = lib.escapeShellArgs ([
@@ -194,7 +214,7 @@ in {
             "--configdir" configDir
           ] ++ cfg.extraArgs);
           ExecStopPost = map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "unallow" "sanoid" pool
+            "+${packages.zfsUser}/bin/zfs" "unallow" "sanoid" pool
           ]) pools;
           User = "sanoid";
           Group = "sanoid";
