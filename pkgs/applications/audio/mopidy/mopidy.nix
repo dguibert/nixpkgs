@@ -1,5 +1,6 @@
 { lib, stdenv, fetchFromGitHub, pythonPackages, wrapGAppsHook
 , gst_all_1, glib-networking, gobject-introspection
+, nix-update-script
 }:
 
 pythonPackages.buildPythonApplication rec {
@@ -37,6 +38,12 @@ pythonPackages.buildPythonApplication rec {
 
   # There are no tests
   doCheck = false;
+
+  passthru = {
+    updateScript = nix-update-script {
+      attrPath = pname;
+    };
+  };
 
   meta = with lib; {
     homepage = "https://www.mopidy.com/";
