@@ -1,12 +1,14 @@
-{ lib, python3Packages, mopidy }:
+{ lib, python3Packages, mopidy, fetchFromGitHub }:
 
 python3Packages.buildPythonApplication rec {
   pname = "Mopidy-Iris";
-  version = "3.59.0";
+  version = "3.60.0";
 
-  src = python3Packages.fetchPypi {
-    inherit pname version;
-    sha256 = "0llvn0khl07ni34jvb3a1r6rnkf0ljizhpqrs5bdishfhpwyhm0j";
+  src = fetchFromGitHub {
+    owner = "jaedb";
+    repo = "Iris";
+    rev = version;
+    sha256 = "1189j6i1aymi3kpa7vbxcc73cvpr01gygb3p185d6yaycfpc51hn";
   };
 
   propagatedBuildInputs = [
