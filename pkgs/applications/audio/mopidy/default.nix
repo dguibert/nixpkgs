@@ -12,9 +12,13 @@ let
 
     mopidy = callPackage ./mopidy.nix { };
 
+    mopidy-beets = callPackage ./beets.nix { };
+
     mopidy-gmusic = callPackage ./gmusic.nix { };
 
     mopidy-local = callPackage ./local.nix { };
+
+    mopidy-jellyfin = callPackage ./jellyfin.nix { };
 
     mopidy-spotify = callPackage ./spotify.nix { };
 
