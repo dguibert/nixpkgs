@@ -1,0 +1,101 @@
+--- a/src/mediaserver/cdplugins/streamproxy.cpp	2020-08-12 10:59:03.653158462 +0200
++++ b/src/mediaserver/cdplugins/streamproxy.cpp	2020-08-12 11:11:44.093627029 +0200
+@@ -155,10 +155,10 @@
+     ~Internal();
+     bool startMHD();
+ 
+-    int answerConn(
+-        struct MHD_Connection *connection, const char *url, 
+-        const char *method, const char *version, 
+-        const char *upload_data, size_t *upload_data_size,
++    MHD_Result answerConn(
++        struct MHD_Connection *connection, const char *url,
++        const char *method, const char *version,
++        const char *upload_data, long unsigned int *upload_data_size,
+         void **con_cls);
+ 
+     void requestCompleted(
+@@ -202,19 +202,19 @@
+ }
+ 
+ 
+-static int answer_to_connection(
+-    void *cls, struct MHD_Connection *conn, 
+-    const char *url, const char *method, const char *version, 
+-    const char *upload_data, size_t *upload_data_size,
++static MHD_Result answer_to_connection(
++    void *cls, struct MHD_Connection *conn,
++    const char *url, const char *method, const char *version,
++    const char *upload_data, long unsigned int *upload_data_size,
+     void **con_cls)
+ {
+     StreamProxy::Internal *internal = static_cast<StreamProxy::Internal*>(cls);
+-    
++
+     if (internal) {
+         return internal->answerConn(
+             conn, url, method, version, upload_data, upload_data_size, con_cls);
+     } else {
+-        return -1;
++        return MHD_NO;
+     }
+ }
+ 
+@@ -238,7 +238,7 @@
+ }
+ #endif /* PRINT_KEYS */
+ 
+-static int mapvalues_cb(void *cls, enum MHD_ValueKind kind, 
++static MHD_Result mapvalues_cb(void *cls, enum MHD_ValueKind kind,
+                         const char *key, const char *value)
+ {
+     unordered_map<string,string> *mp = (unordered_map<string,string> *)cls;
+@@ -307,10 +307,10 @@
+     return true;
+ }
+ 
+-int StreamProxy::Internal::answerConn(
++MHD_Result StreamProxy::Internal::answerConn(
+     struct MHD_Connection *mhdconn, const char *_url,
+-    const char *method, const char *version, 
+-    const char *upload_data, size_t *upload_data_size,
++    const char *method, const char *version,
++    const char *upload_data, long unsigned int *upload_data_size,
+     void **con_cls)
+ {
+     LOGDEB1("answerConn con_cls " << *con_cls << "\n");
+@@ -352,7 +352,7 @@
+                 return MHD_NO;
+             }
+             MHD_add_response_header (response, "Location", url.c_str());
+-            int ret = MHD_queue_response(mhdconn, 302, response);
++            MHD_Result ret = MHD_queue_response(mhdconn, 302, response);
+             MHD_destroy_response(response);
+             return ret;
+         }
+@@ -386,14 +386,14 @@
+ 
+     // Second call for this request (*con_cls is set)
+     ContentReader *reader = (ContentReader*)*con_cls;
+-    
++
+     if (!reader->fetcher->waitForHeaders()) {
+         LOGDEB("StreamProxy::answerConn: waitForHeaders error\n");
+         reader->fetcher->fetchDone(&fetchcode, &httpcode);
+         int code = httpcode ? httpcode : MHD_HTTP_INTERNAL_SERVER_ERROR;
+         struct MHD_Response *response =
+             MHD_create_response_from_buffer(0, 0, MHD_RESPMEM_PERSISTENT);
+-        int ret = MHD_queue_response(mhdconn, code, response);
++        MHD_Result ret = MHD_queue_response(mhdconn, code, response);
+         MHD_destroy_response(response);
+         LOGINF("StreamProxy::answerConn (1): return with http code: " <<
+                code << endl);
+@@ -434,7 +434,7 @@
+     if (reader->fetcher->fetchDone(&fetchcode, &httpcode)) {
+         code = httpcode ? httpcode : MHD_HTTP_INTERNAL_SERVER_ERROR;
+     }
+-    int ret = MHD_queue_response(mhdconn, code, response);
++    MHD_Result ret = MHD_queue_response(mhdconn, code, response);
+     MHD_destroy_response(response);
+     return ret;
+ }
