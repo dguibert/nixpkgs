@@ -7,7 +7,11 @@ lib.makeScope newScope (self: with self; {
 
   mopidy = callPackage ./mopidy.nix { };
 
+  mopidy-beets = callPackage ./beets.nix { };
+
   mopidy-iris = callPackage ./iris.nix { };
+
+  mopidy-jellyfin = callPackage ./jellyfin.nix { };
 
   mopidy-local = callPackage ./local.nix { };
 
