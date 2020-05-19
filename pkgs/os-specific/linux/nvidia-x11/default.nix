@@ -87,8 +87,8 @@ rec {
     prePatch = let
       debPatches = fetchurl {
         url = "mirror://debian/pool/non-free/n/nvidia-graphics-drivers-legacy-304xx/"
-            + "nvidia-graphics-drivers-legacy-304xx_304.137-5.debian.tar.xz";
-        sha256 = "0n8512mfcnvklfbg8gv4lzbkm3z6nncwj6ix2b8ngdkmc04f3b6l";
+            + "nvidia-graphics-drivers-legacy-304xx_304.137-8.debian.tar.xz";
+        sha256 = "1q20g7c68ckvk18nxycx6ifk28ydznkxgap320h9qpcwszb5n4fd";
       };
       prefix = "debian/module/debian/patches";
       applyPatches = pnames: if pnames == [] then null else
