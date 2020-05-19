@@ -352,7 +352,11 @@ in
       moonraker = 320;
       distcc = 321;
       webdav = 322;
+<<<<<<< HEAD
       pipewire = 323;
+=======
+      upmpdcli = 323;
+>>>>>>> 61afef71129 (upmpdcli: add nixos service)
 
       # When adding a uid, make sure it doesn't match an existing gid. And don't use uids above 399!
 
@@ -660,6 +664,7 @@ in
       distcc = 321;
       webdav = 322;
       pipewire = 323;
+      upmpdcli = 324;
 
       # When adding a gid, make sure it doesn't match an existing
       # uid. Users and groups with the same name should have equal
