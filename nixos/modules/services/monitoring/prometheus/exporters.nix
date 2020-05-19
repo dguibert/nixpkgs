@@ -70,6 +70,7 @@ let
     "scaphandre"
     "script"
     "shelly"
+    "slurm"
     "snmp"
     "smartctl"
     "smokeping"
