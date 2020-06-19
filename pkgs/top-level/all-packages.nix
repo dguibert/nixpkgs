@@ -8086,7 +8086,7 @@ in
 
   sssd = callPackage ../os-specific/linux/sssd {
     inherit (perlPackages) Po4a;
-    inherit (python27Packages) ldap;
+    inherit (python3Packages) ldap;
   };
 
   vtun = callPackage ../tools/networking/vtun {
