@@ -10040,7 +10040,7 @@ with pkgs;
 
   sssd = callPackage ../os-specific/linux/sssd {
     inherit (perlPackages) Po4a;
-    inherit (python27Packages) ldap;
+    inherit (python3Packages) ldap;
   };
 
   sentry-cli = callPackage ../development/tools/sentry-cli {
