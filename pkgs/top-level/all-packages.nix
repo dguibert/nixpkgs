@@ -8027,6 +8027,8 @@ with pkgs;
 
   fuse-archive = callPackage ../tools/filesystems/fuse-archive { };
 
+  fuse-migratefs = callPackage ../tools/filesystems/fuse-migratefs { };
+
   fuse-overlayfs = callPackage ../tools/filesystems/fuse-overlayfs { };
 
   fusee-interfacee-tk = callPackage ../applications/misc/fusee-interfacee-tk { };
