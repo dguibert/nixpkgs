@@ -28,10 +28,6 @@ stdenv.mkDerivation {
   ];
   nativeBuildInputs = [ pandoc perl makeWrapper ];
 
-  patches= [
-    ./bup-rev-parse.patch
-  ];
-
   postPatch = ''
     patchShebangs .
     substituteInPlace Makefile --replace "-Werror" ""
