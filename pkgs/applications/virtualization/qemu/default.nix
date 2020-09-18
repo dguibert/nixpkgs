@@ -74,7 +74,8 @@ stdenv.mkDerivation rec {
     ++ optionals virglSupport [ virglrenderer ]
     ++ optionals smbdSupport [ samba ];
 
-  enableParallelBuilding = true;
+  # cannot find version.texi at /build/qemu-5.1.0/scripts/texi2pod.pl line 160, <GEN0> line 4.
+  enableParallelBuilding = false;
 
   outputs = [ "out" "ga" ];
 
