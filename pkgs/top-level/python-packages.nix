@@ -1930,6 +1930,8 @@ in {
 
   datadog = callPackage ../development/python-modules/datadog { };
 
+  datalad = callPackage ../development/python-modules/datalad { };
+
   datamodeldict = callPackage ../development/python-modules/datamodeldict { };
 
   datasets = callPackage ../development/python-modules/datasets { };
