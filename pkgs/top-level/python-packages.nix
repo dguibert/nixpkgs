@@ -1996,6 +1996,8 @@ in {
 
   datafusion = callPackage ../development/python-modules/datafusion { };
 
+  datalad = callPackage ../development/python-modules/datalad { };
+
   datamodeldict = callPackage ../development/python-modules/datamodeldict { };
 
   dataset = callPackage ../development/python-modules/dataset { };
