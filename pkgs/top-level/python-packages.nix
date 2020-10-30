@@ -2080,6 +2080,8 @@ in {
 
   datafusion = callPackage ../development/python-modules/datafusion { };
 
+  datalad = callPackage ../development/python-modules/datalad { };
+
   datamodeldict = callPackage ../development/python-modules/datamodeldict { };
 
   dataset = callPackage ../development/python-modules/dataset { };
@@ -8962,6 +8964,8 @@ in {
   requestsexceptions = callPackage ../development/python-modules/requestsexceptions { };
 
   requests-file = callPackage ../development/python-modules/requests-file { };
+
+  requests-ftp = callPackage ../development/python-modules/requests-ftp { };
 
   requests-futures = callPackage ../development/python-modules/requests-futures { };
 
