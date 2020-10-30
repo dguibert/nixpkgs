@@ -13,6 +13,16 @@ let
     # Get datasets of the specified type
     (catAttrs type (attrValues cfg.commands))
   ));
+
+  # from nixos/modules/tasks/filesystems/zfs.nix
+  packages = if config.boot.zfs.enableUnstable then {
+    zfs = kernel.zfsUnstable;
+    zfsUser = pkgs.zfsUnstable;
+  } else {
+    zfs = kernel.zfs;
+    zfsUser = pkgs.zfs;
+  };
+
 in {
 
     # Interface
@@ -199,11 +209,11 @@ in {
         after = [ "zfs.target" ];
         serviceConfig = {
           ExecStartPre = (map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "allow"
+            "+${packages.zfsUser}/bin/zfs" "allow"
             cfg.user "hold,send,bookmark" pool
           ]) (getPools "source")) ++
           (map (pool: lib.escapeShellArgs [
-            "+/run/booted-system/sw/bin/zfs" "allow"
+            "+${packages.zfsUser}/bin/zfs" "allow"
             cfg.user "create,mount,receive,rollback" pool
           ]) (getPools "target"));
           User = cfg.user;
