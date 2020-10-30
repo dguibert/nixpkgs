@@ -1994,6 +1994,8 @@ in {
 
   datadog = callPackage ../development/python-modules/datadog { };
 
+  datalad = callPackage ../development/python-modules/datalad { };
+
   datamodeldict = callPackage ../development/python-modules/datamodeldict { };
 
   datasets = callPackage ../development/python-modules/datasets { };
@@ -8474,6 +8476,8 @@ in {
   requestsexceptions = callPackage ../development/python-modules/requestsexceptions { };
 
   requests-file = callPackage ../development/python-modules/requests-file { };
+
+  requests-ftp = callPackage ../development/python-modules/requests-ftp { };
 
   requests-futures = callPackage ../development/python-modules/requests-futures { };
 
