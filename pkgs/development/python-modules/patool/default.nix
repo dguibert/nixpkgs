@@ -46,6 +46,13 @@ buildPythonPackage rec {
     "test_unzip_file"
     "test_zip"
     "test_zip_file"
+
+    "test_mime"
+    "test_7z"
+    "test_pylzma"
+    "test_tar"
+    "test_xz"
+
   ];
 
   meta = with lib; {
