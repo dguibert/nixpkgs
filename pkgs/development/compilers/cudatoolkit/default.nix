@@ -154,5 +154,5 @@ in rec {
     gcc = gcc9;
   };
 
-  cudatoolkit_11 = cudatoolkit_11_0;
+  cudatoolkit_11 = cudatoolkit_11_1;
 }
