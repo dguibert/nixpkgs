@@ -95,5 +95,5 @@ in rec {
     sha256 = "sha256-HQRr+nk5navMb2yxUHkYdUQ5RC6gyp4Pvs3URvmwDM4=";
   };
 
-  cudnn_cudatoolkit_11 = cudnn_cudatoolkit_11_0;
+  cudnn_cudatoolkit_11 = cudnn_cudatoolkit_11_1;
 }
