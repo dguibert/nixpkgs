@@ -79,9 +79,9 @@ stdenv.mkDerivation rec {
     done
 
   '' + lib.optionalString (!stdenv.hostPlatform.isDarwin) ''
-    # remove /build/** from RPATHs
+    # remove /build/** or $TMPDIR from RPATHs
     for f in "$bin"/bin/*; do
-      local nrp="$(patchelf --print-rpath "$f" | sed -E 's@(:|^)/build/[^:]*:@\1@g')"
+      local nrp="$(patchelf --print-rpath "$f" | sed -E "s@(:|^)/build/[^:]*:@\1@g" | sed -E "s@(:|^)$TMPDIR/[^:]*:@\1@g")"
       patchelf --set-rpath "$nrp" "$f"
     done
   '';
