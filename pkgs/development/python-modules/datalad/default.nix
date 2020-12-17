@@ -11,8 +11,8 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "datalad";
     repo = "datalad";
-    rev = "refs/tags/0.13.4";
-    sha256 = "sha256-0dAdNA7fhX5bKaw/jSHpcU2KV6BdEIYY9XBEH4STPXA=";
+    rev = "refs/tags/0.13.6";
+    sha256 = "sha256-nioipgigqgkCNfVFszEvbdVG74q4Afr5nKHNvkl5QvI=";
   };
 
   propagatedBuildInputs = [
