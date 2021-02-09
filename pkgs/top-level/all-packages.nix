@@ -595,6 +595,8 @@ in
 
   iconConvTools = callPackage ../build-support/icon-conv-tools {};
 
+  isBroken = callPackage ../build-support/is-broken {};
+
   validatePkgConfig = makeSetupHook
     { name = "validate-pkg-config"; deps = [ findutils pkg-config ]; }
     ../build-support/setup-hooks/validate-pkg-config.sh;
@@ -1676,6 +1678,10 @@ in
   blis = callPackage ../development/libraries/science/math/blis { };
 
   bliss = callPackage ../applications/science/math/bliss { };
+
+  blitz = callPackage ../development/libraries/blitz {
+    boost = boost160;
+  };
 
   blobfuse = callPackage ../tools/filesystems/blobfuse { };
 
@@ -3397,7 +3403,8 @@ in
     cudatoolkit_10_1
     cudatoolkit_10_2
     cudatoolkit_11
-    cudatoolkit_11_0;
+    cudatoolkit_11_0
+    cudatoolkit_11_1;
 
   cudatoolkit = cudatoolkit_10;
 
@@ -3416,7 +3423,8 @@ in
     cudnn_cudatoolkit_10_1
     cudnn_cudatoolkit_10_2
     cudnn_cudatoolkit_11
-    cudnn_cudatoolkit_11_0;
+    cudnn_cudatoolkit_11_0
+    cudnn_cudatoolkit_11_1;
 
   cudnn = cudnn_cudatoolkit_10;
 
@@ -4329,6 +4337,8 @@ in
   foundationdb = foundationdb61;
 
   fuse-7z-ng = callPackage ../tools/filesystems/fuse-7z-ng { };
+
+  fuse-migratefs = callPackage ../tools/filesystems/fuse-migratefs {};
 
   fuse-overlayfs = callPackage ../tools/filesystems/fuse-overlayfs {};
 
@@ -8721,7 +8731,7 @@ in
 
   sssd = callPackage ../os-specific/linux/sssd {
     inherit (perlPackages) Po4a;
-    inherit (python27Packages) ldap;
+    inherit (python3Packages) ldap;
   };
 
   vtun = callPackage ../tools/networking/vtun {
@@ -15488,7 +15498,11 @@ in
 
   libunistring = callPackage ../development/libraries/libunistring { };
 
+  libnpupnp = callPackage ../development/libraries/npupnp { };
+
   libupnp = callPackage ../development/libraries/pupnp { };
+
+  libupnpp = callPackage ../development/libraries/libupnpp { };
 
   libwhereami = callPackage ../development/libraries/libwhereami { };
 
@@ -16982,6 +16996,10 @@ in
 
   unicon-lang = callPackage ../development/interpreters/unicon-lang {};
 
+  upmpdcli = callPackage ../tools/networking/upmpdcli {
+    python = python3;
+  };
+
   tsocks = callPackage ../development/libraries/tsocks { };
 
   unixODBC = callPackage ../development/libraries/unixODBC { };
@@ -18274,6 +18292,7 @@ in
   prometheus-postfix-exporter = callPackage ../servers/monitoring/prometheus/postfix-exporter.nix { };
   prometheus-postgres-exporter = callPackage ../servers/monitoring/prometheus/postgres-exporter.nix { };
   prometheus-process-exporter = callPackage ../servers/monitoring/prometheus/process-exporter.nix { };
+  prometheus-slurm-exporter = callPackage ../servers/monitoring/prometheus/slurm-exporter.nix { };
   prometheus-pushgateway = callPackage ../servers/monitoring/prometheus/pushgateway.nix { };
   prometheus-redis-exporter = callPackage ../servers/monitoring/prometheus/redis-exporter.nix { };
   prometheus-rabbitmq-exporter = callPackage ../servers/monitoring/prometheus/rabbitmq-exporter.nix { };
@@ -19276,7 +19295,7 @@ in
 
     oci-seccomp-bpf-hook = if lib.versionAtLeast kernel.version "5.4" then callPackage ../os-specific/linux/oci-seccomp-bpf-hook { } else null;
 
-    perf = callPackage ../os-specific/linux/kernel/perf.nix { };
+    perf = if lib.versionAtLeast kernel.version "3.12" then callPackage ../os-specific/linux/kernel/perf.nix { } else null;
 
     phc-intel = if lib.versionAtLeast kernel.version "4.10" then callPackage ../os-specific/linux/phc-intel { } else null;
 
@@ -23597,9 +23616,11 @@ in
 
   inherit (mopidyPackages)
     mopidy
+    mopidy-beets
     mopidy-gmusic
     mopidy-iris
     mopidy-local
+    mopidy-jellyfin
     mopidy-moped
     mopidy-mopify
     mopidy-mpd
@@ -24898,6 +24919,10 @@ in
   smartgithg = callPackage ../applications/version-management/smartgithg {
     jre = openjdk11;
   };
+
+  slimThemes = recurseIntoAttrs (callPackage ../applications/display-managers/slim/themes.nix {});
+
+  smartsvn = callPackage ../applications/version-management/smartsvn { };
 
   smartdeblur = callPackage ../applications/graphics/smartdeblur { };
 
