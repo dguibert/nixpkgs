@@ -33,7 +33,7 @@ edk2.mkDerivation projectDscPath {
   buildFlags =
     lib.optional secureBoot "-DSECURE_BOOT_ENABLE=TRUE -DSMM_REQUIRE "
     ++ lib.optionals csmSupport [ "-D CSM_ENABLE" "-D FD_SIZE_2MB" ]
-    ++ lib.optionals httpSupport [ "-DNETWORK_HTTP_ENABLE=TRUE" "-DNETWORK_HTTP_BOOT_ENABLE=TRUE" "-DTLS_ENABLE" ];
+    ++ lib.optionals httpSupport [ "-DNETWORK_HTTP_ENABLE=TRUE" "-DNETWORK_HTTP_BOOT_ENABLE=TRUE" "-DTLS_ENABLE" ]
     # Please build the Debian packages with TPM2_ENABLE=TRUE in order for TPMs to be
     # used with OVMF, either with host passthrough or emulation via swtpm and
     # libtpms.
