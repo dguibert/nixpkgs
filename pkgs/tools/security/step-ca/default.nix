@@ -9,22 +9,22 @@
 
 buildGoModule rec {
   pname = "step-ca";
-  version = "0.15.6";
+  version = "0.15.8";
 
   src = fetchFromGitHub {
     owner = "smallstep";
     repo = "certificates";
     rev = "v${version}";
-    sha256 = "0n26692ph4q4cmrqammfazmx1k9p2bydwqc57q4hz5ni6jd31zbz";
+    sha256 = "pDnQlRcUbp63AW9XM9tJ7kpiki21ceQdyEBcGIH6a40=";
   };
 
-  vendorSha256 = "0w0phyqymcg2h2jjasxmkf4ryn4y1bqahcy94rs738cqr5ifyfbg";
+  vendorSha256 = "WDZhXxS7gqgmnZiafnJhw66EbhjPfL9AHvo3OtJI1D4=";
 
   nativeBuildInputs = [ pkg-config ];
 
   buildInputs =
-    lib.optional stdenv.isLinux (lib.getDev pcsclite)
-    ++ lib.optional stdenv.isDarwin PCSC;
+    lib.optionals (stdenv.isLinux) [ pcsclite ] ++
+    lib.optionals (stdenv.isDarwin) [ PCSC ];
 
   # Tests fail on darwin with
   # panic: httptest: failed to listen on a port: listen tcp6 [::1]:0: bind: operation not permitted [recovered]
