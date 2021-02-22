@@ -10,6 +10,10 @@ stdenv.mkDerivation {
 
   patches = [ ./systemd.patch ./union-wait.patch ./fix-includes-for-musl.patch ];
 
+  makeFlags = [
+    "CC=${stdenv.cc.targetPrefix}cc"
+  ];
+
   NIX_CFLAGS_COMPILE = "-DSYSV";
 
   installFlags = [ "BINDIR=$(out)/sbin" "MANDIR=$(out)/share/man" "INSTALL=install" ];
@@ -17,6 +21,8 @@ stdenv.mkDerivation {
   preConfigure =
     ''
       sed -e 's@-o \''${MAN_USER} -g \''${MAN_GROUP} -m \''${MAN_PERMS} @@' -i Makefile
+      # don"t strip (when cross-compiling strip not found)
+      sed -e 's@\''${INSTALL} -m 500 -s@\''${INSTALL} -m 500@' -i Makefile
     '';
 
   preInstall = "mkdir -p $out/share/man/man5/ $out/share/man/man8/ $out/sbin";
