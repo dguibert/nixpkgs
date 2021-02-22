@@ -5,13 +5,13 @@
 stdenv.mkDerivation rec {
 
   pname = "libdatrie";
-  version = "2019-12-20";
+  version = "0.2.13";
 
   src = fetchFromGitHub {
     owner = "tlwg";
     repo = "libdatrie";
-    rev = "d1db08ac1c76f54ba23d63665437473788c999f3";
-    sha256 = "03dc363259iyiidrgadzc7i03mmfdj8h78j82vk6z53w6fxq5zxc";
+    rev = "refs/tags/v0.2.13";
+    sha256 = "sha256-Dafv9fnlc0kIf5gcoUW0zdM6O7kxK4hqsfkEJ5Bbfwc=";
   };
 
   nativeBuildInputs = [

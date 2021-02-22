@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
     sha256 = "04g93bgxrcnay9fglpq2lj9nr7x1xh06i60m7haip8as9dxs3q7z";
   };
 
-  nativeBuildInputs = [ installShellFiles pkg-config ];
+  nativeBuildInputs = [ installShellFiles pkg-config libdatrie /*for trietool*/ ];
 
   buildInputs = [ libdatrie ];
 
