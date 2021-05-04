@@ -10,5 +10,7 @@ buildDunePackage {
 
   propagatedBuildInputs = [ csv ocaml_lwt uutf ];
 
+  useDune2 = true;
+
   doCheck = lib.versionAtLeast ocaml.version "4.03";
 }
