@@ -29,7 +29,8 @@ in
   imports = [
     (mkRemovedOptionModule [ "sdImage" "bootPartitionID" ] "The FAT partition for SD image now only holds the Raspberry Pi firmware files. Use firmwarePartitionID to configure that partition's ID.")
     (mkRemovedOptionModule [ "sdImage" "bootSize" ] "The boot files for SD image have been moved to the main ext4 partition. The FAT partition now only holds the Raspberry Pi firmware files. Changing its size may not be required.")
-    ../../profiles/all-hardware.nix
+    # FIXME breaks sd-image with rapsberrypi4 kernel
+    #../../profiles/all-hardware.nix
   ];
 
   options.sdImage = {
