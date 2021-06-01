@@ -20,12 +20,12 @@ in python3Packages.buildPythonApplication rec {
   patches = [
     # https://phab.mercurial-scm.org/D10638, needed for below patch to apply
     (fetchpatch {
-      url = "https://phab.mercurial-scm.org/file/data/oymk4awh2dd7q6cwjbzu/PHID-FILE-bfcr7qrp5spg42wspxpd/D10638.diff";
+      url = "https://phab.mercurial-scm.org/file/data/kb2qusk4o5ayyv74f5yi/PHID-FILE-4ifwt2vrzbzkb2of6v4g/D10638.diff";
       sha256 = "0mfi324is02l7cnd3j0gbmg5rpyyqn3afg3f73flnfwmz5njqa5f";
     })
     # https://phab.mercurial-scm.org/D10639, fixes https://bz.mercurial-scm.org/show_bug.cgi?id=6514
     (fetchpatch {
-      url = "https://phab.mercurial-scm.org/file/data/re4uqdhtknjiacx2ogwu/PHID-FILE-4m26id65dno5gzix2ngh/D10639.diff";
+      url = "https://phab.mercurial-scm.org/file/data/lqklvomksvkzzr3i6wvv/PHID-FILE-2quv6veycjzrh55hatue/D10639.diff";
       sha256 = "0h5ilrd2x1789fr6sf4k1mcvxdh0xdyr94yawdacw87v3x12c8cb";
     })
   ];
