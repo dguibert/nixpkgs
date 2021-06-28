@@ -15775,6 +15775,7 @@ in
 
   gtk3 = callPackage ../development/libraries/gtk/3.x.nix {
     inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
+    cairo = cairo.override { x11Support = true; };
   };
 
   gtk4 = callPackage ../development/libraries/gtk/4.x.nix {
