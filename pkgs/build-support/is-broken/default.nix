@@ -1,6 +1,6 @@
-{ stdenv, bash, writeScript, coreutils }:
+{ lib, bash, writeScript, coreutils }:
 toFail:
-stdenv.lib.overrideDerivation toFail (old: {
+lib.overrideDerivation toFail (old: {
   builder = writeScript "toFail-${old.name}" ''
     #!${bash}/bin/bash
     echo "Ensuring that ${old.name} fails to build" 1>&2
