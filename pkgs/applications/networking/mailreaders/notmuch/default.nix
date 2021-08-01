@@ -12,7 +12,7 @@
 with lib;
 
 stdenv.mkDerivation rec {
-  version = "0.32.2";
+  version = "0.32.1";
   pname = "notmuch";
 
   passthru = {
@@ -20,9 +20,10 @@ stdenv.mkDerivation rec {
     inherit version;
   };
 
-  src = fetchurl {
-    url = "https://notmuchmail.org/releases/notmuch-${version}.tar.xz";
-    sha256 = "1myylb19hj5nb1vriqng252vfjwwkgbi3gxj93pi2q1fzyw7w2lf";
+  src = fetchgit {
+    url = "https://git.notmuchmail.org/git/notmuch";
+    sha256 = "sha256:06r0hdz8mxnzag74md62a9m6c2zm0fxn45n4n1c26j5cmrys7j16";
+    rev = version;
   };
 
   nativeBuildInputs = [
@@ -30,7 +31,7 @@ stdenv.mkDerivation rec {
     doxygen                   # (optional) api docs
     pythonPackages.sphinx     # (optional) documentation -> doc/INSTALL
     texinfo                   # (optional) documentation -> doc/INSTALL
-  ] ++ optional withEmacs emacs;
+  ] ++ optional withEmacs [ emacs ];
 
   buildInputs = [
     gnupg                     # undefined dependencies
@@ -96,7 +97,7 @@ stdenv.mkDerivation rec {
   meta = {
     description = "Mail indexer";
     homepage    = "https://notmuchmail.org/";
-    license     = licenses.gpl3Plus;
+    license     = licenses.gpl3;
     maintainers = with maintainers; [ flokli puckipedia ];
     platforms   = platforms.unix;
   };
