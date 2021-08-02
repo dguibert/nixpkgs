@@ -1,6 +1,7 @@
 { PyGithub, annexremote, appdirs, boto, buildPythonPackage, chardet, fasteners
 , fetchPypi, humanize, iso8601, jsmin, keyring, keyrings-alt, lib, msgpack
 , patool, requests, simplejson, tqdm, whoosh, wrapt, setuptools
+, requests-ftp
 , fetchFromGitHub
 }:
 
@@ -35,6 +36,7 @@ buildPythonPackage rec {
     simplejson
     whoosh
     setuptools
+    requests-ftp
   ];
 
   # TODO FIXME
