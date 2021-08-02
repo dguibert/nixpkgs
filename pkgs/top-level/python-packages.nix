@@ -7873,6 +7873,8 @@ in {
 
   requests-file = callPackage ../development/python-modules/requests-file { };
 
+  requests-ftp = callPackage ../development/python-modules/requests-ftp { };
+
   requests-futures = callPackage ../development/python-modules/requests-futures { };
 
   requests-http-signature = callPackage ../development/python-modules/requests-http-signature { };
