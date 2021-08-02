@@ -1,6 +1,6 @@
 { stdenv, fetchFromGitHub, pkgconfig, gfortran, texinfo
 , autoreconfHook
-, python2
+, python
 
 # Select SIMD alignment width (in bytes) for vectorization.
 , simdWidth ? 1
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
 
   patches = [ ./blitz-testsuite-stencil-et.patch ];
 
-  nativeBuildInputs = [ pkgconfig autoreconfHook python2 ];
+  nativeBuildInputs = [ pkgconfig autoreconfHook python ];
   buildInputs = [ gfortran texinfo ]
     ++ optional (boost != null) boost;
 
