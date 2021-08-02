@@ -16,12 +16,13 @@
 # WARNING: Some of the tests require up to 1700MB of memory to compile.
 , doCheck ? true
 
+, lib
 }:
 
 assert enableSerialization -> boost != null;
 
 let
-  inherit (stdenv.lib) optional optionals;
+  inherit (lib) optional optionals;
 in
 
 stdenv.mkDerivation rec {
@@ -67,9 +68,9 @@ stdenv.mkDerivation rec {
   meta = {
     description = "Fast multi-dimensional array library for C++";
     homepage = https://sourceforge.net/projects/blitz/;
-    license = stdenv.lib.licenses.lgpl3;
-    platforms = stdenv.lib.platforms.linux ++ stdenv.lib.platforms.darwin;
-    maintainers = [ stdenv.lib.maintainers.aherrmann ];
+    license = lib.licenses.lgpl3;
+    platforms = lib.platforms.linux ++ lib.platforms.darwin;
+    maintainers = [ lib.maintainers.aherrmann ];
 
     longDescription = ''
       Blitz++ is a C++ class library for scientific computing which provides
