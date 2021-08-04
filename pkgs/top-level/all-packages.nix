@@ -32468,7 +32468,7 @@ with pkgs;
 
   nix-linter = haskell.lib.justStaticExecutables (haskellPackages.nix-linter);
 
-  nixos-option = callPackage ../tools/nix/nixos-option { };
+  nixos-option = callPackage ../tools/nix/nixos-option { nix = nixStable; };
 
   nix-pin = callPackage ../tools/package-management/nix-pin { };
 
