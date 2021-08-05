@@ -4,13 +4,13 @@
 
 mkDerivation rec {
   pname = "paraview";
-  version = "5.8.0";
+  version = "5.9.1";
 
   src = fetchFromGitHub {
     owner = "Kitware";
     repo = "ParaView";
     rev = "v${version}";
-    sha256 = "1mka6wwg9mbkqi3phs29mvxq6qbc44sspbm4awwamqhilh4grhrj";
+    sha256 = "sha256-TPWzBGyh8uok8F1UuM7kg0vKuqu4XysLOnmDvEpi8V8=";
     fetchSubmodules = true;
   };
 
