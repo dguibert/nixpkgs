@@ -56,5 +56,19 @@ in rec {
     gcc = gcc9;
   };
 
+  cudatoolkit_11_3 = common {
+    version = "11.3.1";
+    url = "https://developer.download.nvidia.com/compute/cuda/11.3.1/local_installers/cuda_11.3.1_465.19.01_linux.run";
+    sha256 = "sha256-rZPqmO/O01hVxY06D8MmN3xgkXyz6MAX0+bYiBm/KTQ=";
+    gcc = gcc9;
+  };
+
+  cudatoolkit_11_4 = common {
+    version = "11.4.1";
+    url = "https://developer.download.nvidia.com/compute/cuda/11.4.1/local_installers/cuda_11.4.1_470.57.02_linux.run";
+    sha256 = "sha256-3WwzmnGZidJRj11U7qwe1wfQZz+GZLoMTUsq98O6AAU=";
+    gcc = gcc9;
+  };
+
   cudatoolkit_11 = cudatoolkit_11_2;
 }
