@@ -4107,7 +4107,9 @@ with pkgs;
     cudatoolkit_11
     cudatoolkit_11_0
     cudatoolkit_11_1
-    cudatoolkit_11_2;
+    cudatoolkit_11_2
+    cudatoolkit_11_3
+    cudatoolkit_11_4;
 
   cudatoolkit = cudatoolkit_10;
 
