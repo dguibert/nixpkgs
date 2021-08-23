@@ -4064,7 +4064,9 @@ with pkgs;
     cudatoolkit_11
     cudatoolkit_11_0
     cudatoolkit_11_1
-    cudatoolkit_11_2;
+    cudatoolkit_11_2
+    cudatoolkit_11_3
+    cudatoolkit_11_4;
 
   cudatoolkit = cudatoolkit_10;
 
@@ -4077,7 +4079,9 @@ with pkgs;
     cudnn_cudatoolkit_11
     cudnn_cudatoolkit_11_0
     cudnn_cudatoolkit_11_1
-    cudnn_cudatoolkit_11_2;
+    cudnn_cudatoolkit_11_2
+    cudnn_cudatoolkit_11_3
+    cudnn_cudatoolkit_11_4;
 
   cudnn = cudnn_cudatoolkit_10;
 
@@ -4089,7 +4093,9 @@ with pkgs;
     cutensor_cudatoolkit_11
     cutensor_cudatoolkit_11_0
     cutensor_cudatoolkit_11_1
-    cutensor_cudatoolkit_11_2;
+    cutensor_cudatoolkit_11_2
+    cutensor_cudatoolkit_11_3
+    cutensor_cudatoolkit_11_4;
 
   cutensor = cutensor_cudatoolkit_10;
 
