@@ -11,7 +11,7 @@ buildGoModule rec {
     owner = "smallstep";
     repo = "cli";
     rev = "v${version}";
-    sha256 = "sha256-w+1iL/Y1OKksIqGJvft734NmjLbxm2yebV/xjhzOubM=";
+    sha256 = "sha256-HUZuYaQ94Zh8Niuh6233tMxh4r0nlktcr0v6/8Fql8Q=";
   };
 
   ldflags = [
