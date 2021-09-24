@@ -26,7 +26,7 @@ buildPythonPackage rec {
     tqdm
     wrapt
     annexremote
-    boto
+    #boto # downloaders/s3: migrate from boto (2.x) to boto3: https://github.com/datalad/datalad/issues/5597
     keyring
     keyrings-alt
     msgpack
@@ -47,6 +47,9 @@ buildPythonPackage rec {
     # ERROR: Could not find a version that satisfies the requirement distro; python_version >= "3.8" (from datalad==0.13.4) (from versions: none)
     # ERROR: No matching distribution found for distro; python_version >= "3.8" (from datalad==0.13.4)
     sed -i -e "s@'distro; python_version@#'distro; python_version@" setup.py
+
+    sed -i -e "s@        'boto',@@" setup.py
+
   '';
 
   postFixup = ''
