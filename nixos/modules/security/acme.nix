@@ -163,7 +163,8 @@ let
       ++ optionals (!data.dnsPropagationCheck) [ "--dns.disable-cp" ]
       ++ optionals (data.dnsResolver != null) [ "--dns.resolvers" data.dnsResolver ]
     ) else (
-      [ "--http" "--http.webroot" data.webroot ]
+      [ "--http" ]
+      ++ optionals (data.webroot != null) [ "--http.webroot" data.webroot ]
     );
 
     commonOpts = [
