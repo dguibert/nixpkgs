@@ -25,7 +25,7 @@
 }:
 
 stdenv.mkDerivation rec {
-  name = "hip";
+  pname = "hip";
   version = "4.3.1";
   src = fetchFromGitHub {
     owner = "ROCm-Developer-Tools";
