@@ -78,6 +78,7 @@ let
           -i bin/hipconfig
 
       sed -e 's, abs_path, Cwd::abs_path,' -i bin/hipvars.pm
+      sed -e 's,$HIP_ROCCLR_HOME = $HIP_PATH;,$HIP_ROCCLR_HOME = ${rocclr};,' -i bin/hipvars.pm
     '';
 
     buildPhase = "";
