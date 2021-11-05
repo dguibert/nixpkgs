@@ -542,6 +542,7 @@ with pkgs;
               gmp = null;
               aclSupport = false;
               attrSupport = false;
+              autoreconfHook = null;
             };
             inherit perl;
           };
