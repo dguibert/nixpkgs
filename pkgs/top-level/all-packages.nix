@@ -576,7 +576,7 @@ with pkgs;
                   fetchurl = stdenv.fetchurlBoot;
                   inherit autoconf perl;
                 };
-		libtool = buildPackages.libtool_1_5.override {
+                libtool = buildPackages.libtool_1_5.override {
                   fetchurl = stdenv.fetchurlBoot;
                   inherit perl;
                   m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
@@ -584,7 +584,7 @@ with pkgs;
                 gettext = buildPackages.gettext.override {
                   fetchurl = stdenv.fetchurlBoot;
                   xz = buildPackages.xz.override { fetchurl = stdenv.fetchurlBoot; };
-		  libiconv = null;
+                  libiconv = null;
                 };
               };
               texinfo = null;
