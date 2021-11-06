@@ -559,7 +559,7 @@ with pkgs;
         openssl = buildPackages.openssl.override {
           fetchurl = stdenv.fetchurlBoot;
           buildPackages = {
-            coreutils = buildPackages.coreutils.override {
+            coreutils = buildPackages.coreutils.override rec {
               fetchurl = stdenv.fetchurlBoot;
               inherit perl;
               xz = buildPackages.xz.override { fetchurl = stdenv.fetchurlBoot; };
@@ -567,10 +567,21 @@ with pkgs;
               aclSupport = false;
               attrSupport = false;
               #{ makeSetupHook, autoconf, automake, gettext, libtool }:
-                autoconf = buildPackages.autoconf.override { fetchurl = stdenv.fetchurlBoot; };
-                automake = buildPackages.automake.override { fetchurl = stdenv.fetchurlBoot; };
-                gettext  = buildPackages.gettext.override { fetchurl = stdenv.fetchurlBoot; };
-                libtool  = buildPackages.libtool.override { fetchurl = stdenv.fetchurlBoot; };
+	        autoconf = buildPackages.autoconf.override {
+	          fetchurl = stdenv.fetchurlBoot;
+                  m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
+                  inherit perl;
+	        };
+		automake = buildPackages.automake.override {
+                  fetchurl = stdenv.fetchurlBoot;
+		  inherit autoconf perl;
+	       	};
+                gettext  = null;
+		libtool  = buildPackages.libtool.override {
+                  fetchurl = stdenv.fetchurlBoot;
+                  inherit perl;
+                  m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
+	       	};
             };
             inherit perl;
           };
