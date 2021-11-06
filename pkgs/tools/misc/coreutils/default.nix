@@ -1,7 +1,5 @@
 { stdenv, lib, buildPackages
-, autoconf
-, automake
-, libtool
+, autoreconfHook
 , bison, texinfo, fetchurl, perl, xz, libiconv, gmp ? null
 , aclSupport ? stdenv.isLinux, acl ? null
 , attrSupport ? stdenv.isLinux, attr ? null
@@ -91,7 +89,7 @@ stdenv.mkDerivation (rec {
 
   outputs = [ "out" "info" ];
 
-  nativeBuildInputs = [ perl xz.bin automake autoconf libtool ] # autoreconfHook is due to patch, normally only needed for cygwin
+  nativeBuildInputs = [ perl xz.bin autoreconfHook ] # autoreconfHook is due to patch, normally only needed for cygwin
     ++ optionals stdenv.hostPlatform.isCygwin [ texinfo ];  # due to patch
   configureFlags = [ "--with-packager=https://NixOS.org" ]
     ++ optional (singleBinary != false)

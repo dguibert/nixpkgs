@@ -567,22 +567,23 @@ with pkgs;
               aclSupport = false;
               attrSupport = false;
               #{ makeSetupHook, autoconf, automake, gettext, libtool }:
-	      #autoconf = buildPackages.autoconf.override {
-	      #  fetchurl = stdenv.fetchurlBoot;
-              #  m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
-              #  inherit perl;
-	      #};
-	      automake = buildPackages.automake.override {
-                fetchurl = stdenv.fetchurlBoot;
-	        inherit autoconf perl;
+	      autoreconfHook = buildPackages.autoreconfHook.override {
+	        autoconf = buildPackages.autoconf.override {
+	          fetchurl = stdenv.fetchurlBoot;
+                  m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
+                  inherit perl;
+	        };
+	        automake = buildPackages.automake.override {
+                  fetchurl = stdenv.fetchurlBoot;
+	          inherit autoconf perl;
+	        };
+	        libtool  = buildPackages.libtool.override {
+                  fetchurl = stdenv.fetchurlBoot;
+                  inherit perl;
+                  m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
+	        };
+		gettext = null;
 	      };
-	      autoconf = null;
-	      libtool = null;
-	      #libtool  = buildPackages.libtool.override {
-              #  fetchurl = stdenv.fetchurlBoot;
-              #  inherit perl;
-              #  m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
-	      #};
 	      texinfo = null;
             };
             inherit perl;
