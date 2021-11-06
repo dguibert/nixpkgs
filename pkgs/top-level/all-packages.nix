@@ -581,7 +581,11 @@ with pkgs;
                   inherit perl;
                   m4 = buildPackages.m4.override { fetchurl = stdenv.fetchurlBoot; };
                 };
-                gettext = null;
+                gettext = buildPackages.gettext.override {
+                  fetchurl = stdenv.fetchurlBoot;
+                  xz = buildPackages.xz.override { fetchurl = stdenv.fetchurlBoot; };
+		  libiconv = null;
+                };
               };
               texinfo = null;
             };
