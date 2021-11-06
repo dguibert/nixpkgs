@@ -567,12 +567,10 @@ with pkgs;
               aclSupport = false;
               attrSupport = false;
               #{ makeSetupHook, autoconf, automake, gettext, libtool }:
-	      autoreconfHook = buildPackages.autoreconfHook.override {
-                autoconf = old.autoconf.override { fetchurl = stdenv.fetchurlBoot; };
-                automake = old.automake.override { fetchurl = stdenv.fetchurlBoot; };
-                gettext  = old.gettext.override { fetchurl = stdenv.fetchurlBoot; };
-                libtool  = old.libtool.override { fetchurl = stdenv.fetchurlBoot; };
-	      };
+                autoconf = buildPackages.autoconf.override { fetchurl = stdenv.fetchurlBoot; };
+                automake = buildPackages.automake.override { fetchurl = stdenv.fetchurlBoot; };
+                gettext  = buildPackages.gettext.override { fetchurl = stdenv.fetchurlBoot; };
+                libtool  = buildPackages.libtool.override { fetchurl = stdenv.fetchurlBoot; };
             };
             inherit perl;
           };
