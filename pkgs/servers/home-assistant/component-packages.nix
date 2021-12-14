@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2021.12.0";
+  version = "2021.12.1";
   components = {
     "abode" = ps: with ps; [ abodepy ];
     "accuweather" = ps: with ps; [ accuweather ];
@@ -597,7 +597,7 @@
     "nzbget" = ps: with ps; [ ]; # missing inputs: pynzbgetapi
     "oasa_telematics" = ps: with ps; [ ]; # missing inputs: oasatelematics
     "obihai" = ps: with ps; [ pyobihai ];
-    "octoprint" = ps: with ps; [ ]; # missing inputs: pyoctoprintapi
+    "octoprint" = ps: with ps; [ pyoctoprintapi ];
     "oem" = ps: with ps; [ oemthermostat ];
     "ohmconnect" = ps: with ps; [ defusedxml ];
     "ombi" = ps: with ps; [ pyombi ];
