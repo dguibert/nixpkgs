@@ -473,6 +473,11 @@ let
 
       # Detect buffer overflows on the stack
       CC_STACKPROTECTOR_REGULAR = {optional = true; tristate = whenOlder "4.18" "y";};
+    } // optionalAttrs stdenv.hostPlatform.isx86 {
+      # Enable Intel SGX
+      X86_SGX     = whenAtLeast "5.11" yes;
+      # Allow KVM guests to load SGX enclaves
+      X86_SGX_KVM = whenAtLeast "5.13" yes;
     };
 
     microcode = {
@@ -876,6 +881,12 @@ let
       LIRC = mkMerge [ (whenOlder "4.16" module) (whenAtLeast "4.17" yes) ];
 
       SCHED_CORE = whenAtLeast "5.14" yes;
+
+      ASHMEM =                 { optional = true; tristate = whenAtLeast "5.0" "y";};
+      ANDROID =                { optional = true; tristate = whenAtLeast "5.0" "y";};
+      ANDROID_BINDER_IPC =     { optional = true; tristate = whenAtLeast "5.0" "y";};
+      ANDROID_BINDERFS =       { optional = true; tristate = whenAtLeast "5.0" "y";};
+      ANDROID_BINDER_DEVICES = { optional = true; freeform = whenAtLeast "5.0" "binder,hwbinder,vndbinder";};
 
     } // optionalAttrs (stdenv.hostPlatform.system == "x86_64-linux" || stdenv.hostPlatform.system == "aarch64-linux") {
       # Enable CPU/memory hotplug support
