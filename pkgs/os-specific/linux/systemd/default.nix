@@ -2,6 +2,7 @@
 
 { stdenv
 , lib
+, nixosTests
 , fetchFromGitHub
 , fetchpatch
 , fetchzip
@@ -40,6 +41,7 @@
 , gnupg
 , zlib
 , xz
+, zstd
 , tpm2-tss
 , libuuid
 , libapparmor
@@ -47,6 +49,7 @@
 , bzip2
 , pcre2
 , e2fsprogs
+, elfutils
 , linuxHeaders ? stdenv.cc.libc.linuxHeaders
 , gnu-efi
 , iptables
@@ -67,7 +70,7 @@
 
 , withAnalyze ? true
 , withApparmor ? true
-, withCompression ? true  # adds bzip2, lz4 and xz
+, withCompression ? true  # adds bzip2, lz4, xz and zstd
 , withCoredump ? true
 , withCryptsetup ? true
 , withDocumentation ? true
@@ -120,7 +123,7 @@ assert withHomed -> withCryptsetup;
 assert withCryptsetup -> (cryptsetup != null);
 let
   wantCurl = withRemote || withImportd;
-  version = "249.5";
+  version = "249.7";
 in
 stdenv.mkDerivation {
   inherit pname version;
@@ -131,7 +134,7 @@ stdenv.mkDerivation {
     owner = "systemd";
     repo = "systemd-stable";
     rev = "v${version}";
-    sha256 = "0bir2syy20rdi59sv8xp8nw1c92zl9z0wmv7ggsll8dca7niqwbp";
+    sha256 = "sha256-y33/BvvI+JyhsvuT1Cbm6J2Z72j71oXgLw6X9NwCMPE=";
   };
 
   # If these need to be regenerated, `git am path/to/00*.patch` them into a
@@ -163,15 +166,8 @@ stdenv.mkDerivation {
     # systemd. With the below patch we mitigate that effect by special casing
     # all our root unit dirs if they are symlinks. This does exactly what we
     # need (AFAICT).
+    # See https://github.com/systemd/systemd/pull/20479 for upsteam discussion.
     ./0019-core-handle-lookup-paths-being-symlinks.patch
-
-    # In v248 compiler weirdness and refactoring lead to the bootloader
-    # erroring out handling keyboard input on some systems. See
-    # https://github.com/systemd/systemd/issues/19191
-    # This should be redundant in v249.6 when it offically gets tagged in
-    # systemd-stable
-    ./0020-sd-boot-Unify-error-handling.patch
-    ./0021-sd-boot-Rework-console-input-handling.patch
   ] ++ lib.optional stdenv.hostPlatform.isMusl (let
     oe-core = fetchzip {
       url = "https://git.openembedded.org/openembedded-core/snapshot/openembedded-core-14c6e5a4b72d0e4665279158a0740dd1dc21f72f.tar.bz2";
@@ -372,7 +368,8 @@ stdenv.mkDerivation {
 
     ++ lib.optional withApparmor libapparmor
     ++ lib.optional wantCurl (lib.getDev curl)
-    ++ lib.optionals withCompression [ bzip2 lz4 xz ]
+    ++ lib.optionals withCompression [ bzip2 lz4 xz zstd ]
+    ++ lib.optional withCoredump elfutils
     ++ lib.optional withCryptsetup (lib.getDev cryptsetup.dev)
     ++ lib.optional withEfi gnu-efi
     ++ lib.optional withKexectools kexec-tools
@@ -580,12 +577,6 @@ stdenv.mkDerivation {
   '';
 
   postInstall = ''
-    # sysinit.target: Don't depend on
-    # systemd-tmpfiles-setup.service. This interferes with NixOps's
-    # send-keys feature (since sshd.service depends indirectly on
-    # sysinit.target).
-    mv $out/lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev.service $out/lib/systemd/system/multi-user.target.wants/
-
     mkdir -p $out/example/systemd
     mv $out/lib/{modules-load.d,binfmt.d,sysctl.d,tmpfiles.d} $out/example
     mv $out/lib/systemd/{system,user} $out/example/systemd
@@ -612,6 +603,10 @@ stdenv.mkDerivation {
   # systemd builds is the same, then we can switch between them at
   # runtime; otherwise we can't and we need to reboot.
   passthru.interfaceVersion = 2;
+
+  passthru.tests = {
+    inherit (nixosTests) switchTest;
+  };
 
   meta = with lib; {
     homepage = "https://www.freedesktop.org/wiki/Software/systemd/";
