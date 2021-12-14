@@ -33,6 +33,7 @@
 , nspr
 , nss
 , pango
+, pipewire
 , systemd
 , xdg-utils
 , xorg
@@ -44,14 +45,14 @@ let
 
   pname = "slack";
 
-  x86_64-darwin-version = "4.19.0";
-  x86_64-darwin-sha256 = "0dj51lhxiba69as6x76ni8h20d36bcpf2xz3rxr1s8881mprpfsg";
+  x86_64-darwin-version = "4.22.0";
+  x86_64-darwin-sha256 = "094p9vyv56m5qfp9jh2205ijfqcp0dr6bkmiv0wxihy2rg20b5zp";
 
-  x86_64-linux-version = "4.19.2";
-  x86_64-linux-sha256 = "02npmprwl1h7c2y03khvx8ifhk1gj1axbvlwigp2hkkjdw7y4b5a";
+  x86_64-linux-version = "4.22.0";
+  x86_64-linux-sha256 = "0k84glxp653lxgfv5b65zvvysax7fr3lhsjgq76safk7g7cjc86i";
 
-  aarch64-darwin-version = "4.19.0";
-  aarch64-darwin-sha256 = "1mvs1bdyyyrpqmrbqg4sxpy6ylgchwz39nr232s441iqdz45p87v";
+  aarch64-darwin-version = "4.22.0";
+  aarch64-darwin-sha256 = "1z2pcgva9ixjx702c1535b4k0xr9fdnfzi5m08xgvabk9x66hqx4";
 
   version = {
     x86_64-darwin = x86_64-darwin-version;
@@ -73,7 +74,7 @@ let
           sha256 = aarch64-darwin-sha256;
         };
         x86_64-linux = fetchurl {
-          url = "${base}/linux_releases/slack-desktop-${version}-amd64.deb";
+          url = "${base}/releases/linux/${version}/prod/x64/slack-desktop-${version}-amd64.deb";
           sha256 = x86_64-linux-sha256;
         };
       }.${system} or throwSystem;
@@ -119,6 +120,7 @@ let
       nspr
       nss
       pango
+      pipewire
       stdenv.cc.cc
       systemd
       xorg.libX11

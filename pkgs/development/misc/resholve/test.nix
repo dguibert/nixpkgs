@@ -3,6 +3,8 @@
 , callPackage
 , resholve
 , resholvePackage
+, resholveScript
+, resholveScriptBin
 , shunit2
 , coreutils
 , gnused
@@ -19,39 +21,17 @@
 , rSrc
 , runDemo ? false
 , binlore
+, sqlite
+, util-linux
+, gawk
+, rlwrap
+, gnutar
+, bc
 }:
 
 let
-  inherit (callPackage ./default.nix { })
-    resholve resholvePackage resholveScript resholveScriptBin;
-
-  # ourCoreutils = coreutils.override { singleBinary = false; };
-
-  /*
-    TODO: wrapped copy of find so that we can eventually test
-    our ability to see through wrappers. Unused for now.
-    Note: grep can serve the negative case; grep doesn't match, and
-    egrep is a shell wrapper for grep.
-  */
-  # wrapfind = runCommand "wrapped-find" { } ''
-  #   source ${makeWrapper}/nix-support/setup-hook
-  #   makeWrapper ${findutils}/bin/find $out/bin/wrapped-find
-  # '';
-  /* TODO:
-    unrelated, but is there already a function (or would
-    there be demand for one?) along the lines of:
-    wrap = { drv, executable(s?), args ? { } }: that:
-    - generates a sane output name
-    - sources makewrapper
-    - retargets real executable if already wrapped
-    - wraps the executable
-
-    I wonder because my first thought here was overrideAttrs,
-    but I realized rebuilding just for a custom wrapper is an
-    ongoing waste of time. If it is a common pattern in the
-    wild, it would be a nice QoL improvement.
-  */
-
+  default_packages = [ bash file findutils gettext ];
+  parsed_packages = [ coreutils sqlite util-linux gnused gawk findutils rlwrap gnutar bc ];
 in
 rec {
   re_shunit2 = with shunit2;
@@ -83,9 +63,6 @@ rec {
             "/usr/bin/od" = true;
           };
           keep = {
-            # dynamically defined in shunit2:_shunit_mktempFunc
-            eval = [ "shunit_condition_" "_shunit_test_" "_shunit_prepForSourcing" ];
-
             # variables invoked as commands; long-term goal is to
             # resolve the *variable*, but that is complexish, so
             # this is where we are...
@@ -193,13 +170,14 @@ rec {
     # LOGLEVEL="DEBUG";
 
     # default path
-    RESHOLVE_PATH = "${lib.makeBinPath [ bash file findutils gettext ]}";
+    RESHOLVE_PATH = "${lib.makeBinPath default_packages}";
     # but separate packages for combining as needed
     PKG_FILE = "${lib.makeBinPath [ file ]}";
     PKG_FINDUTILS = "${lib.makeBinPath [ findutils ]}";
     PKG_GETTEXT = "${lib.makeBinPath [ gettext ]}";
     PKG_COREUTILS = "${lib.makeBinPath [ coreutils ]}";
-    RESHOLVE_LORE = "${binlore.collect { drvs = [ bash file findutils gettext coreutils ]; } }";
+    RESHOLVE_LORE = "${binlore.collect { drvs = default_packages ++ [ coreutils ] ++ parsed_packages; } }";
+    PKG_PARSED = "${lib.makeBinPath parsed_packages}";
 
     # explicit interpreter for demo suite; maybe some better way...
     INTERP = "${bash}/bin/bash";

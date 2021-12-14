@@ -1,4 +1,3 @@
-
 { lib
 , aiohttp
 , async-timeout
@@ -10,14 +9,16 @@
 
 buildPythonPackage rec {
   pname = "millheater";
-  version = "0.6.0";
+  version = "0.9.0";
+  format = "setuptools";
+
   disabled = pythonOlder "3.6";
 
   src = fetchFromGitHub {
     owner = "Danielhiversen";
     repo = "pymill";
     rev = version;
-    sha256 = "sha256-goKJLI1iUHR6CrciwzsOHyN7EjdLHJufDVuA9Qa9Ftk=";
+    sha256 = "sha256-ocPp9tRghlOb0vZrpELDkwOq8ue+JBCRf2uB0Q7CPF8=";
   };
 
   propagatedBuildInputs = [
@@ -29,7 +30,9 @@ buildPythonPackage rec {
   # Project has no tests
   doCheck = false;
 
-  pythonImportsCheck = [ "mill" ];
+  pythonImportsCheck = [
+    "mill"
+  ];
 
   meta = with lib; {
     description = "Python library for Mill heater devices";

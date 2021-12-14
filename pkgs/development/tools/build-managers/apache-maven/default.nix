@@ -4,13 +4,13 @@ assert jdk != null;
 
 stdenv.mkDerivation rec {
   pname = "apache-maven";
-  version = "3.8.2";
+  version = "3.8.4";
 
   builder = ./builder.sh;
 
   src = fetchurl {
     url = "mirror://apache/maven/maven-3/${version}/binaries/${pname}-${version}-bin.tar.gz";
-    sha256 = "sha256-ja4QsJ/re45MB5/DmhHzKWq2MP2bxE7OoPsojOx3cPc=";
+    sha256 = "sha256-LNycUZQnuyD9wlvvWpBjt5Dkq9kw57FLTp9IY9b58Tw=";
   };
 
   nativeBuildInputs = [ makeWrapper ];

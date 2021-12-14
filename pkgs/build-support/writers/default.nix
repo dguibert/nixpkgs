@@ -1,4 +1,4 @@
-{ pkgs, lib, gawk, gnused, gixy }:
+{ pkgs, buildPackages, lib, stdenv, libiconv, gawk, gnused, gixy }:
 
 with lib;
 rec {
@@ -77,7 +77,11 @@ rec {
     }) ''
       ${compileScript}
       ${lib.optionalString strip
-         "${pkgs.binutils-unwrapped}/bin/strip --strip-unneeded $out"}
+          "${lib.getBin buildPackages.bintools-unwrapped}/bin/${buildPackages.bintools-unwrapped.targetPrefix}strip -S $out"}
+      # Sometimes binaries produced for darwin (e. g. by GHC) won't be valid
+      # mach-o executables from the get-go, but need to be corrected somehow
+      # which is done by fixupPhase.
+      ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin "fixupPhase"}
       ${optionalString (types.path.check nameOrPath) ''
         mv $out tmp
         mkdir -p $out/$(dirname "${nameOrPath}")
@@ -146,10 +150,13 @@ rec {
       rustcArgs ? [],
       strip ? true
   }:
+  let
+    darwinArgs = lib.optionals stdenv.isDarwin [ "-L${lib.getLib libiconv}/lib" ];
+  in
     makeBinWriter {
       compileScript = ''
         cp "$contentPath" tmp.rs
-        PATH=${makeBinPath [pkgs.gcc]} ${lib.getBin rustc}/bin/rustc ${lib.escapeShellArgs rustcArgs} -o "$out" tmp.rs
+        PATH=${makeBinPath [pkgs.gcc]} ${lib.getBin rustc}/bin/rustc ${lib.escapeShellArgs rustcArgs} ${lib.escapeShellArgs darwinArgs} -o "$out" tmp.rs
       '';
       inherit strip;
     } name;
@@ -233,9 +240,9 @@ rec {
       then "${python}/bin/python"
       else "${python.withPackages (ps: libraries)}/bin/python"
     ;
-    check = writeDash "python2check.sh" ''
+    check = optionalString python.isPy3k (writeDash "pythoncheck.sh" ''
       exec ${pythonPackages.flake8}/bin/flake8 --show-source ${ignoreAttribute} "$1"
-    '';
+    '');
   } name;
 
   # writePython2 takes a name an attributeset with libraries and some python2 sourcecode and

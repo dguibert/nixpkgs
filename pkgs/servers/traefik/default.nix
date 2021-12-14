@@ -2,15 +2,15 @@
 
 buildGoModule rec {
   pname = "traefik";
-  version = "2.5.2";
+  version = "2.5.4";
 
   src = fetchzip {
     url = "https://github.com/traefik/traefik/releases/download/v${version}/traefik-v${version}.src.tar.gz";
-    sha256 = "1q93l7jb0vs1d324453gk307hlhav2g0xjqkcz3f43rxhb0jbwpk";
+    sha256 = "sha256-OMzLRgpTUIosmlAdMiNplOx/Oj28gcqamsOPJdoFkN0=";
     stripRoot = false;
   };
 
-  vendorSha256 = "054l0b6xlbl9sh2bisnydm9dha30jrafybb06ggzbjffsqcgj7qw";
+  vendorSha256 = "sha256-BSempfKgRCj87XM8qPNEUs+sMILVS6bWwWgf7wWQviI=";
 
   doCheck = false;
 

@@ -15,11 +15,11 @@
 
 buildPythonPackage rec {
   pname = "eventlet";
-  version = "0.32.0";
+  version = "0.33.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "2f0bb8ed0dc0ab21d683975d5d8ab3c054d588ce61def9faf7a465ee363e839b";
+    sha256 = "80144f489c1bb273a51b6f96ff9785a382d2866b9bab1f5bd748385019f4141f";
   };
 
   propagatedBuildInputs = [ dnspython greenlet pyopenssl six ]
@@ -29,7 +29,7 @@ buildPythonPackage rec {
 
   doCheck = !stdenv.isDarwin;
 
-  preCheck = ''
+  preCheck = lib.optionalString doCheck ''
     echo "nameserver 127.0.0.1" > resolv.conf
     export NIX_REDIRECTS=/etc/protocols=${iana-etc}/etc/protocols:/etc/resolv.conf=$(realpath resolv.conf)
     export LD_PRELOAD=${libredirect}/lib/libredirect.so
@@ -40,7 +40,9 @@ buildPythonPackage rec {
   checkPhase = ''
     runHook preCheck
 
-    nosetests --exclude test_getaddrinfo --exclude test_hosts_no_network
+    # test_fork-after_monkey_patch fails on aarch64 on hydra only
+    #   AssertionError: Expected single line "pass" in stdout
+    nosetests --exclude test_getaddrinfo --exclude test_hosts_no_network --exclude test_fork_after_monkey_patch
 
     runHook postCheck
   '';

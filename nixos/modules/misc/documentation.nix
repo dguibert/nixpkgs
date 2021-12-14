@@ -1,4 +1,4 @@
-{ config, lib, pkgs, baseModules, extraModules, modules, modulesPath, ... }:
+{ config, lib, pkgs, extendModules, noUserModules, ... }:
 
 with lib;
 
@@ -6,11 +6,8 @@ let
 
   cfg = config.documentation;
 
-  manualModules =
-    baseModules
-    # Modules for which to show options even when not imported
-    ++ [ ../virtualisation/qemu-vm.nix ]
-    ++ optionals cfg.nixos.includeAllModules (extraModules ++ modules);
+  /* Modules for which to show options even when not imported. */
+  extraDocModules = [ ../virtualisation/qemu-vm.nix ];
 
   /* For the purpose of generating docs, evaluate options with each derivation
     in `pkgs` (recursively) replaced by a fake with path "\${pkgs.attribute.path}".
@@ -24,13 +21,10 @@ let
     extraSources = cfg.nixos.extraModuleSources;
     options =
       let
-        scrubbedEval = evalModules {
-          modules = [ { nixpkgs.localSystem = config.nixpkgs.localSystem; } ] ++ manualModules;
-          args = (config._module.args) // { modules = [ ]; };
-          specialArgs = {
-            pkgs = scrubDerivations "pkgs" pkgs;
-            inherit modulesPath;
-          };
+        extendNixOS = if cfg.nixos.includeAllModules then extendModules else noUserModules.extendModules;
+        scrubbedEval = extendNixOS {
+          modules = extraDocModules;
+          specialArgs.pkgs = scrubDerivations "pkgs" pkgs;
         };
         scrubDerivations = namePrefix: pkgSet: mapAttrs
           (name: value:
@@ -79,6 +73,10 @@ let
         desktopItem
       ];
     };
+
+  # list of man outputs currently active intended for use as default values
+  # for man-related options, thus "man" is included unconditionally.
+  activeManOutputs = [ "man" ] ++ lib.optionals cfg.dev.enable [ "devman" ];
 
 in
 
@@ -130,10 +128,10 @@ in
           name = "man-paths";
           paths = config.environment.systemPackages;
           pathsToLink = [ "/share/man" ];
-          extraOutputsToInstall = ["man"];
+          extraOutputsToInstall = activeManOutputs;
           ignoreCollisions = true;
         };
-        defaultText = "all man pages in config.environment.systemPackages";
+        defaultText = literalDocBook "all man pages in <option>config.environment.systemPackages</option>";
         description = ''
           The manual pages to generate caches for if <option>generateCaches</option>
           is enabled. Must be a path to a directory with man pages under
@@ -211,7 +209,7 @@ in
           Which extra NixOS module paths the generated NixOS's documentation should strip
           from options.
         '';
-        example = literalExample ''
+        example = literalExpression ''
           # e.g. with options from modules in ''${pkgs.customModules}/nix:
           [ pkgs.customModules ]
         '';
@@ -226,7 +224,7 @@ in
     (mkIf cfg.man.enable {
       environment.systemPackages = [ pkgs.man-db ];
       environment.pathsToLink = [ "/share/man" ];
-      environment.extraOutputsToInstall = [ "man" ] ++ optional cfg.dev.enable "devman";
+      environment.extraOutputsToInstall = activeManOutputs;
       environment.etc."man_db.conf".text =
         let
           manualCache = pkgs.runCommandLocal "man-cache" { } ''

@@ -246,6 +246,11 @@ runTests {
     };
   };
 
+  testEscapeXML = {
+    expr = escapeXML ''"test" 'test' < & >'';
+    expected = "&quot;test&quot; &apos;test&apos; &lt; &amp; &gt;";
+  };
+
 # LISTS
 
   testFilter = {
@@ -491,7 +496,7 @@ runTests {
 
   testToPretty =
     let
-      deriv = derivation { name = "test"; builder = "/bin/sh"; system = builtins.currentSystem; };
+      deriv = derivation { name = "test"; builder = "/bin/sh"; system = "aarch64-linux"; };
     in {
     expr = mapAttrs (const (generators.toPretty { multiline = false; })) rec {
       int = 42;

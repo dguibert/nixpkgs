@@ -68,14 +68,14 @@ let
     };
 
     # `llvm` historically had the binaries.  When choosing an output explicitly,
-    # we need to reintroduce `outputUnspecified` to get the expected behavior e.g. of lib.get*
-    llvm = tools.libllvm.out // { outputUnspecified = true; };
+    # we need to reintroduce `outputSpecified` to get the expected behavior e.g. of lib.get*
+    llvm = tools.libllvm.out // { outputSpecified = false; };
 
     libclang = callPackage ./clang {
       inherit llvm_meta;
     };
 
-    clang-unwrapped = tools.libclang.out // { outputUnspecified = true; };
+    clang-unwrapped = tools.libclang.out // { outputSpecified = false; };
 
     llvm-manpages = lowPrio (tools.libllvm.override {
       enableManpages = true;
@@ -247,11 +247,18 @@ let
                else stdenv;
     };
 
-    libcxxabi = callPackage ./libcxxabi {
-      inherit llvm_meta;
-      stdenv = if stdenv.hostPlatform.useLLVM or false
+    libcxxabi = let
+      stdenv_ = if stdenv.hostPlatform.useLLVM or false
                then overrideCC stdenv buildLlvmTools.clangNoLibcxx
                else stdenv;
+      cxx-headers = callPackage ./libcxx {
+        inherit llvm_meta;
+        stdenv = stdenv_;
+        headersOnly = true;
+      };
+    in callPackage ./libcxxabi {
+      stdenv = stdenv_;
+      inherit llvm_meta cxx-headers;
     };
 
     libunwind = callPackage ./libunwind {

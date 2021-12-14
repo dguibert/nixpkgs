@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modules, baseModules, specialArgs, ... }:
+{ config, lib, pkgs, extendModules, noUserModules, ... }:
 
 with lib;
 
@@ -11,16 +11,10 @@ let
   # you can provide an easy way to boot the same configuration
   # as you use, but with another kernel
   # !!! fix this
-  children = mapAttrs (childName: childConfig:
-      (import ../../../lib/eval-config.nix {
-        inherit lib baseModules specialArgs;
-        system = config.nixpkgs.initialSystem;
-        modules =
-           (optionals childConfig.inheritParentConfig modules)
-        ++ [ ./no-clone.nix ]
-        ++ [ childConfig.configuration ];
-      }).config.system.build.toplevel
-    ) config.specialisation;
+  children =
+    mapAttrs
+      (childName: childConfig: childConfig.configuration.system.build.toplevel)
+      config.specialisation;
 
   systemBuilder =
     let
@@ -84,6 +78,13 @@ let
       export localeArchive="${config.i18n.glibcLocales}/lib/locale/locale-archive"
       substituteAll ${./switch-to-configuration.pl} $out/bin/switch-to-configuration
       chmod +x $out/bin/switch-to-configuration
+      ${optionalString (pkgs.stdenv.hostPlatform == pkgs.stdenv.buildPlatform) ''
+        if ! output=$($perl/bin/perl -c $out/bin/switch-to-configuration 2>&1); then
+          echo "switch-to-configuration syntax is not valid:"
+          echo "$output"
+          exit 1
+        fi
+      ''}
 
       echo -n "${toString config.system.extraDependencies}" > $out/extra-dependencies
 
@@ -155,7 +156,7 @@ in
 
     specialisation = mkOption {
       default = {};
-      example = lib.literalExample "{ fewJobsManyCores.configuration = { nix.buildCores = 0; nix.maxJobs = 1; }; }";
+      example = lib.literalExpression "{ fewJobsManyCores.configuration = { nix.buildCores = 0; nix.maxJobs = 1; }; }";
       description = ''
         Additional configurations to build. If
         <literal>inheritParentConfig</literal> is true, the system
@@ -169,7 +170,11 @@ in
         </screen>
       '';
       type = types.attrsOf (types.submodule (
-        { ... }: {
+        local@{ ... }: let
+          extend = if local.config.inheritParentConfig
+            then extendModules
+            else noUserModules.extendModules;
+        in {
           options.inheritParentConfig = mkOption {
             type = types.bool;
             default = true;
@@ -178,7 +183,15 @@ in
 
           options.configuration = mkOption {
             default = {};
-            description = "Arbitrary NixOS configuration options.";
+            description = ''
+              Arbitrary NixOS configuration.
+
+              Anything you can add to a normal NixOS configuration, you can add
+              here, including imports and config values, although nested
+              specialisations will be ignored.
+            '';
+            visible = "shallow";
+            inherit (extend { modules = [ ./no-clone.nix ]; }) type;
           };
         })
       );
@@ -195,6 +208,7 @@ in
     system.boot.loader.kernelFile = mkOption {
       internal = true;
       default = pkgs.stdenv.hostPlatform.linux-kernel.target;
+      defaultText = literalExpression "pkgs.stdenv.hostPlatform.linux-kernel.target";
       type = types.str;
       description = ''
         Name of the kernel file to be passed to the bootloader.
@@ -243,7 +257,7 @@ in
 
     system.replaceRuntimeDependencies = mkOption {
       default = [];
-      example = lib.literalExample "[ ({ original = pkgs.openssl; replacement = pkgs.callPackage /path/to/openssl { }; }) ]";
+      example = lib.literalExpression "[ ({ original = pkgs.openssl; replacement = pkgs.callPackage /path/to/openssl { }; }) ]";
       type = types.listOf (types.submodule (
         { ... }: {
           options.original = mkOption {
@@ -274,7 +288,11 @@ in
         if config.networking.hostName == ""
         then "unnamed"
         else config.networking.hostName;
-      defaultText = '''networking.hostName' if non empty else "unnamed"'';
+      defaultText = literalExpression ''
+        if config.networking.hostName == ""
+        then "unnamed"
+        else config.networking.hostName;
+      '';
       description = ''
         The name of the system used in the <option>system.build.toplevel</option> derivation.
         </para><para>

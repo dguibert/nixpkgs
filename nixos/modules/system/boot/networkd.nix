@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, utils, ... }:
 
+with utils.systemdUtils.unitOptions;
+with utils.systemdUtils.lib;
 with lib;
-with import ./systemd-unit-options.nix { inherit config lib; };
-with import ./systemd-lib.nix { inherit config lib pkgs; };
 
 let
 
@@ -131,6 +131,7 @@ let
           "fou"
           "xfrm"
           "ifb"
+          "batadv"
         ])
         (assertByteFormat "MTUBytes")
         (assertMacAddress "MACAddress")
@@ -248,6 +249,16 @@ let
         (assertValueOneOf "SerializeTunneledPackets" boolValues)
         (assertInt "ERSPANIndex")
         (assertRange "ERSPANIndex" 1 1048575)
+      ];
+
+      sectionFooOverUDP = checkUnitConfig "FooOverUDP" [
+        (assertOnlyFields [
+          "Port"
+          "Encapsulation"
+          "Protocol"
+        ])
+        (assertPort "Port")
+        (assertValueOneOf "Encapsulation" ["FooOverUDP" "GenericUDPEncapsulation"])
       ];
 
       sectionPeer = checkUnitConfig "Peer" [
@@ -371,6 +382,29 @@ let
         (assertInt "Table")
         (assertMinimum "Table" 0)
       ];
+
+      sectionBatmanAdvanced = checkUnitConfig "BatmanAdvanced" [
+        (assertOnlyFields [
+          "GatewayMode"
+          "Aggregation"
+          "BridgeLoopAvoidance"
+          "DistributedArpTable"
+          "Fragmentation"
+          "HopPenalty"
+          "OriginatorIntervalSec"
+          "GatewayBandwithDown"
+          "GatewayBandwithUp"
+          "RoutingAlgorithm"
+        ])
+        (assertValueOneOf "GatewayMode" ["off" "client" "server"])
+        (assertValueOneOf "Aggregation" boolValues)
+        (assertValueOneOf "BridgeLoopAvoidance" boolValues)
+        (assertValueOneOf "DistributedArpTable" boolValues)
+        (assertValueOneOf "Fragmentation" boolValues)
+        (assertInt "HopPenalty")
+        (assertRange "HopPenalty" 0 255)
+        (assertValueOneOf "RoutingAlgorithm" ["batman-v" "batman-iv"])
+      ];
     };
 
     network = {
@@ -463,6 +497,7 @@ let
           "IgnoreCarrierLoss"
           "Xfrm"
           "KeepConfiguration"
+          "BatmanAdvanced"
         ])
         # Note: For DHCP the values both, none, v4, v6 are deprecated
         (assertValueOneOf "DHCP" ["yes" "no" "ipv4" "ipv6"])
@@ -537,6 +572,7 @@ let
           "Family"
           "User"
           "SuppressPrefixLength"
+          "Type"
         ])
         (assertInt "TypeOfService")
         (assertRange "TypeOfService" 0 255)
@@ -549,6 +585,7 @@ let
         (assertValueOneOf "Family" ["ipv4" "ipv6" "both"])
         (assertInt "SuppressPrefixLength")
         (assertRange "SuppressPrefixLength" 0 128)
+        (assertValueOneOf "Type" ["blackhole" "unreachable" "prohibit"])
       ];
 
       sectionRoute = checkUnitConfig "Route" [
@@ -668,6 +705,9 @@ let
           "SendOption"
           "UserClass"
           "VendorClass"
+          "DUIDType"
+          "DUIDRawData"
+          "IAID"
         ])
         (assertValueOneOf "UseAddress" boolValues)
         (assertValueOneOf "UseDNS" boolValues)
@@ -677,6 +717,7 @@ let
         (assertValueOneOf "ForceDHCPv6PDOtherInformation" boolValues)
         (assertValueOneOf "WithoutRA" ["solicit" "information-request"])
         (assertRange "SendOption" 1 65536)
+        (assertInt "IAID")
       ];
 
       sectionDHCPv6PrefixDelegation = checkUnitConfig "DHCPv6PrefixDelegation" [
@@ -782,6 +823,16 @@ let
         (assertValueOneOf "OnLink" boolValues)
       ];
 
+      sectionDHCPServerStaticLease = checkUnitConfig "DHCPServerStaticLease" [
+        (assertOnlyFields [
+          "MACAddress"
+          "Address"
+        ])
+        (assertHasField "MACAddress")
+        (assertHasField "Address")
+        (assertMacAddress "MACAddress")
+      ];
+
     };
   };
 
@@ -844,7 +895,6 @@ let
     options = {
       wireguardPeerConfig = mkOption {
         default = {};
-        example = { };
         type = types.addCheck (types.attrsOf unitOption) check.netdev.sectionWireGuardPeer;
         description = ''
           Each attribute in this set specifies an option in the
@@ -859,7 +909,6 @@ let
   netdevOptions = commonNetworkOptions // {
 
     netdevConfig = mkOption {
-      default = {};
       example = { Name = "mybridge"; Kind = "bridge"; };
       type = types.addCheck (types.attrsOf unitOption) check.netdev.sectionNetdev;
       description = ''
@@ -896,7 +945,6 @@ let
 
     vxlanConfig = mkOption {
       default = {};
-      example = { Id = "4"; };
       type = types.addCheck (types.attrsOf unitOption) check.netdev.sectionVXLAN;
       description = ''
         Each attribute in this set specifies an option in the
@@ -913,6 +961,18 @@ let
       description = ''
         Each attribute in this set specifies an option in the
         <literal>[Tunnel]</literal> section of the unit.  See
+        <citerefentry><refentrytitle>systemd.netdev</refentrytitle>
+        <manvolnum>5</manvolnum></citerefentry> for details.
+      '';
+    };
+
+    fooOverUDPConfig = mkOption {
+      default = { };
+      example = { Port = 9001; };
+      type = types.addCheck (types.attrsOf unitOption) check.netdev.sectionFooOverUDP;
+      description = ''
+        Each attribute in this set specifies an option in the
+        <literal>[FooOverUDP]</literal> section of the unit.  See
         <citerefentry><refentrytitle>systemd.netdev</refentrytitle>
         <manvolnum>5</manvolnum></citerefentry> for details.
       '';
@@ -959,7 +1019,7 @@ let
       example = {
         PrivateKeyFile = "/etc/wireguard/secret.key";
         ListenPort = 51820;
-        FwMark = 42;
+        FirewallMark = 42;
       };
       type = types.addCheck (types.attrsOf unitOption) check.netdev.sectionWireGuard;
       description = ''
@@ -1033,12 +1093,26 @@ let
       '';
     };
 
+    batmanAdvancedConfig = mkOption {
+      default = {};
+      example = {
+        GatewayMode = "server";
+        RoutingAlgorithm = "batman-v";
+      };
+      type = types.addCheck (types.attrsOf unitOption) check.netdev.sectionBatmanAdvanced;
+      description = ''
+        Each attribute in this set specifies an option in the
+        <literal>[BatmanAdvanced]</literal> section of the unit. See
+        <citerefentry><refentrytitle>systemd.netdev</refentrytitle>
+        <manvolnum>5</manvolnum></citerefentry> for details.
+      '';
+    };
+
   };
 
   addressOptions = {
     options = {
       addressConfig = mkOption {
-        default = {};
         example = { Address = "192.168.0.100/24"; };
         type = types.addCheck (types.attrsOf unitOption) check.network.sectionAddress;
         description = ''
@@ -1055,7 +1129,7 @@ let
     options = {
       routingPolicyRuleConfig = mkOption {
         default = { };
-        example = { routingPolicyRuleConfig = { Table = 10; IncomingInterface = "eth1"; Family = "both"; } ;};
+        example = { Table = 10; IncomingInterface = "eth1"; Family = "both"; };
         type = types.addCheck (types.attrsOf unitOption) check.network.sectionRoutingPolicyRule;
         description = ''
           Each attribute in this set specifies an option in the
@@ -1094,6 +1168,25 @@ let
           <literal>[IPv6Prefix]</literal> section of the unit.  See
           <citerefentry><refentrytitle>systemd.network</refentrytitle>
           <manvolnum>5</manvolnum></citerefentry> for details.
+        '';
+      };
+    };
+  };
+
+  dhcpServerStaticLeaseOptions = {
+    options = {
+      dhcpServerStaticLeaseConfig = mkOption {
+        default = {};
+        example = { MACAddress = "65:43:4a:5b:d8:5f"; Address = "192.168.1.42"; };
+        type = types.addCheck (types.attrsOf unitOption) check.network.sectionDHCPServerStaticLease;
+        description = ''
+          Each attribute in this set specifies an option in the
+          <literal>[DHCPServerStaticLease]</literal> section of the unit.  See
+          <citerefentry><refentrytitle>systemd.network</refentrytitle>
+          <manvolnum>5</manvolnum></citerefentry> for details.
+
+          Make sure to configure the corresponding client interface to use
+          <literal>ClientIdentifier=mac</literal>.
         '';
       };
     };
@@ -1146,7 +1239,7 @@ let
 
     dhcpV6Config = mkOption {
       default = {};
-      example = { UseDNS = true; UseRoutes = true; };
+      example = { UseDNS = true; };
       type = types.addCheck (types.attrsOf unitOption) check.network.sectionDHCPv6;
       description = ''
         Each attribute in this set specifies an option in the
@@ -1211,9 +1304,20 @@ let
       '';
     };
 
+    dhcpServerStaticLeases = mkOption {
+      default = [];
+      example = [ { MACAddress = "65:43:4a:5b:d8:5f"; Address = "192.168.1.42"; } ];
+      type = with types; listOf (submodule dhcpServerStaticLeaseOptions);
+      description = ''
+        A list of DHCPServerStaticLease sections to be added to the unit.  See
+        <citerefentry><refentrytitle>systemd.network</refentrytitle>
+        <manvolnum>5</manvolnum></citerefentry> for details.
+      '';
+    };
+
     ipv6Prefixes = mkOption {
       default = [];
-      example = { AddressAutoconfiguration = true; OnLink = true; };
+      example = [ { AddressAutoconfiguration = true; OnLink = true; } ];
       type = with types; listOf (submodule ipv6PrefixOptions);
       description = ''
         A list of ipv6Prefix sections to be added to the unit.  See
@@ -1449,6 +1553,10 @@ let
           [Tunnel]
           ${attrsToSection def.tunnelConfig}
         ''
+        + optionalString (def.fooOverUDPConfig != { }) ''
+          [FooOverUDP]
+          ${attrsToSection def.fooOverUDPConfig}
+        ''
         + optionalString (def.peerConfig != { }) ''
           [Peer]
           ${attrsToSection def.peerConfig}
@@ -1480,6 +1588,10 @@ let
         + optionalString (def.vrfConfig != { }) ''
           [VRF]
           ${attrsToSection def.vrfConfig}
+        ''
+        + optionalString (def.batmanAdvancedConfig != { }) ''
+          [BatmanAdvanced]
+          ${attrsToSection def.batmanAdvancedConfig}
         ''
         + def.extraConfig;
     };
@@ -1573,6 +1685,10 @@ let
         + flip concatMapStrings def.ipv6Prefixes (x: ''
           [IPv6Prefix]
           ${attrsToSection x.ipv6PrefixConfig}
+        '')
+        + flip concatMapStrings def.dhcpServerStaticLeases (x: ''
+          [DHCPServerStaticLease]
+          ${attrsToSection x.dhcpServerStaticLeaseConfig}
         '')
         + def.extraConfig;
     };

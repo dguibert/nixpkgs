@@ -23,7 +23,7 @@
 , pango
 
 , audioSupport ? mediaSupport
-, pulseaudioSupport ? false
+, pulseaudioSupport ? mediaSupport
 , libpulseaudio
 , apulse
 
@@ -43,12 +43,11 @@
 
 # Hardening
 , graphene-hardened-malloc
-# crashes with intel driver
-, useHardenedMalloc ? false
+# Whether to use graphene-hardened-malloc
+, useHardenedMalloc ? true
 
-# Whether to disable multiprocess support to work around crashing tabs
-# TODO: fix the underlying problem instead of this terrible work-around
-, disableContentSandbox ? true
+# Whether to disable multiprocess support
+, disableContentSandbox ? false
 
 # Extra preferences
 , extraPrefs ? ""
@@ -88,19 +87,25 @@ let
   fteLibPath = makeLibraryPath [ stdenv.cc.cc gmp ];
 
   # Upstream source
-  version = "10.5.6";
+  version = "11.0.2";
 
   lang = "en-US";
 
   srcs = {
     x86_64-linux = fetchurl {
-      url = "https://dist.torproject.org/torbrowser/${version}/tor-browser-linux64-${version}_${lang}.tar.xz";
-      sha256 = "1hxjixriah08c65nngjdp1blbji1vlnhqkphp8f96hy34hk4dpiw";
+      urls = [
+        "https://dist.torproject.org/torbrowser/${version}/tor-browser-linux64-${version}_${lang}.tar.xz"
+        "https://tor.eff.org/dist/torbrowser/${version}/tor-browser-linux64-${version}_${lang}.tar.xz"
+      ];
+      sha256 = "1bqlb8dlh92dpl9gmfh3yclq5ii09vv333yisa0i5gpwwzajnh5s";
     };
 
     i686-linux = fetchurl {
-      url = "https://dist.torproject.org/torbrowser/${version}/tor-browser-linux32-${version}_${lang}.tar.xz";
-      sha256 = "018kwwbbn02drvdj0bjkcyhsnbx97wnmd3lxkrx0kc9dw1s4r418";
+      urls = [
+        "https://dist.torproject.org/torbrowser/${version}/tor-browser-linux32-${version}_${lang}.tar.xz"
+        "https://tor.eff.org/dist/torbrowser/${version}/tor-browser-linux32-${version}_${lang}.tar.xz"
+      ];
+      sha256 = "1blp4z9rmnnsvl3bk0ajdccvpzfshnpyijjfiqb9ma02qw2z0gff";
     };
   };
 in

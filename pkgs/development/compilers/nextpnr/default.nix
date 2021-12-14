@@ -1,5 +1,5 @@
 { lib, stdenv, fetchFromGitHub, cmake
-, boost, python3, eigen
+, boost, python3, eigen, python3Packages
 , icestorm, trellis
 , llvmPackages
 
@@ -14,14 +14,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "nextpnr";
-  version = "2021.09.27";
+  version = "2021.11.24"; # tagged as 0.1, but we'll keep tracking HEAD
 
   srcs = [
     (fetchFromGitHub {
       owner  = "YosysHQ";
       repo   = "nextpnr";
-      rev    = "9d8d3bdbc48133ff7758c9c5293e5904bc6e5ba7";
-      sha256 = "sha256-5Axo8qX2+ATqQ170QqfhRwYfCRQLCKBW1kc89x9XljE=";
+      rev    = "fd2d4a8f999947ece42f791e19ddc4c2d8b823f2";
+      sha256 = "sha256-bGh3svJeVRJO0rTnSYoTndeQrTENx6j9t+GCGX4RX4k=";
       name   = "nextpnr";
     })
     (fetchFromGitHub {
@@ -39,17 +39,18 @@ stdenv.mkDerivation rec {
      = [ cmake ]
     ++ (lib.optional enableGui wrapQtAppsHook);
   buildInputs
-     = [ boostPython python3 eigen ]
+     = [ boostPython python3 eigen python3Packages.apycula ]
     ++ (lib.optional enableGui qtbase)
     ++ (lib.optional stdenv.cc.isClang llvmPackages.openmp);
 
   cmakeFlags =
     [ "-DCURRENT_GIT_VERSION=${lib.substring 0 7 (lib.elemAt srcs 0).rev}"
-      "-DARCH=generic;ice40;ecp5"
+      "-DARCH=generic;ice40;ecp5;gowin"
       "-DBUILD_TESTS=ON"
       "-DICESTORM_INSTALL_PREFIX=${icestorm}"
       "-DTRELLIS_INSTALL_PREFIX=${trellis}"
       "-DTRELLIS_LIBDIR=${trellis}/lib/trellis"
+      "-DGOWIN_BBA_EXECUTABLE=${python3Packages.apycula}/bin/gowin_bba"
       "-DUSE_OPENMP=ON"
       # warning: high RAM usage
       "-DSERIALIZE_CHIPDBS=OFF"
@@ -74,6 +75,7 @@ stdenv.mkDerivation rec {
     wrapQtApp $out/bin/nextpnr-generic
     wrapQtApp $out/bin/nextpnr-ice40
     wrapQtApp $out/bin/nextpnr-ecp5
+    wrapQtApp $out/bin/nextpnr-gowin
   '';
 
   meta = with lib; {

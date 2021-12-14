@@ -1,7 +1,7 @@
-{ lib, stdenv
+{ lib
+, stdenv
 , fetchFromGitHub
 , nix-update-script
-, pantheon
 , pkg-config
 , meson
 , ninja
@@ -19,21 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "elementary-screenshot";
-  version = "6.0.0";
-
-  repoName = "screenshot";
+  version = "6.0.2";
 
   src = fetchFromGitHub {
     owner = "elementary";
-    repo = repoName;
+    repo = "screenshot";
     rev = version;
-    sha256 = "1fvsl9zdkv7bgx3jpy7pr9lflm4ckr3swdby379mdxn2x6kxji0x";
-  };
-
-  passthru = {
-    updateScript = nix-update-script {
-      attrPath = "pantheon.${pname}";
-    };
+    sha256 = "sha256-n+L08C/W5YnHZ5P3F1NGUYE2SH94sc4+kr1x+wXZ+cw=";
   };
 
   nativeBuildInputs = [
@@ -60,11 +52,18 @@ stdenv.mkDerivation rec {
     patchShebangs meson/post_install.py
   '';
 
+  passthru = {
+    updateScript = nix-update-script {
+      attrPath = "pantheon.${pname}";
+    };
+  };
+
   meta = with lib; {
     description = "Screenshot tool designed for elementary OS";
     homepage = "https://github.com/elementary/screenshot";
     license = licenses.lgpl3;
     platforms = platforms.linux;
     maintainers = teams.pantheon.members;
+    mainProgram = "io.elementary.screenshot";
   };
 }

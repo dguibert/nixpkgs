@@ -17,6 +17,7 @@ in {
     name = mkOption {
       description = "Etcd unique node name.";
       default = config.networking.hostName;
+      defaultText = literalExpression "config.networking.hostName";
       type = types.str;
     };
 
@@ -123,7 +124,7 @@ in {
       '';
       type = types.attrsOf types.str;
       default = {};
-      example = literalExample ''
+      example = literalExpression ''
         {
           "CORS" = "*";
           "NAME" = "default-name";

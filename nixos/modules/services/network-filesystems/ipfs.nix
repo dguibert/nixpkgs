@@ -57,7 +57,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.ipfs;
-        defaultText = "pkgs.ipfs";
+        defaultText = literalExpression "pkgs.ipfs";
         description = "Which IPFS package to use.";
       };
 
@@ -79,6 +79,11 @@ in
           if versionAtLeast config.system.stateVersion "17.09"
           then "/var/lib/ipfs"
           else "/var/lib/ipfs/.ipfs";
+        defaultText = literalExpression ''
+          if versionAtLeast config.system.stateVersion "17.09"
+          then "/var/lib/ipfs"
+          else "/var/lib/ipfs/.ipfs"
+        '';
         description = "The data dir for IPFS";
       };
 

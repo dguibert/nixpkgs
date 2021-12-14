@@ -122,10 +122,18 @@ in {
   options = {
     services.matrix-synapse = {
       enable = mkEnableOption "matrix.org synapse";
+      configFile = mkOption {
+        type = types.str;
+        readOnly = true;
+        description = ''
+          Path to the configuration file on the target system. Useful to configure e.g. workers
+          that also need this.
+        '';
+      };
       package = mkOption {
         type = types.package;
         default = pkgs.matrix-synapse;
-        defaultText = "pkgs.matrix-synapse";
+        defaultText = literalExpression "pkgs.matrix-synapse";
         description = ''
           Overridable attribute of the matrix synapse server package to use.
         '';
@@ -133,7 +141,7 @@ in {
       plugins = mkOption {
         type = types.listOf types.package;
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           with config.services.matrix-synapse.package.plugins; [
             matrix-synapse-ldap3
             matrix-synapse-pam
@@ -219,6 +227,7 @@ in {
         type = types.str;
         example = "example.com";
         default = config.networking.hostName;
+        defaultText = literalExpression "config.networking.hostName";
         description = ''
           The domain name of the server, with optional explicit port.
           This is used by remote servers to look up the server address.
@@ -371,6 +380,11 @@ in {
         default = if versionAtLeast config.system.stateVersion "18.03"
           then "psycopg2"
           else "sqlite3";
+        defaultText = literalExpression ''
+          if versionAtLeast config.system.stateVersion "18.03"
+            then "psycopg2"
+            else "sqlite3"
+        '';
         description = ''
           The database engine name. Can be sqlite or psycopg2.
         '';
@@ -705,6 +719,8 @@ in {
         '';
       }
     ];
+
+    services.matrix-synapse.configFile = "${configFile}";
 
     users.users.matrix-synapse = {
       group = "matrix-synapse";

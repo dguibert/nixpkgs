@@ -4,20 +4,19 @@
 
 stdenv.mkDerivation rec {
   pname = "fheroes2";
-  version = "0.9.7";
+  version = "0.9.10";
 
   src = fetchFromGitHub {
     owner = "ihhub";
     repo = "fheroes2";
     rev = version;
-    sha256 = "sha256-1hnkcsz+uGK3knWEryOvltBTmBm+zl0ym9F1jxSCf2w=";
+    sha256 = "sha256-8HXFt4SsQ+qXu/VJmdAdYX7XoNjA4AHItnwS/nyY6H8=";
   };
 
   buildInputs = [ gettext libpng SDL2 SDL2_image SDL2_mixer SDL2_ttf zlib ];
 
   makeFlags = [
     "FHEROES2_STRICT_COMPILATION=1"
-    "RELEASE=1"
   ];
 
   enableParallelBuilding = true;

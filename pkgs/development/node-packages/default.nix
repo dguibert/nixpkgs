@@ -1,6 +1,7 @@
 { pkgs, nodejs, stdenv, applyPatches, fetchFromGitHub, fetchpatch, fetchurl }:
 
 let
+  inherit (pkgs) lib;
   since = (version: pkgs.lib.versionAtLeast nodejs.version version);
   before = (version: pkgs.lib.versionOlder nodejs.version version);
   super = import ./composition.nix {
@@ -88,6 +89,25 @@ let
           pkgs.lib.makeBinPath [ pkgs.nodejs ]
         }
       '';
+      # See: https://github.com/NixOS/nixpkgs/issues/142196
+      # [...]/@hyperspace/cli/node_modules/.bin/node-gyp-build: /usr/bin/env: bad interpreter: No such file or directory
+      meta.broken = true;
+    };
+
+    mdctl-cli = super."@medable/mdctl-cli".override {
+      nativeBuildInputs = with pkgs; with darwin.apple_sdk.frameworks; [
+        glib
+        libsecret
+        pkg-config
+      ] ++ lib.optionals stdenv.isDarwin [
+        AppKit
+        Security
+      ];
+      buildInputs = with pkgs; [
+        nodePackages.node-gyp-build
+        nodePackages.node-pre-gyp
+        nodejs
+      ];
     };
 
     coc-imselect = super.coc-imselect.override {
@@ -149,6 +169,10 @@ let
     insect = super.insect.override (drv: {
       nativeBuildInputs = drv.nativeBuildInputs or [] ++ [ pkgs.psc-package self.pulp ];
     });
+
+    intelephense = super.intelephense.override {
+      meta.license = pkgs.lib.licenses.unfree;
+    };
 
     jsonplaceholder = super.jsonplaceholder.override (drv: {
       buildInputs = [ nodejs ];
@@ -219,6 +243,11 @@ let
             url = "https://github.com/svanderburg/node2nix/commit/58736093161f2d237c17e75a96529b018cd0ac64.patch";
             sha256 = "0sif7803c9g6gjmmdniw5qxrq5igiz9nqdmdrcf1hxfi5x43a32h";
           })
+          # Extract common logic from composePackage to a shell function
+          (fetchpatch {
+            url = "https://github.com/svanderburg/node2nix/commit/e4c951971df6c9f9584c7252971c13b55c369916.patch";
+            sha256 = "0w8fcyr12g2340rn06isv40jkmz2khmak81c95zpkjgipzx7hp7w";
+          })
         ];
       };
       postInstall = ''
@@ -278,24 +307,22 @@ let
       meta.mainProgram = "postcss";
     };
 
-    prisma = super.prisma.override {
+    prisma = super.prisma.override rec {
       nativeBuildInputs = [ pkgs.makeWrapper ];
-      version = "3.1.1";
+      version = "3.5.0";
       src = fetchurl {
-        url = "https://registry.npmjs.org/prisma/-/prisma-3.1.1.tgz";
-        sha512 = "sha512-+eZtWIL6hnOKUOvqq9WLBzSw2d/EbTmOx1Td1LI8/0XE40ctXMLG2N1p6NK5/+yivGaoNJ9PDpPsPL9lO4nJrQ==";
+        url = "https://registry.npmjs.org/prisma/-/prisma-${version}.tgz";
+        sha512 = "sha512-WEYQ+H98O0yigG+lI0gfh4iyBChvnM6QTXPDtY9eFraLXAmyb6tf/T2mUdrUAU1AEvHLVzQA5A+RpONZlQozBg==";
       };
-      dependencies = [
-        {
-          name = "_at_prisma_slash_engines";
-          packageName = "@prisma/engines";
-          version = "3.1.0-24.c22652b7e418506fab23052d569b85d3aec4883f";
-          src = fetchurl {
-            url = "https://registry.npmjs.org/@prisma/engines/-/engines-3.1.0-24.c22652b7e418506fab23052d569b85d3aec4883f.tgz";
-            sha512 = "sha512-6NEp0VlLho3hVtIvj2P4h0e19AYqQSXtFGts8gSIXDnV+l5pRFZaDMfGo2RiLMR0Kfrs8c3ZYxYX0sWmVL0tWw==";
-          };
-        }
-      ];
+      dependencies = [ rec {
+        name = "_at_prisma_slash_engines";
+        packageName = "@prisma/engines";
+        version = "3.5.0-38.78a5df6def6943431f4c022e1428dbc3e833cf8e";
+        src = fetchurl {
+          url = "https://registry.npmjs.org/@prisma/engines/-/engines-${version}.tgz";
+          sha512 = "sha512-MqZUrxuLlIbjB3wu8LrRJOKcvR4k3dunKoI4Q2bPfAwLQY0XlpsLZ3TRVW1c32ooVk939p6iGNkaCUo63Et36g==";
+        };
+      }];
       postInstall = with pkgs; ''
         wrapProgram "$out/bin/prisma" \
           --set PRISMA_MIGRATION_ENGINE_BINARY ${prisma-engines}/bin/migration-engine \
@@ -318,25 +345,18 @@ let
       '';
     };
 
-    netlify-cli =
-      let
-        esbuild = pkgs.esbuild.overrideAttrs (old: rec {
-          version = "0.13.6";
-
-          src = fetchFromGitHub {
-            owner = "netlify";
-            repo = "esbuild";
-            rev = "v${version}";
-            sha256 = "0asjmqfzdrpfx2hd5hkac1swp52qknyqavsm59j8xr4c1ixhc6n9";
-          };
-
-        });
-      in
-      super.netlify-cli.override {
-        preRebuild = ''
-          export ESBUILD_BINARY_PATH="${esbuild}/bin/esbuild"
+    reveal-md = super.reveal-md.override (
+      lib.optionalAttrs (!stdenv.isDarwin) {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        prePatch = ''
+          export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
         '';
-      };
+        postInstall = ''
+          wrapProgram $out/bin/reveal-md \
+          --set PUPPETEER_EXECUTABLE_PATH ${pkgs.chromium.outPath}/bin/chromium
+        '';
+      }
+    );
 
     ssb-server = super.ssb-server.override {
       buildInputs = [ pkgs.automake pkgs.autoconf self.node-gyp-build ];
@@ -372,6 +392,7 @@ let
     };
 
     teck-programmer = super.teck-programmer.override {
+      nativeBuildInputs = [ self.node-gyp-build ];
       buildInputs = [ pkgs.libusb1 ];
     };
 
@@ -387,18 +408,19 @@ let
     };
 
     vega-lite = super.vega-lite.override {
-        # npx tries to install vega from scratch at vegalite runtime if it
-        # can't find it. We thus replace it with a direct call to the nix
-        # derivation. This might not be necessary anymore in future vl
-        # versions: https://github.com/vega/vega-lite/issues/6863.
         postInstall = ''
-          substituteInPlace $out/lib/node_modules/vega-lite/bin/vl2pdf \
-            --replace "npx -p vega vg2pdf"  "${self.vega-cli}/bin/vg2pdf"
-          substituteInPlace $out/lib/node_modules/vega-lite/bin/vl2svg \
-            --replace "npx -p vega vg2svg"  "${self.vega-cli}/bin/vg2svg"
-          substituteInPlace $out/lib/node_modules/vega-lite/bin/vl2png \
-            --replace "npx -p vega vg2png"  "${self.vega-cli}/bin/vg2png"
+          cd node_modules
+          for dep in ${self.vega-cli}/lib/node_modules/vega-cli/node_modules/*; do
+            if [[ ! -d $dep ]]; then
+              ln -s "${self.vega-cli}/lib/node_modules/vega-cli/node_modules/$dep"
+            fi
+          done
         '';
+        passthru.tests = {
+          simple-execution = pkgs.callPackage ./package-tests/vega-lite.nix {
+            inherit (self) vega-lite;
+          };
+        };
     };
 
     webtorrent-cli = super.webtorrent-cli.override {

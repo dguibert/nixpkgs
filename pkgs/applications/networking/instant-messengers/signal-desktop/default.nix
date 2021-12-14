@@ -18,14 +18,13 @@ let
       # E.g. "de_DE" -> "de-de" (spellcheckerLanguage -> hunspellDict)
       spellLangComponents = splitString "_" spellcheckerLanguage;
       hunspellDict = elemAt spellLangComponents 0 + "-" + toLower (elemAt spellLangComponents 1);
-    in if spellcheckerLanguage != null
-      then ''
-        --set HUNSPELL_DICTIONARIES "${hunspellDicts.${hunspellDict}}/share/hunspell" \
-        --set LC_MESSAGES "${spellcheckerLanguage}"''
-      else "");
+    in lib.optionalString (spellcheckerLanguage != null) ''
+      --set HUNSPELL_DICTIONARIES "${hunspellDicts.${hunspellDict}}/share/hunspell" \
+      --set LC_MESSAGES "${spellcheckerLanguage}"'');
+
 in stdenv.mkDerivation rec {
   pname = "signal-desktop";
-  version = "5.18.0"; # Please backport all updates to the stable channel.
+  version = "5.25.1"; # Please backport all updates to the stable channel.
   # All releases have a limited lifetime and "expire" 90 days after the release.
   # When releases "expire" the application becomes unusable until an update is
   # applied. The expiration date for the current release can be extracted with:
@@ -35,7 +34,7 @@ in stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://updates.signal.org/desktop/apt/pool/main/s/signal-desktop/signal-desktop_${version}_amd64.deb";
-    sha256 = "1pajv9f6xl06597322swkjzhfqvlfavsbhbn1xnvy4r28i84mp7d";
+    sha256 = "1b634sy2bac5i548g1z1fd5qqy8jr6abl5kbhq50d1kmwnqy1a5l";
   };
 
   nativeBuildInputs = [
@@ -117,15 +116,9 @@ in stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
-  # Required for $SQLCIPHER_LIB which contains "/build/" inside the path:
-  noAuditTmpdir = true;
-
   preFixup = ''
-    export SQLCIPHER_LIB="$out/lib/Signal/resources/app.asar.unpacked/node_modules/better-sqlite3/build/Release/better_sqlite3.node"
-    test -x "$SQLCIPHER_LIB" # To ensure the location hasn't changed
     gappsWrapperArgs+=(
       --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ stdenv.cc.cc ] }"
-      --prefix LD_PRELOAD : "$SQLCIPHER_LIB"
       ${customLanguageWrapperArgs}
     )
 

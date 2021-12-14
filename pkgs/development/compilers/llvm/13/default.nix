@@ -19,7 +19,7 @@
 
 let
   release_version = "13.0.0";
-  candidate = "rc4"; # empty or "rcN"
+  candidate = ""; # empty or "rcN"
   dash-candidate = lib.optionalString (candidate != "") "-${candidate}";
   rev = ""; # When using a Git commit
   rev-version = ""; # When using a Git commit
@@ -68,14 +68,14 @@ let
     };
 
     # `llvm` historically had the binaries.  When choosing an output explicitly,
-    # we need to reintroduce `outputUnspecified` to get the expected behavior e.g. of lib.get*
-    llvm = tools.libllvm.out // { outputUnspecified = true; };
+    # we need to reintroduce `outputSpecified` to get the expected behavior e.g. of lib.get*
+    llvm = tools.libllvm.out // { outputSpecified = false; };
 
     libclang = callPackage ./clang {
       inherit llvm_meta;
     };
 
-    clang-unwrapped = tools.libclang.out // { outputUnspecified = true; };
+    clang-unwrapped = tools.libclang.out // { outputSpecified = false; };
 
     llvm-manpages = lowPrio (tools.libllvm.override {
       enableManpages = true;
@@ -244,14 +244,26 @@ let
       inherit llvm_meta;
       stdenv = if stdenv.hostPlatform.useLLVM or false
                then overrideCC stdenv buildLlvmTools.clangNoLibcxx
-               else stdenv;
+               else (
+                 # libcxx >= 13 does not build on gcc9
+                 if stdenv.cc.isGNU && lib.versionOlder stdenv.cc.version "10"
+                 then pkgs.gcc10Stdenv
+                 else stdenv
+               );
     };
 
-    libcxxabi = callPackage ./libcxxabi {
-      inherit llvm_meta;
-      stdenv = if stdenv.hostPlatform.useLLVM or false
+    libcxxabi = let
+      stdenv_ = if stdenv.hostPlatform.useLLVM or false
                then overrideCC stdenv buildLlvmTools.clangNoLibcxx
                else stdenv;
+      cxx-headers = callPackage ./libcxx {
+        inherit llvm_meta;
+        stdenv = stdenv_;
+        headersOnly = true;
+      };
+    in callPackage ./libcxxabi {
+      stdenv = stdenv_;
+      inherit llvm_meta cxx-headers;
     };
 
     libunwind = callPackage ./libunwind {

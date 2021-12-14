@@ -26,6 +26,12 @@ buildPythonPackage rec {
     sha256 = "sha256-27LmNR1KC8w3zRJ7YBlBolQ4Q70ScTPqypMCpU6fO+I=";
   };
 
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace 'websockets = "^9.0"' 'websockets = "^10.0"' \
+      --replace 'PyYAML = "^5.4.0"' 'PyYAML = "*"' \
+  '';
+
   nativeBuildInputs = [ poetry-core ];
 
   propagatedBuildInputs = [

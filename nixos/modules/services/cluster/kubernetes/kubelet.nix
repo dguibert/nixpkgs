@@ -96,7 +96,7 @@ in
         description = "Kubernetes CNI configuration.";
         type = listOf attrs;
         default = [];
-        example = literalExample ''
+        example = literalExpression ''
           [{
             "cniVersion": "0.3.1",
             "name": "mynet",
@@ -168,6 +168,7 @@ in
     hostname = mkOption {
       description = "Kubernetes kubelet hostname override.";
       default = config.networking.hostName;
+      defaultText = literalExpression "config.networking.hostName";
       type = str;
     };
 
@@ -257,6 +258,8 @@ in
         "net.ipv4.ip_forward"                 = 1;
         "net.bridge.bridge-nf-call-ip6tables" = 1;
       };
+
+      systemd.enableUnifiedCgroupHierarchy = false; # true breaks node memory metrics
 
       systemd.services.kubelet = {
         description = "Kubernetes Kubelet Service";

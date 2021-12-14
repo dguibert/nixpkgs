@@ -5,23 +5,18 @@
 
 trivialBuild {
   pname = "bqn-mode";
-  version = "0.0.0+unstable=2021-09-26";
+  version = "0.pre+date=2021-12-03";
 
   src = fetchFromGitHub {
-    owner = "mlochbaum";
-    repo = "BQN";
-    rev = "97cbdc67fe6a9652c42daefadd658cc41c1e5ae3";
-    sha256 = "09nmsl7gzyi56g0x459a6571c8nsafl0g350m0hk1vy2gpg6yq0p";
+    owner = "museoa";
+    repo = "bqn-mode";
+    rev = "38fba1193e0d1101f3b90bd76e419c011651ad6f";
+    sha256 = "0fdfz3kmrdgmx2i6fgrrj1cvapvrgnc3ahnwx3aayrpl1f091439";
   };
 
-  postUnpack = ''
-    sourceRoot="$sourceRoot/editors/emacs"
-  '';
-
   meta = with lib; {
-    homepage = "https://mlochbaum.github.io/BQN/editors/index.html";
-    description = "Emacs mode for BQN";
+    description = "Emacs mode for BQN programming language";
     license = licenses.gpl3Only;
-    maintainers = [ maintainers.sternenseemann ];
+    maintainers = with maintainers; [ sternenseemann AndersonTorres ];
   };
 }

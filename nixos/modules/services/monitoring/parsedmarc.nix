@@ -39,7 +39,7 @@ in
         hostname = lib.mkOption {
           type = lib.types.str;
           default = config.networking.fqdn;
-          defaultText = "config.networking.fqdn";
+          defaultText = lib.literalExpression "config.networking.fqdn";
           example = "monitoring.example.com";
           description = ''
             The hostname to use when configuring Postfix.
@@ -93,6 +93,7 @@ in
         dashboard = lib.mkOption {
           type = lib.types.bool;
           default = config.services.grafana.enable;
+          defaultText = lib.literalExpression "config.services.grafana.enable";
           description = ''
             Whether the official parsedmarc grafana dashboard should
             be provisioned to the local grafana instance.

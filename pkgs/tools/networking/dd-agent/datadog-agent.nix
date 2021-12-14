@@ -10,15 +10,15 @@ let
 
 in buildGoModule rec {
   pname = "datadog-agent";
-  version = "7.30.2";
+  version = "7.32.1";
 
   src = fetchFromGitHub {
     inherit owner repo;
     rev = version;
-    sha256 = "17ahrxhb87sj7f04wg44xv4k9wrlvf04j92ac5936a6maygp01rd";
+    sha256 = "sha256-21xrnPP5uoGzVCBplNxzKUxFTjopDTjdVQqyvIEzIuo=";
   };
 
-  vendorSha256 = "06ryy501vibc6n14qwg94394c76l060525y6qg261qb748mbi8qi";
+  vendorSha256 = "sha256-j3A8Gqw3Erf6suK/TH9Ml2zb7tYDGNFqil5wSZRs79o=";
 
   subPackages = [
     "cmd/agent"

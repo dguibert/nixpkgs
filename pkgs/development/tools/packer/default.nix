@@ -1,25 +1,17 @@
-{ lib, buildGoModule, fetchFromGitHub, installShellFiles, fetchpatch }:
+{ lib, buildGoModule, fetchFromGitHub, installShellFiles }:
 
 buildGoModule rec {
   pname = "packer";
-  version = "1.7.5";
+  version = "1.7.8";
 
   src = fetchFromGitHub {
     owner = "hashicorp";
     repo = "packer";
     rev = "v${version}";
-    sha256 = "15kw4zy0p7hr6jm0202s0fk5ja3ff0pdir37qdifngm1x7id1vxc";
+    sha256 = "sha256-VLHibkyuB8H2zfUCAuk7lBKbW5bl2kJOkwpo/iqsdm8=";
   };
 
-  vendorSha256 = "1785yv48sn504zcig9szjw9s4dxb55dg9idh10i2gzfgbda2c3nf";
-
-  patches = [
-    # https://github.com/hashicorp/packer/pull/11282
-    (fetchpatch {
-      url = "https://github.com/hashicorp/packer/commit/dbf13803217e18c6cb567ffefc9476c4e0149e02.patch";
-      sha256 = "1n038x6qnr75c5ci2jp8jcwp6yvlchcf2nydksb2s75ffvidjrsa";
-    })
-  ];
+  vendorSha256 = "sha256-NB3oD4IB2xC9+d2eghPa1hnJM7Eop88zvRFlHdQDn38=";
 
   subPackages = [ "." ];
 

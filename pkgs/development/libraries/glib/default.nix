@@ -45,11 +45,11 @@ in
 
 stdenv.mkDerivation rec {
   pname = "glib";
-  version = "2.68.4";
+  version = "2.70.2";
 
   src = fetchurl {
     url = "mirror://gnome/sources/glib/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-    sha256 = "sha256-Yv0GHQinVJJhfmJac+LAXiWfgxrLuOH4ucgfI/eZOjs=";
+    sha256 = "BVFFnIXNPaPVjdyQFv0ovlr1A/XhYVpxultRKslFgG8=";
   };
 
   patches = optionals stdenv.isDarwin [
@@ -59,6 +59,7 @@ stdenv.mkDerivation rec {
     ./quark_init_on_demand.patch
     ./gobject_init_on_demand.patch
   ] ++ [
+    ./glib-appinfo-watch.patch
     ./schema-override-variable.patch
 
     # GLib contains many binaries used for different purposes;

@@ -12,14 +12,14 @@
 
 buildPythonPackage rec {
   pname = "apycula";
-  version = "0.0.1a9";
+  version = "0.0.1a12";
 
   disabled = pythonOlder "3.8";
 
   src = fetchPypi {
     inherit version;
     pname = "Apycula";
-    sha256 = "01shkaxakisgg253jdwjkd81vnjgfws3gi2wyrdxmkcg95wphk5y";
+    hash = "sha256-TFb1C1GaMAK+ckEeXDxSyO2Cgx5dmq62daoSnAiAFmI=";
   };
 
   nativeBuildInputs = [ setuptools-scm ];

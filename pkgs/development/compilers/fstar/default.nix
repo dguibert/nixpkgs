@@ -1,29 +1,14 @@
 { lib, stdenv, fetchFromGitHub, z3, ocamlPackages, makeWrapper, installShellFiles }:
 
-let
-  # FStar requires sedlex < 2.4
-  # see https://github.com/FStarLang/FStar/issues/2343
-  sedlex-2_3 = ocamlPackages.sedlex_2.overrideAttrs (_: rec {
-    pname = "sedlex";
-    version = "2.3";
-    src = fetchFromGitHub {
-       owner = "ocaml-community";
-       repo = "sedlex";
-       rev = "v${version}";
-       sha256 = "WXUXUuIaBUrFPQOKtZ7dgDZYdpEVnoJck0dkrCi8g0c=";
-    };
-  });
-in
-
 stdenv.mkDerivation rec {
   pname = "fstar";
-  version = "2021.09.11";
+  version = "2021.11.27";
 
   src = fetchFromGitHub {
     owner = "FStarLang";
     repo = "FStar";
     rev = "v${version}";
-    sha256 = "1aqk6fx77zcb7mcm78dk4l4zzd323qiv7yc7hvc38494yf6gk8a0";
+    sha256 = "sha256-OpY7vDb37ym4srsmD+deXiuofUJKRyKXG7g3zsJKvHo=";
   };
 
   nativeBuildInputs = [ makeWrapper installShellFiles ];
@@ -42,7 +27,7 @@ stdenv.mkDerivation rec {
     menhir
     menhirLib
     pprint
-    sedlex-2_3
+    sedlex_2
     ppxlib
     ppx_deriving
     ppx_deriving_yojson
@@ -52,6 +37,8 @@ stdenv.mkDerivation rec {
   makeFlags = [ "PREFIX=$(out)" ];
 
   buildFlags = [ "libs" ];
+
+  enableParallelBuilding = true;
 
   postPatch = ''
     patchShebangs ulib/gen_mllib.sh
@@ -74,6 +61,6 @@ stdenv.mkDerivation rec {
     license = licenses.asl20;
     changelog = "https://github.com/FStarLang/FStar/raw/v${version}/CHANGES.md";
     platforms = with platforms; darwin ++ linux;
-    maintainers = with maintainers; [ gebner ];
+    maintainers = with maintainers; [ gebner pnmadelaine ];
   };
 }

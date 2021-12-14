@@ -19,13 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "river";
-  version = "unstable-2021-08-19";
+  version = "0.1.0";
 
   src = fetchFromGitHub {
     owner = "ifreund";
     repo = pname;
-    rev = "e59c2a73d72853cb54f55eecc446f337c94cda24";
-    sha256 = "sha256-R/Wg8KLh4v3ccX1Uh0Q+7026tRH7XLxHpX9/BgsGGdA=";
+    rev = "v${version}";
+    sha256 = "03pdgrcpj8db9s14249815z76dyjwwma8xv6p9hpw79flk6rk7v7";
     fetchSubmodules = true;
   };
 
@@ -34,7 +34,6 @@ stdenv.mkDerivation rec {
   buildInputs = [
     wayland-protocols
     wlroots
-    pixman
     libxkbcommon
     pixman
     udev

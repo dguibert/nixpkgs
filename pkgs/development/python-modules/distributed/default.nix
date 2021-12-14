@@ -19,14 +19,19 @@
 
 buildPythonPackage rec {
   pname = "distributed";
-  version = "2021.9.0";
+  version = "2021.11.2";
   disabled = pythonOlder "3.6";
 
   # get full repository need conftest.py to run tests
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-IiKc0rJYODCtGC9AAOkjbww/VG7PdfrqJ32IHU9xWbo=";
+    sha256 = "f86a01a2e1e678865d2e42300c47552b5012cd81a2d354e47827a1fd074cc302";
   };
+
+  postPatch = ''
+    substituteInPlace requirements.txt \
+      --replace "dask == 2021.11.2" "dask"
+  '';
 
   propagatedBuildInputs = [
     bokeh

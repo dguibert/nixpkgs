@@ -18,11 +18,12 @@
 
 buildPythonPackage rec {
   pname = "google-cloud-bigquery";
-  version = "2.26.0";
+  version = "2.30.1";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "15ca1f9c8165b584c2d593620354cd3b17c007e87cfd1abd1eebd2c08eb5d109";
+    sha256 = "4e3b5e3dcc475d5a601d84872ac0b63e059540be2251b1c4165c51106d572855";
   };
 
   propagatedBuildInputs = [
@@ -53,12 +54,14 @@ buildPythonPackage rec {
     # requires credentials
     "test_bigquery_magic"
     "TestBigQuery"
-    "test_query_retry_539"
+    "test_arrow_extension_types_same_for_storage_and_REST_APIs_894"
     "test_query_retry_539"
     "test_list_rows_empty_table"
     "test_list_rows_page_size"
     "test_list_rows_scalars"
     "test_list_rows_scalars_extreme"
+    "test_dry_run"
+    "test_session"
     # Mocking of _ensure_bqstorage_client fails
     "test_to_arrow_ensure_bqstorage_client_wo_bqstorage"
     # requires network

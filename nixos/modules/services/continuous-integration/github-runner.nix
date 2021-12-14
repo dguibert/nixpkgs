@@ -58,6 +58,7 @@ in
       '';
       example = "nixos";
       default = config.networking.hostName;
+      defaultText = literalExpression "config.networking.hostName";
     };
 
     runnerGroup = mkOption {
@@ -77,7 +78,7 @@ in
 
         Changing this option triggers a new runner registration.
       '';
-      example = literalExample ''[ "nixos" ]'';
+      example = literalExpression ''[ "nixos" ]'';
       default = [ ];
     };
 
@@ -105,6 +106,7 @@ in
         Which github-runner derivation to use.
       '';
       default = pkgs.github-runner;
+      defaultText = literalExpression "pkgs.github-runner";
     };
   };
 

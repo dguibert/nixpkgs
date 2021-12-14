@@ -5,17 +5,20 @@
 , storeDir ? builtins.storeDir
 , rootModules ?
     [ "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_balloon" "virtio_rng" "ext4" "unix" "9p" "9pnet_virtio" "crc32c_generic" ]
-      ++ pkgs.lib.optional (pkgs.stdenv.isi686 || pkgs.stdenv.isx86_64) "rtc_cmos"
+      ++ pkgs.lib.optional pkgs.stdenv.hostPlatform.isx86 "rtc_cmos"
 }:
 
-with pkgs;
-
+let
+  inherit (pkgs) bash bashInteractive busybox cpio coreutils e2fsprogs fetchurl kmod rpm
+    stdenv util-linux
+    buildPackages writeScript writeText runCommand;
+in
 rec {
   qemu-common = import ../../../nixos/lib/qemu-common.nix { inherit lib pkgs; };
 
   qemu = buildPackages.qemu_kvm;
 
-  modulesClosure = makeModulesClosure {
+  modulesClosure = pkgs.makeModulesClosure {
     inherit kernel rootModules;
     firmware = kernel;
   };
@@ -87,6 +90,10 @@ rec {
     done
 
     mount -t devtmpfs devtmpfs /dev
+    ln -s /proc/self/fd /dev/fd
+    ln -s /proc/self/fd/0 /dev/stdin
+    ln -s /proc/self/fd/1 /dev/stdout
+    ln -s /proc/self/fd/2 /dev/stderr
 
     ifconfig lo up
 
@@ -137,7 +144,7 @@ rec {
   '';
 
 
-  initrd = makeInitrd {
+  initrd = pkgs.makeInitrd {
     contents = [
       { object = stage1Init;
         symlink = "/init";
@@ -152,7 +159,7 @@ rec {
 
     # Set the system time from the hardware clock.  Works around an
     # apparent KVM > 1.5.2 bug.
-    ${pkgs.util-linux}/bin/hwclock -s
+    ${util-linux}/bin/hwclock -s
 
     export NIX_STORE=${storeDir}
     export NIX_BUILD_TOP=/tmp
@@ -324,7 +331,7 @@ rec {
 
 
   extractFs = {file, fs ? null} :
-    with pkgs; runInLinuxVM (
+    runInLinuxVM (
     stdenv.mkDerivation {
       name = "extract-file";
       buildInputs = [ util-linux ];
@@ -349,10 +356,10 @@ rec {
 
 
   extractMTDfs = {file, fs ? null} :
-    with pkgs; runInLinuxVM (
+    runInLinuxVM (
     stdenv.mkDerivation {
       name = "extract-file-mtd";
-      buildInputs = [ util-linux mtdutils ];
+      buildInputs = [ pkgs.util-linux pkgs.mtdutils ];
       buildCommand = ''
         ln -s ${kernel}/lib /lib
         ${kmod}/bin/modprobe mtd
@@ -387,7 +394,7 @@ rec {
       diskImage=$(pwd)/disk-image.qcow2
       origImage=${attrs.diskImage}
       if test -d "$origImage"; then origImage="$origImage/disk-image.qcow2"; fi
-      ${qemu}/bin/qemu-img create -b "$origImage" -f qcow2 $diskImage
+      ${qemu}/bin/qemu-img create -F ${attrs.diskImageFormat} -b "$origImage" -f qcow2 $diskImage
     '';
 
     /* Inside the VM, run the stdenv setup script normally, but at the
@@ -503,7 +510,7 @@ rec {
      tarball must contain an RPM specfile. */
 
   buildRPM = attrs: runInLinuxImage (stdenv.mkDerivation ({
-    prePhases = [ prepareImagePhase sysInfoPhase ];
+    prePhases = [ pkgs.prepareImagePhase pkgs.sysInfoPhase ];
     dontUnpack = true;
     dontConfigure = true;
 
@@ -584,7 +591,7 @@ rec {
       buildCommand = ''
         ${createRootFS}
 
-        PATH=$PATH:${lib.makeBinPath [ dpkg dpkg glibc xz ]}
+        PATH=$PATH:${lib.makeBinPath [ pkgs.dpkg pkgs.glibc pkgs.xz ]}
 
         # Unpack the .debs.  We do this to prevent pre-install scripts
         # (which have lots of circular dependencies) from barfing.

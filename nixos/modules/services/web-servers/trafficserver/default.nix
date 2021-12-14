@@ -61,16 +61,18 @@ in
 
     ipAllow = mkOption {
       type = types.nullOr yaml.type;
-      default = builtins.fromJSON (builtins.readFile ./ip_allow.json);
-      defaultText = "upstream defaults";
-      example = literalExample {
-        ip_allow = [{
-          apply = "in";
-          ip_addrs = "127.0.0.1";
-          action = "allow";
-          methods = "ALL";
-        }];
-      };
+      default = lib.importJSON ./ip_allow.json;
+      defaultText = literalDocBook "upstream defaults";
+      example = literalExpression ''
+        {
+          ip_allow = [{
+            apply = "in";
+            ip_addrs = "127.0.0.1";
+            action = "allow";
+            methods = "ALL";
+          }];
+        }
+      '';
       description = ''
         Control client access to Traffic Server and Traffic Server connections
         to upstream servers.
@@ -82,9 +84,9 @@ in
 
     logging = mkOption {
       type = types.nullOr yaml.type;
-      default = builtins.fromJSON (builtins.readFile ./logging.json);
-      defaultText = "upstream defaults";
-      example = literalExample { };
+      default = lib.importJSON ./logging.json;
+      defaultText = literalDocBook "upstream defaults";
+      example = { };
       description = ''
         Configure logs.
 
@@ -145,7 +147,7 @@ in
         in
         valueType;
       default = { };
-      example = literalExample { proxy.config.proxy_name = "my_server"; };
+      example = { proxy.config.proxy_name = "my_server"; };
       description = ''
         List of configurable variables used by Traffic Server.
 
@@ -197,12 +199,14 @@ in
     sni = mkOption {
       type = types.nullOr yaml.type;
       default = null;
-      example = literalExample {
-        sni = [{
-          fqdn = "no-http2.example.com";
-          https = "off";
-        }];
-      };
+      example = literalExpression ''
+        {
+          sni = [{
+            fqdn = "no-http2.example.com";
+            https = "off";
+          }];
+        }
+      '';
       description = ''
         Configure aspects of TLS connection handling for both inbound and
         outbound connections.

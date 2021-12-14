@@ -1,15 +1,15 @@
-{ lib, buildPythonApplication, fetchPypi, requests, pytestCheckHook }:
+{ lib, buildPythonApplication, fetchPypi, requests, yt-dlp, pytestCheckHook }:
 
 buildPythonApplication rec {
   pname = "gallery_dl";
-  version = "1.18.4";
+  version = "1.19.3";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "bdb84706fdde867fe2ee11c74c8c51af4e560399bd5fa562f19bfcaf8fc0dac9";
+    sha256 = "db3973a17f1074e4f4cb99b635b94c1926bdd549263e1df909498f3c6aa93484";
   };
 
-  propagatedBuildInputs = [ requests ];
+  propagatedBuildInputs = [ requests yt-dlp ];
 
   checkInputs = [ pytestCheckHook ];
   pytestFlagsArray = [

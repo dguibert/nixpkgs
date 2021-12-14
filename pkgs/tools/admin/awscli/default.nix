@@ -1,5 +1,4 @@
 { lib
-, nixosTests
 , python3
 , groff
 , less
@@ -21,21 +20,19 @@ let
 in
 with py.pkgs; buildPythonApplication rec {
   pname = "awscli";
-  version = "1.20.31"; # N.B: if you change this, change botocore and boto3 to a matching version too
+  version = "1.22.14"; # N.B: if you change this, change botocore and boto3 to a matching version too
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-qDKnxh4M+LOXYp1xCvW0S0IE5NnwvFpYelUCCjA18zQ=";
+    sha256 = "sha256-FTGtUqdjZel8XqSrO3s3XQNqR6fyTO3mc1gyIQfk9n8=";
   };
 
   # https://github.com/aws/aws-cli/issues/4837
   postPatch = ''
     substituteInPlace setup.py \
-      --replace "docutils>=0.10,<0.16" "docutils>=0.10"
+      --replace "docutils>=0.10,<0.16" "docutils>=0.10" \
+      --replace "rsa>=3.1.2,<4.8" "rsa<5,>=3.1.2"
   '';
-
-  # No tests included
-  doCheck = false;
 
   propagatedBuildInputs = [
     botocore
@@ -62,9 +59,17 @@ with py.pkgs; buildPythonApplication rec {
 
   passthru = {
     python = py; # for aws_shell
-
-    tests = { inherit (nixosTests) awscli; };
   };
+
+  doInstallCheck = true;
+  installCheckPhase = ''
+    runHook preInstallCheck
+
+    $out/bin/aws --version | grep "${py.pkgs.botocore.version}"
+    $out/bin/aws --version | grep "${version}"
+
+    runHook postInstallCheck
+  '';
 
   meta = with lib; {
     homepage = "https://aws.amazon.com/cli/";

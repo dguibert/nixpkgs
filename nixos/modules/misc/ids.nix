@@ -48,7 +48,7 @@ in
       #disk = 6; # unused
       #vsftpd = 7; # dynamically allocated ass of 2021-09-14
       ftp = 8;
-      bitlbee = 9;
+      # bitlbee = 9; # removed 2021-10-05 #139765
       #avahi = 10; # removed 2019-05-22
       nagios = 11;
       atd = 12;
@@ -144,7 +144,7 @@ in
       dictd = 105;
       couchdb = 106;
       #searx = 107; # dynamically allocated as of 2020-10-27
-      kippo = 108;
+      #kippo = 108; # removed 2021-10-07, the kippo package was removed in 1b213f321cdbfcf868b96fd9959c24207ce1b66a during 2021-04
       jenkins = 109;
       systemd-journal-gateway = 110;
       #notbit = 111; # unused
@@ -351,6 +351,7 @@ in
       hqplayer = 319;
       moonraker = 320;
       distcc = 321;
+      webdav = 322;
 
       # When adding a uid, make sure it doesn't match an existing gid. And don't use uids above 399!
 
@@ -368,7 +369,7 @@ in
       disk = 6;
       #vsftpd = 7; # dynamically allocated as of 2021-09-14
       ftp = 8;
-      bitlbee = 9;
+      # bitlbee = 9; # removed 2021-10-05 #139765
       #avahi = 10; # removed 2019-05-22
       #nagios = 11; # unused
       atd = 12;
@@ -462,7 +463,7 @@ in
       dictd = 105;
       couchdb = 106;
       #searx = 107; # dynamically allocated as of 2020-10-27
-      kippo = 108;
+      #kippo = 108; # removed 2021-10-07, the kippo package was removed in 1b213f321cdbfcf868b96fd9959c24207ce1b66a during 2021-04
       jenkins = 109;
       systemd-journal-gateway = 110;
       #notbit = 111; # unused
@@ -638,7 +639,7 @@ in
       qemu-libvirtd = 301;
       kvm = 302; # default udev rules from systemd requires these
       render = 303; # default udev rules from systemd requires these
-      # zeronet = 304; # removed 2019-01-03
+      sgx = 304; # default udev rules from systemd requires these
       lirc = 305;
       lidarr = 306;
       slurm = 307;
@@ -656,6 +657,7 @@ in
       hqplayer = 319;
       moonraker = 320;
       distcc = 321;
+      webdav = 322;
 
       # When adding a gid, make sure it doesn't match an existing
       # uid. Users and groups with the same name should have equal

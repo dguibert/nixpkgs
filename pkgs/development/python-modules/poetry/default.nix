@@ -24,7 +24,7 @@
 
 buildPythonPackage rec {
   pname = "poetry";
-  version = "1.1.8";
+  version = "1.1.12";
   format = "pyproject";
   disabled = isPy27;
 
@@ -32,7 +32,7 @@ buildPythonPackage rec {
     owner = "python-poetry";
     repo = pname;
     rev = version;
-    sha256 = "0qcgjb78nj69sppd8146519q9422xxg1bi34gyxy51sjkvd5lxhz";
+    sha256 = "1fm4yj6wxr24v7b77gmf63j7xsgszhbhzw2i9fvlfi0p9l0q34pm";
   };
 
   postPatch = ''

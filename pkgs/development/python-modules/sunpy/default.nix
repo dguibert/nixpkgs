@@ -31,12 +31,12 @@
 
 buildPythonPackage rec {
   pname = "sunpy";
-  version = "3.0.1";
+  version = "3.1.2";
   disabled = pythonOlder "3.6";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-WpqkCAwDYb6L+W4VTC/1auGVbblnNYwBxbk+tZbAiBw=";
+    sha256 = "5eeb479c3f2424bf46355165249a1caa849872f8bee525349c4dca4d15b271fd";
   };
 
   nativeBuildInputs = [
@@ -86,6 +86,20 @@ buildPythonPackage rec {
   disabledTestPaths = [
     "sunpy/io/special/asdf/schemas/sunpy.org/sunpy/coordinates/frames/helioprojective-1.0.0.yaml"
     "sunpy/io/special/asdf/schemas/sunpy.org/sunpy/coordinates/frames/heliocentric-1.0.0.yaml"
+    # requires mpl-animators package
+    "sunpy/map/tests/test_compositemap.py"
+    "sunpy/map/tests/test_mapbase.py"
+    "sunpy/map/tests/test_mapsequence.py"
+    "sunpy/map/tests/test_plotting.py"
+    "sunpy/map/tests/test_reproject_to.py"
+    "sunpy/net/tests/test_helioviewer.py"
+    "sunpy/timeseries/tests/test_timeseriesbase.py"
+    "sunpy/visualization/animator/tests/test_basefuncanimator.py"
+    "sunpy/visualization/animator/tests/test_mapsequenceanimator.py"
+    "sunpy/visualization/animator/tests/test_wcs.py"
+    "sunpy/visualization/colormaps/tests/test_cm.py"
+    # requires cdflib package
+    "sunpy/timeseries/tests/test_timeseries_factory.py"
   ];
 
   pytestFlagsArray = [

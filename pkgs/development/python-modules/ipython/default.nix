@@ -18,17 +18,16 @@
 , pexpect
 , appnope
 , backcall
-, fetchpatch
 }:
 
 buildPythonPackage rec {
   pname = "ipython";
-  version = "7.27.0";
+  version = "7.29.0";
   disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "58b55ebfdfa260dad10d509702dc2857cb25ad82609506b070cf2d7b7df5af13";
+    sha256 = "4f69d7423a5a1972f6347ff233e38bbf4df6a150ef20fbb00c635442ac3060aa";
   };
 
   prePatch = lib.optionalString stdenv.isDarwin ''

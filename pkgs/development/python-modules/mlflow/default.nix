@@ -20,17 +20,16 @@
 , sqlalchemy
 , gorilla
 , gunicorn
-, pytest
 }:
 
 buildPythonPackage rec {
   pname = "mlflow";
-  version = "1.20.1";
+  version = "1.21.0";
   disabled = isPy27;
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "71764443c4942f181fee2d5bf44dd74a0507bcc5b62a1f1e08079d1f40a15fc0";
+    sha256 = "5524a371f19c66a18e7ebe9b1085a77f63a6ae514271e487428f28187d79fc8f";
   };
 
   # run into https://stackoverflow.com/questions/51203641/attributeerror-module-alembic-context-has-no-attribute-config

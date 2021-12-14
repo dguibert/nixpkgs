@@ -3,20 +3,19 @@
 , fetchPypi
 , isPy3k
 , pytestCheckHook
-, setuptoolsBuildHook
 , python
 }:
 
 buildPythonPackage rec {
   pname = "frozendict";
-  version = "2.0.5";  # 2.0.6 breaks canonicaljson
+  version = "2.1.0";
   format = "setuptools";
 
   disabled = !isPy3k;
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-wb7hwHDY2fZA4SjluHV2pEAAhgCfeGLRPAv4YA5iE9M=";
+    sha256 = "0189168749ddea8601afd648146c502533f93ae33840eb76cd71f694742623cd";
   };
 
   pythonImportsCheck = [
@@ -35,6 +34,10 @@ buildPythonPackage rec {
   disabledTests = [
     # TypeError: unsupported operand type(s) for |=: 'frozendict.frozendict' and 'dict'
     "test_union"
+    # non-standard assertions
+    "test_repr"
+    "test_format"
+    "test_str"
   ];
 
   disabledTestPaths = [

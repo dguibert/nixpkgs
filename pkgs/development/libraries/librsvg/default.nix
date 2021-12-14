@@ -24,13 +24,13 @@
 
 stdenv.mkDerivation rec {
   pname = "librsvg";
-  version = "2.50.7";
+  version = "2.52.4";
 
   outputs = [ "out" "dev" "installedTests" ];
 
   src = fetchurl {
     url = "mirror://gnome/sources/${pname}/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-    sha256 = "//thsIzVKCqq4UegKzBRZqdCb60iqLlCdwjw8vxCbrw=";
+    sha256 = "Zg7Ig2o6kVh7yThJIBMtTDjR0XGMZ/4WDFIT/k3sKSg=";
   };
 
   cargoVendorDir = "vendor";
@@ -48,9 +48,6 @@ stdenv.mkDerivation rec {
     rustPlatform.cargoSetupHook
   ] ++ lib.optionals withIntrospection [
     gobject-introspection
-  ] ++ lib.optionals stdenv.isDarwin [
-    ApplicationServices
-    Foundation
   ];
 
   buildInputs = [
@@ -61,6 +58,8 @@ stdenv.mkDerivation rec {
   ] ++ lib.optionals withIntrospection [
     gobject-introspection
   ] ++ lib.optionals stdenv.isDarwin [
+    ApplicationServices
+    Foundation
     libobjc
   ];
 
@@ -106,6 +105,9 @@ stdenv.mkDerivation rec {
     # Fix thumbnailer path
     sed -e "s#@bindir@\(/gdk-pixbuf-thumbnailer\)#${gdk-pixbuf}/bin\1#g" \
         -i gdk-pixbuf-loader/librsvg.thumbnailer.in
+
+    # 'error: linker `cc` not found' when cross-compiling
+    export RUSTFLAGS="-Clinker=$CC"
   '';
 
   # Not generated when cross compiling.

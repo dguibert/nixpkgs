@@ -7,13 +7,13 @@ with builtins;
 
 stdenv.mkDerivation rec {
   pname = "libbpf";
-  version = "0.4.0";
+  version = "0.6.0";
 
   src = fetchFromGitHub {
     owner  = "libbpf";
     repo   = "libbpf";
     rev    = "v${version}";
-    sha256 = "1by5w7g3i2fc10bi6f0j8jqi2nq0x8r973j2qx7qlfryjxr7b2v3";
+    sha256 = "sha256-p9wUDC7r6+ElbheNkTkZW4eMNAvPbvpUyQjTjCE34ck=";
   };
 
   nativeBuildInputs = [ pkg-config ];
@@ -22,6 +22,11 @@ stdenv.mkDerivation rec {
   sourceRoot = "source/src";
   enableParallelBuilding = true;
   makeFlags = [ "PREFIX=$(out)" ];
+
+  postInstall = ''
+    # install linux's libbpf-compatible linux/btf.h
+    install -Dm444 ../include/uapi/linux/btf.h -t $out/include/linux
+  '';
 
   # FIXME: Multi-output requires some fixes to the way the pkg-config file is
   # constructed (it gets put in $out instead of $dev for some reason, with
@@ -33,7 +38,7 @@ stdenv.mkDerivation rec {
     description = "Upstream mirror of libbpf";
     homepage    = "https://github.com/libbpf/libbpf";
     license     = with licenses; [ lgpl21 /* or */ bsd2 ];
-    maintainers = with maintainers; [ thoughtpolice vcunat ];
+    maintainers = with maintainers; [ thoughtpolice vcunat saschagrunert martinetd ];
     platforms   = platforms.linux;
   };
 }

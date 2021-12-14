@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "difftastic";
-  version = "0.9";
+  version = "0.12.0";
 
   src = fetchFromGitHub {
     owner = "wilfred";
     repo = pname;
     rev = version;
-    sha256 = "sha256-spncRJjROytGnIig6ujqHu0e/XBTN4dsJ3og4aIu+l8=";
+    sha256 = "sha256-A6Z3g6fbYBynyN4OhRrZNO0ZghvT3XnIahdUQ8SE8tU=";
   };
 
-  cargoSha256 = "sha256-2xGwS4wjLQ7zmfZ2gMdlUAkjPDF6SmUaiX2j1KYy0vo=";
+  cargoSha256 = "sha256-6/JwrPymtpj/CXqx3Pe43v+MJTNONArU2WEo/zgJhT4=";
 
   postPatch = ''
     pushd vendor
@@ -30,5 +30,6 @@ rustPlatform.buildRustPackage rec {
     changelog = "https://github.com/Wilfred/difftastic/raw/${version}/CHANGELOG.md";
     license = licenses.mit;
     maintainers = with maintainers; [ ethancedwards8 figsoda ];
+    mainProgram = "difft";
   };
 }
