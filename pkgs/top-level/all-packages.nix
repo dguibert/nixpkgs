@@ -834,18 +834,22 @@ with pkgs;
             fetchurl = stdenv.fetchurlBoot;
           };
         });
-        perl = buildPackages.perl.override { fetchurl = stdenv.fetchurlBoot; };
+        perl = buildPackages.perl.override { fetchurl = stdenv.fetchurlBoot; inherit zlib; };
         openssl = buildPackages.openssl.override {
           fetchurl = stdenv.fetchurlBoot;
           buildPackages = {
-            coreutils = buildPackages.coreutils.override {
+            coreutils = (buildPackages.coreutils.override rec {
               fetchurl = stdenv.fetchurlBoot;
               inherit perl;
               xz = buildPackages.xz.override { fetchurl = stdenv.fetchurlBoot; };
               gmp = null;
               aclSupport = false;
               attrSupport = false;
-            };
+              autoreconfHook = null;
+              texinfo = null;
+            }).overrideAttrs (_: {
+              preBuild = "touch Makefile.in"; # avoid automake
+            });
             inherit perl;
           };
           inherit perl;
