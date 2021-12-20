@@ -122,7 +122,7 @@ assert withHomed -> withCryptsetup;
 let
   wantCurl = withRemote || withImportd;
   wantGcrypt = withResolved || withImportd;
-  version = "251.7";
+  version = "251.8";
 
   # Bump this variable on every (major) version change. See below (in the meson options list) for why.
   # command:
@@ -139,7 +139,7 @@ stdenv.mkDerivation {
     owner = "systemd";
     repo = "systemd-stable";
     rev = "v${version}";
-    sha256 = "sha256-Sa5diyNFyYtREo1xSCcufAW83ZZGZvueoDVuQ2r8wno=";
+    sha256 = "sha256-kao0xJwwJc4zUyaK5yxyGip4E6ADak98iVv5E8Hw0zk=";
   };
 
   # On major changes, or when otherwise required, you *must* reformat the patches,
@@ -406,6 +406,7 @@ stdenv.mkDerivation {
     # https://github.com/systemd/systemd/blob/60e930fc3e6eb8a36fbc184773119eb8d2f30364/NEWS#L258-L266
     "-Dtime-epoch=${releaseTimestamp}"
 
+    "-Dmode=release"
     "-Ddbuspolicydir=${placeholder "out"}/share/dbus-1/system.d"
     "-Ddbussessionservicedir=${placeholder "out"}/share/dbus-1/services"
     "-Ddbussystemservicedir=${placeholder "out"}/share/dbus-1/system-services"
