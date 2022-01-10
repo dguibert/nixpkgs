@@ -2,13 +2,13 @@
 
 python3Packages.buildPythonPackage rec {
   pname = "yubikey-manager";
-  version = "4.0.7";
+  version = "4.1.0a1";
 
   src = fetchFromGitHub {
     repo = "yubikey-manager";
     rev = version;
     owner = "Yubico";
-    sha256 = "sha256-PG/mIM1rcs1SAz2kfQtfUWoMBIwLz2ASZM0YQrz9w5I=";
+    sha256 = "sha256-/YuHYBDOCY3ggZYV85Urw4ZQPHsI1uzj4uIGTZDcCqQ=";
   };
 
   postPatch = ''
