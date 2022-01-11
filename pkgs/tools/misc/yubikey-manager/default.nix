@@ -14,6 +14,7 @@ python3Packages.buildPythonPackage rec {
   postPatch = ''
     substituteInPlace "ykman/pcsc/__init__.py" \
       --replace '/usr/bin/pkill' '${procps}/bin/pkill'
+    substituteInPlace pyproject.toml --replace 'cryptography = ">=2.1, <36"' 'cryptography = ">=2.1"'
   '';
 
   format = "pyproject";
