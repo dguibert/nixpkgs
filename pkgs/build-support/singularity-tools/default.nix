@@ -13,7 +13,6 @@
 , e2fsprogs
 , nix
 , closureInfo
-, lib
 }:
 
 # WARNING: this API is unstable and may be subject to backwards-incompatible changes in the future.
