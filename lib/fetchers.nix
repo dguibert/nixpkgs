@@ -8,6 +8,7 @@
     # derivation like fetchurl is allowed to do so since its result is
     # by definition pure.
     "http_proxy" "https_proxy" "ftp_proxy" "all_proxy" "no_proxy"
+    "PROXYCHAINS_CONF_FILE" "LD_PRELOAD"
   ];
 
 }
