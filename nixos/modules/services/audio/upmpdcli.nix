@@ -9,9 +9,6 @@ let
   cfg = config.services.upmpdcli;
 
   defaultConf = {
-    ### https://www.lesbonscomptes.com/upmpdcli/upmpdcli-manual.html#UPMPDCLI-CONFIGURATION
-    pkgdatadir = "${upmpdcli}/share/upmpdcli";
-
     # upnp network parameters
     ##upnpiface =
     upnpip = "127.0.0.1";
@@ -36,7 +33,11 @@ let
 
   };
 
-  configuration = defaultConf // cfg.configuration;
+  configuration = defaultConf // {
+    ### https://www.lesbonscomptes.com/upmpdcli/upmpdcli-manual.html#UPMPDCLI-CONFIGURATION
+    pkgdatadir = "${pkgs.upmpdcli}/share/upmpdcli";
+
+  } // cfg.configuration;
 
   upmpdcliConf = writeText "upmpdcli.conf" (lib.generators.toKeyValue {} configuration);
 in {
@@ -67,7 +68,7 @@ in {
       after = [ "network.target" "sound.target" ];
       description = "upmpdcli music player daemon";
       serviceConfig = {
-        ExecStart = "${upmpdcli}/bin/upmpdcli -c ${upmpdcliConf}";
+        ExecStart = "${pkgs.upmpdcli}/bin/upmpdcli -c ${upmpdcliConf}";
       };
     };
 
