@@ -15,6 +15,11 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ fuse3 ];
 
+  postInstall = ''
+    ln -sv $out/bin/migratefs $out/bin/mount.migratefs
+    ln -sv $out/bin/migratefs $out/bin/mount.fuse.migratefs
+  '';
+
   meta = with lib; {
     description = "A filesystem overlay for transparent, distributed migration of active data across separate storage systems";
     longDescription = "FUSE-based filesystem overlay designed to semalessly migrate data from one filesystem to another";
