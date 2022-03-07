@@ -7,13 +7,13 @@
 
 buildPythonPackage rec {
   pname = "datalad";
-  version = "0.15.4";
+  version = "0.15.6";
 
   src = fetchFromGitHub {
     owner = "datalad";
     repo = "datalad";
     rev = "refs/tags/${version}";
-    sha256 = "sha256-U528IaLB/RmQ8SeVnN819ehFURV6YOGt9q1Tp/BMFIg=";
+    sha256 = "sha256-7jviBuOfXEK7u2d1hVf6s3tQy9KDYqgqYxHb5sNh7YA=";
   };
 
   propagatedBuildInputs = [
