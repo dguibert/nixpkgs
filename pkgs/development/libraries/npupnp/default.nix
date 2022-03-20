@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
 
     license = "BSD-style";
 
-    homepage = https://framagit.org/medoc92/npupnp;
+    homepage = "https://framagit.org/medoc92/npupnp";
     platforms = lib.platforms.unix;
   };
 }
