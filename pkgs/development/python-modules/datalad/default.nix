@@ -13,7 +13,7 @@ buildPythonPackage rec {
     owner = "datalad";
     repo = "datalad";
     rev = "refs/tags/${version}";
-    sha256 = "sha256-7jviBuOfXEK7u2d1hVf6s3tQy9KDYqgqYxHb5sNh7YA=";
+    sha256 = "sha256-zlFrYFRykHHM4NKqK+V2h85AAAWmvuDGp4nVSc6vCk4=";
   };
 
   propagatedBuildInputs = [
