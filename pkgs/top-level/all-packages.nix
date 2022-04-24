@@ -17100,6 +17100,22 @@ with pkgs;
   ffmpeg_5 = callPackage ../development/libraries/ffmpeg/5.nix {
     inherit (darwin.apple_sdk.frameworks) Cocoa CoreMedia VideoToolbox;
   };
+  ffmpeg_5-full = callPackage ../development/libraries/ffmpeg-full {
+    ffmpeg = ffmpeg_5;
+    svt-av1 = if stdenv.isAarch64 then null else svt-av1;
+    rav1e = null; # We already have SVT-AV1 for faster encoding
+    rtmpdump = null; # Prefer the built-in RTMP implementation
+    # The following need to be fixed on Darwin
+    libjack2 = if stdenv.isDarwin then null else libjack2;
+    libmodplug = if stdenv.isDarwin then null else libmodplug;
+    libmfx = if stdenv.isDarwin then null else intel-media-sdk;
+    libpulseaudio = if stdenv.isDarwin then null else libpulseaudio;
+    samba = if stdenv.isDarwin then null else samba;
+    vid-stab = if stdenv.isDarwin then null else vid-stab;
+    inherit (darwin.apple_sdk.frameworks)
+      Cocoa CoreServices CoreAudio AVFoundation MediaToolbox
+      VideoDecodeAcceleration;
+  };
 
   # Aliases
   # Please make sure this is updated to the latest version on the next major
