@@ -843,6 +843,7 @@ with pkgs;
           enableApp = false; # curl just needs libnghttp2
           enableTests = false; # avoids bringing `cunit` and `tzdata` into scope
         };
+        brotli = null;
       });
     };
 
