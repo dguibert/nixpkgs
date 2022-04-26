@@ -52,7 +52,12 @@ assert wolfsslSupport -> wolfssl != null;
 assert zlibSupport -> zlib != null;
 assert zstdSupport -> zstd != null;
 
-stdenv.mkDerivation rec {
+let
+withFeatureAsDev = with_: feat: value: let
+    dev = if with_ then lib.getDev value else null;
+  in lib.withFeatureAs with_ feat dev;
+
+in stdenv.mkDerivation rec {
   pname = "curl";
   version = "7.81.0";
 
@@ -120,12 +125,12 @@ stdenv.mkDerivation rec {
       (lib.withFeature http3Support "ngtcp2")
       (lib.withFeature rtmpSupport "librtmp")
       (lib.withFeature zstdSupport "zstd")
-      (lib.withFeatureAs brotliSupport "brotli" (lib.getDev brotli))
-      (lib.withFeatureAs gnutlsSupport "gnutls" (lib.getDev gnutls))
-      (lib.withFeatureAs idnSupport "libidn2" (lib.getDev libidn2))
-      (lib.withFeatureAs opensslSupport "openssl" (lib.getDev openssl))
-      (lib.withFeatureAs scpSupport "libssh2" (lib.getDev libssh2))
-      (lib.withFeatureAs wolfsslSupport "wolfssl" (lib.getDev wolfssl))
+      (withFeatureAsDev brotliSupport "brotli" brotli)
+      (withFeatureAsDev gnutlsSupport "gnutls" gnutls)
+      (withFeatureAsDev idnSupport "libidn2" libidn2)
+      (withFeatureAsDev opensslSupport "openssl" openssl)
+      (withFeatureAsDev scpSupport "libssh2" libssh2)
+      (withFeatureAsDev wolfsslSupport "wolfssl" wolfssl)
     ]
     ++ lib.optional gssSupport "--with-gssapi=${lib.getDev libkrb5}"
        # For the 'urandom', maybe it should be a cross-system option
