@@ -2,6 +2,7 @@
 , fetchPypi, humanize, iso8601, jsmin, keyring, keyrings-alt, lib, msgpack
 , patool, requests, simplejson, tqdm, whoosh, wrapt, setuptools
 , requests-ftp, python-gitlab
+, packaging
 , fetchFromGitHub
 }:
 
@@ -38,6 +39,8 @@ buildPythonPackage rec {
     setuptools
     requests-ftp
     python-gitlab
+
+    packaging
   ];
 
   # TODO FIXME
