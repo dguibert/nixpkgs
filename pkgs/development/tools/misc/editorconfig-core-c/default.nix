@@ -1,18 +1,18 @@
-{ lib, stdenv, fetchFromGitHub, cmake, pcre, doxygen }:
+{ lib, stdenv, fetchFromGitHub, cmake, pcre2, doxygen }:
 
 stdenv.mkDerivation rec {
   pname = "editorconfig-core-c";
-  version = "0.12.1";
+  version = "0.12.5";
 
   src = fetchFromGitHub {
     owner = "editorconfig";
     repo = "editorconfig-core-c";
     rev = "v${version}";
-    sha256 = "sha256-pFsbyqIt7okfaiOwlYN8EXm1SFlCUnsHVbOgyIZZlys=";
+    sha256 = "sha256-4p8bomeXtA+zJ3IvWW0UZixdMnjYWYu7yeA6JUwwRb8=";
     fetchSubmodules = true;
   };
 
-  buildInputs = [ pcre ];
+  buildInputs = [ pcre2 ];
   nativeBuildInputs = [ cmake doxygen ];
 
   # Multiple doxygen can not generate man pages in the same base directory in
