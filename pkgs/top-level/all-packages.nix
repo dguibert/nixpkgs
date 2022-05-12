@@ -28557,6 +28557,8 @@ with pkgs;
 
   softmaker-office = callPackage ../applications/office/softmaker/softmaker_office.nix {};
 
+  somebar = callPackage ../applications/misc/somebar { };
+
   songrec = callPackage ../applications/audio/songrec {};
 
   storrent = callPackage ../applications/networking/p2p/storrent { };
