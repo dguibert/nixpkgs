@@ -41,6 +41,7 @@ stdenv.mkDerivation rec {
       ln -s ${nodeDependencies}/lib/node_modules ./node_modules
       export PATH="${nodeDependencies}/bin:$PATH"
 
+      export HOME=$TMPDIR
       npm run build:production
 
       runHook postBuild
