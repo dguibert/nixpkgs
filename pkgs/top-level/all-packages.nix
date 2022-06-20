@@ -374,7 +374,9 @@ with pkgs;
 
   cryptowatch-desktop = callPackage ../applications/finance/cryptowatch { };
 
-  datalad = callPackage ../applications/version-management/datalad { };
+  datalad = callPackage ../applications/version-management/datalad {
+    python3 = python39; # error: boto-2.49.0 not supported for interpreter python3.10
+  };
 
   dhallDirectoryToNix = callPackage ../build-support/dhall/directory-to-nix.nix { };
 
