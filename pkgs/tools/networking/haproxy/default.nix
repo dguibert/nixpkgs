@@ -46,6 +46,7 @@ stdenv.mkDerivation rec {
   ] ++ lib.optionals stdenv.isLinux [
     "USE_SYSTEMD=yes"
     "USE_GETADDRINFO=1"
+    "USE_LINUX_TPROXY=1"
   ] ++ lib.optionals withPrometheusExporter [
     "USE_PROMEX=yes"
   ] ++ [ "CC=${stdenv.cc.targetPrefix}cc" ];
