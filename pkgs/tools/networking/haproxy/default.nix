@@ -35,6 +35,7 @@ stdenv.mkDerivation rec {
   buildFlags = [
     "USE_OPENSSL=yes"
     "USE_ZLIB=yes"
+    "USE_TPROXY=1"
   ] ++ lib.optionals usePcre [
     "USE_PCRE=yes"
     "USE_PCRE_JIT=yes"
@@ -46,6 +47,7 @@ stdenv.mkDerivation rec {
   ] ++ lib.optionals stdenv.isLinux [
     "USE_SYSTEMD=yes"
     "USE_GETADDRINFO=1"
+    "USE_LINUX_TPROXY=1"
   ] ++ lib.optionals withPrometheusExporter [
     "USE_PROMEX=yes"
   ] ++ [ "CC=${stdenv.cc.targetPrefix}cc" ];
