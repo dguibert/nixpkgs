@@ -26,6 +26,8 @@
   keyring,
   msgpack,
   requests,
+  # downloaders-extra
+  requests-ftp,
   # publish
   python-gitlab,
   # misc
@@ -107,7 +109,7 @@ buildPythonPackage rec {
       requests
     ];
     downloaders-extra = [
-      # requests-ftp # not in nixpkgs yet
+      requests-ftp
     ];
     publish = [ python-gitlab ];
     misc = [
