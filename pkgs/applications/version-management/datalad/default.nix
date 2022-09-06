@@ -26,7 +26,7 @@ python3.pkgs.buildPythonApplication rec {
     annexremote
 
     # downloaders-extra
-    # requests-ftp # not in nixpkgs yet
+    requests-ftp
 
     # downloaders
     boto
