@@ -2877,6 +2877,12 @@
     githubId = 1382175;
     name = "Oliver Matthews";
   };
+  cwyc = {
+    email = "hello@cwyc.page";
+    github = "cwyc";
+    githubId = 16950437;
+    name = "cwyc";
+  };
   cyounkins = {
     name = "Craig Younkins";
     email = "cyounkins@gmail.com";
@@ -4831,6 +4837,15 @@
     githubId = 6905586;
     keys = [{
       fingerprint = "386E D1BF 848A BB4A 6B4A  3C45 FC83 907C 125B C2BC";
+    }];
+  };
+  georgesalkhouri = {
+    name = "Georges Alkhouri";
+    email = "incense.stitch_0w@icloud.com";
+    github = "GeorgesAlkhouri";
+    githubId = 6077574;
+    keys = [{
+      fingerprint = "1608 9E8D 7C59 54F2 6A7A 7BD0 8BD2 09DC C54F D339";
     }];
   };
   georgewhewell = {
@@ -9381,6 +9396,12 @@
     githubId = 1222539;
     name = "Roman Naumann";
   };
+  naphta = {
+    email = "naphta@noreply.github.com";
+    github = "naphta";
+    githubId = 6709831;
+    name = "Jake Hill";
+  };
   nasirhm = {
     email = "nasirhussainm14@gmail.com";
     github = "nasirhm";
@@ -9533,6 +9554,12 @@
     email = "entropy.overseer@protonmail.com";
     github = "nessdoor";
     githubId = 25993494;
+  };
+  net-mist = {
+    email = "archimist.linux@gmail.com";
+    github = "Net-Mist";
+    githubId = 13920346;
+    name = "Sébastien Iooss";
   };
   netali = {
     name = "Jennifer Graul";
@@ -9874,6 +9901,12 @@
     github = "NULLx76";
     githubId = 1809198;
     name = "Victor Roest";
+  };
+  nullishamy = {
+    email = "amy.codes@null.net";
+    name = "nullishamy";
+    github = "nullishamy";
+    githubId = 99221043;
   };
   numinit = {
     email = "me@numin.it";
@@ -10665,6 +10698,16 @@
     github = "pmiddend";
     githubId = 178496;
     name = "Philipp Middendorf";
+  };
+  pmw = {
+    email = "philip@mailworks.org";
+    matrix = "@philip4g:matrix.org";
+    name = "Philip White";
+    github = "philipmw";
+    githubId = 1379645;
+    keys = [{
+      fingerprint = "9AB0 6C94 C3D1 F9D0 B9D9  A832 BC54 6FB3 B16C 8B0B";
+    }];
   };
   pmy = {
     email = "pmy@xqzp.net";
@@ -12847,13 +12890,6 @@
     github = "SuperBo";
     githubId = 2666479;
     name = "Y Nguyen";
-  };
-  superherointj = {
-    name = "Sérgio G.";
-    email = "5861043+superherointj@users.noreply.github.com";
-    matrix = "@superherointj:matrix.org";
-    github = "superherointj";
-    githubId = 5861043;
   };
   SuperSandro2000 = {
     email = "sandro.jaeckel@gmail.com";
@@ -15395,6 +15431,12 @@
     name = "Jinnah Ali-Clarke";
     github = "jali-clarke";
     githubId = 17733984;
+  };
+  wesleyjrz = {
+    email = "wesleyjr2002@gmail.com";
+    name = "Wesley V. Santos Jr.";
+    github = "wesleyjrz";
+    githubId = 60184588;
   };
   npatsakula = {
     email = "nikita.patsakula@gmail.com";
