@@ -539,6 +539,7 @@ in lib.makeScopeWithSplicing
     version = "9.2";
     sha256 = "00a3zmh15pg4vx6hz0kaa5mi8d2b1sj4h512d7p6wbvxq6mznwcn";
     NIX_CFLAGS_COMPILE = lib.optional stdenv.isLinux "-DNO_BASE64";
+    NIX_LDFLAGS = lib.optional stdenv.isDarwin "-lresolv";
   };
 
   cksum = mkDerivation {
@@ -907,7 +908,7 @@ in lib.makeScopeWithSplicing
       byacc genassym gencat lorder tsort statHook rsync rpcgen
     ];
     buildInputs = with self; [ headers csu ];
-    NIX_CFLAGS_COMPILE = "-B${self.csu}/lib";
+    NIX_CFLAGS_COMPILE = "-B${self.csu}/lib -fcommon";
     meta.platforms = lib.platforms.netbsd;
     SHLIBINSTALLDIR = "$(out)/lib";
     MKPICINSTALL = "yes";
