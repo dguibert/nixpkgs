@@ -2,7 +2,7 @@
 
 buildGoPackage rec {
   pname = "prometheus-slurm-exporter";
-  version = "0.8-3-g7881b06";
+  version = "0.20";
 
   goPackagePath = "github.com/vpenso/prometheus-slurm-exporter";
 
@@ -10,9 +10,9 @@ buildGoPackage rec {
 
   src = fetchFromGitHub {
     owner = "vpenso";
-    repo = "prometheus-${pname}";
+    repo = pname;
     rev = "${version}";
-    sha256 = "sha256-wEvz0kk0LqU2iR92e1FG4TvQYpD3+bV5gGNtgJNMduk=";
+    sha256 = "sha256-KS9LoDuLQFq3KoKpHd8vg1jw20YCNRJNJrnBnu5vxvs=";
   };
 
   doCheck = false; # slurm installed?
