@@ -23,7 +23,7 @@ in stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "http://download.virtualbox.org/virtualbox/${version}/VBoxGuestAdditions_${version}.iso";
-    sha256 = "d456c559926f1a8fdd7259056e0a50f12339fd494122cf30db7736e2032970c6";
+    sha256 = "85908d49df9df685ae00806d4cf0d154791804651039a3839be8cc876fae1011";
   };
 
   KERN_DIR = "${kernel.dev}/lib/modules/${kernel.modDirVersion}/build";
