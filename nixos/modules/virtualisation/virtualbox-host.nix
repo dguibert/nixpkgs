@@ -128,7 +128,6 @@ in
                 "VBoxVolInfo"
               ]
               ++ (lib.optionals (!cfg.headless) [
-                "VBoxSDL"
                 "VirtualBoxVM"
               ]);
           in
