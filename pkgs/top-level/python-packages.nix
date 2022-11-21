@@ -12052,6 +12052,8 @@ self: super: with self; {
 
   xlwt = callPackage ../development/python-modules/xlwt { };
 
+  xlutils = callPackage ../development/python-modules/xlutils { };
+
   xmind = callPackage ../development/python-modules/xmind { };
 
   xml2rfc = callPackage ../development/python-modules/xml2rfc { };
