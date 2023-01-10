@@ -5,7 +5,7 @@ stdenv.mkDerivation rec {
   version = "17.04";
 
   src = fetchFromGitHub {
-    owner  = "jinfeihan57";
+    owner  = "p7zip-project";
     repo   = pname;
     rev    = "v${version}";
     sha256 = {
@@ -55,7 +55,7 @@ stdenv.mkDerivation rec {
   passthru.updateScript = ./update.sh;
 
   meta = with lib; {
-    homepage = "https://github.com/jinfeihan57/p7zip";
+    homepage = "https://github.com/p7zip-project/p7zip";
     description = "A new p7zip fork with additional codecs and improvements (forked from https://sourceforge.net/projects/p7zip/)";
     license = with licenses;
       # p7zip code is largely lgpl2Plus
