@@ -2,13 +2,13 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "datalad";
-  version = "0.17.10";
+  version = "0.18.1";
 
   src = fetchFromGitHub {
     owner = "datalad";
     repo = pname;
     rev = version;
-    hash = "sha256-h9LRT/BPRai1jrxVkrbCW1MJBWLxddjdo/XHx+nWm08=";
+    hash = "sha256-xqxeT5iRkbkGv1HvsNkO0GKqHtQOkcYuSKjLdqH7ooU=";
   };
 
   nativeBuildInputs = [ installShellFiles git ];
@@ -28,6 +28,7 @@ python3.pkgs.buildPythonApplication rec {
     patool
     tqdm
     annexremote
+    looseversion
 
     # downloaders-extra
     requests-ftp
