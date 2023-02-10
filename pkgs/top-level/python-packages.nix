@@ -7044,6 +7044,8 @@ self: super: with self; {
 
   pidi-display-pil = callPackage ../development/python-modules/pidi-display-pil { };
 
+  pidi-display-st7789 = callPackage ../development/python-modules/pidi-display-st7789 { };
+
   pg8000 = callPackage ../development/python-modules/pg8000 { };
 
   pgcli = callPackage ../development/python-modules/pgcli { };
