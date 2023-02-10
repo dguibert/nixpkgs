@@ -28,6 +28,7 @@ python3.pkgs.buildPythonApplication rec {
     patool
     tqdm
     annexremote
+    looseversion
 
     # downloaders-extra
     requests-ftp
