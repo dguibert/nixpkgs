@@ -3557,6 +3557,8 @@ self: super: with self; {
 
   fonts = callPackage ../development/python-modules/fonts { };
 
+  font-roboto = callPackage ../development/python-modules/font-roboto { };
+
   fonttools = callPackage ../development/python-modules/fonttools { };
 
   fontmake = callPackage ../development/python-modules/fontmake { };
