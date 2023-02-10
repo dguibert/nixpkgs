@@ -7042,6 +7042,8 @@ self: super: with self; {
 
   pexpect = callPackage ../development/python-modules/pexpect { };
 
+  pidi-display-pil = callPackage ../development/python-modules/pidi-display-pil { };
+
   pg8000 = callPackage ../development/python-modules/pg8000 { };
 
   pgcli = callPackage ../development/python-modules/pgcli { };
