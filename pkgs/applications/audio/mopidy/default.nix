@@ -33,6 +33,8 @@ lib.makeScope newScope (self: with self; {
 
   mopidy-podcast = callPackage ./podcast.nix { };
 
+  mopidy-pidi = callPackage ./pidi.nix { };
+
   mopidy-scrobbler = callPackage ./scrobbler.nix { };
 
   mopidy-somafm = callPackage ./somafm.nix { };

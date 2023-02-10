@@ -31388,6 +31388,7 @@ with pkgs;
     mopidy-musicbox-webclient
     mopidy-notify
     mopidy-podcast
+    mopidy-pidi
     mopidy-scrobbler
     mopidy-somafm
     mopidy-soundcloud
