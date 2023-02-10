@@ -11041,6 +11041,8 @@ self: super: with self; {
 
   sslib = callPackage ../development/python-modules/sslib { };
 
+  st7789-python = callPackage ../development/python-modules/st7789-python { };
+
   stack-data = callPackage ../development/python-modules/stack-data { };
 
   stanza = callPackage ../development/python-modules/stanza { };
