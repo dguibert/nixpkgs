@@ -3555,6 +3555,8 @@ self: super: with self; {
 
   fontpens = callPackage ../development/python-modules/fontpens { };
 
+  fonts = callPackage ../development/python-modules/fonts { };
+
   fonttools = callPackage ../development/python-modules/fonttools { };
 
   fontmake = callPackage ../development/python-modules/fontmake { };
