@@ -2,11 +2,11 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "mopidy-beets";
-  version = "4.0.0";
+  version = "4.0.1";
 
   src = fetchurl {
-    url = "https://github.com/mopidy/mopidy-beets/archive/v4.0.0.tar.gz";
-    sha256 = "sha256-y/TktE7OGuAB3Rk44AGuBIL4K48eXeE4NO4yxbD043w=";
+    url = "https://github.com/mopidy/mopidy-beets/archive/v4.0.1.tar.gz";
+    sha256 = "sha256-sfucpAZHYLMA7dfpd3ehpBhMVpTmEUEDgK4QOak9Mzo=";
   };
 
   propagatedBuildInputs = [
