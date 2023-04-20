@@ -256,6 +256,7 @@ stdenv.mkDerivation (rec {
     echo -n "${buildMK}" > mk/build.mk
   '' + lib.optionalString (stdenv.isLinux && hostPlatform.libc == "glibc") ''
     export LOCALE_ARCHIVE="${glibcLocales}/lib/locale/locale-archive"
+    export LC_ALL=C.UTF-8
   '' + lib.optionalString (!stdenv.isDarwin) ''
     export NIX_LDFLAGS+=" -rpath $out/lib/ghc-${version}"
   '' + lib.optionalString stdenv.isDarwin ''
