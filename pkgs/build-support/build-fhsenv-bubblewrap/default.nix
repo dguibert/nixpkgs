@@ -24,6 +24,7 @@
 , unshareUts ? true
 , unshareCgroup ? true
 , dieWithParent ? true
+, nixStore ? "/nix"
 , ...
 } @ args:
 
@@ -191,7 +192,7 @@ let
       ${lib.optionalString unshareUts "--unshare-uts"}
       ${lib.optionalString unshareCgroup "--unshare-cgroup"}
       ${lib.optionalString dieWithParent "--die-with-parent"}
-      --ro-bind /nix /nix
+      --ro-bind ${nixStore} ${nixStore}
       # Our glibc will look for the cache in its own path in `/nix/store`.
       # As such, we need a cache to exist there, because pressure-vessel
       # depends on the existence of an ld cache. However, adding one
