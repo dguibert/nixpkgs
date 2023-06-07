@@ -6,8 +6,8 @@ let
 
   versions = {
     stable = {
-      version = "2.3.57.12";
-      sha256 = "sha256-lePhDRHI++9zs54bTt2/Lu6ZQ7egjJCWb752aI0s7Mw==";
+      version = "2.5.59.2";
+      sha256 = "sha256-IgE+NWy2DUrPR2ROfK1F67e8B3eoM9yRVQ0GZTxJ42I=";
       patches = null;
     };
     latest = {
