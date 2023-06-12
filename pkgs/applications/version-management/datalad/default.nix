@@ -2,13 +2,13 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "datalad";
-  version = "0.18.3";
+  version = "0.18.4";
 
   src = fetchFromGitHub {
     owner = "datalad";
     repo = pname;
     rev = version;
-    hash = "sha256-vqO37o5NxQk+gHfvhM1I2ea9/q9ZaLWkDEyPYJKEPcs";
+    hash = "sha256-LAqwggwyUTyZxqDCB3vnDaSKDSzOX1WQLk/9RsaI13Q=";
   };
 
   nativeBuildInputs = [ installShellFiles git ];
@@ -31,6 +31,7 @@ python3.pkgs.buildPythonApplication rec {
     looseversion
     setuptools
     git-annex
+    typing-extensions
 
     # downloaders-extra
     requests-ftp
