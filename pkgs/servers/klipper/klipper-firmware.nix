@@ -13,6 +13,7 @@
 , stm32flash
 , mcu ? "mcu"
 , firmwareConfig ? ./simulator.cfg
+, fetchpatch
 }: stdenv.mkDerivation rec {
   name = "klipper-firmware-${mcu}-${version}";
   version = klipper.version;
@@ -29,6 +30,13 @@
     stm32flash
     pkg-config
     wxGTK32 # Required for bossac
+  ];
+
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/Laikulo/klipper/commit/ecf4266cc71f52045460c4021fdd7b971f119562.patch";
+      sha256 = "sha256-0m4fVfGqL7IOCzhD6InM/G9pVv1vGvhz/2PeBrC3Z6U=";
+    })
   ];
 
   preBuild = "cp ${firmwareConfig} ./.config";
