@@ -30,6 +30,11 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "duecredit" ];
 
+  disabledTests = [
+    # touches network
+    "test_import_doi"
+  ];
+
   meta = with lib; {
     homepage = "https://github.com/duecredit/duecredit";
     description = "Simple framework to embed references in code";
