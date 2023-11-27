@@ -31296,7 +31296,7 @@ with pkgs;
   dyff = callPackage ../development/tools/dyff { };
 
   dwl = callPackage ../applications/window-managers/dwl {
-    wlroots = wlroots_0_16;
+    wlroots = wlroots_0_17;
   };
 
   dwm = callPackage ../applications/window-managers/dwm {
@@ -32666,6 +32666,7 @@ with pkgs;
   inherit (callPackages ../development/libraries/wlroots {})
     wlroots_0_15
     wlroots_0_16
+    wlroots_0_17
     wlroots;
 
   sway-unwrapped = callPackage ../applications/window-managers/sway {
