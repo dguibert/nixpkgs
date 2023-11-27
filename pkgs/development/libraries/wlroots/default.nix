@@ -21,6 +21,7 @@
 , vulkan-loader
 , glslang
 , nixosTests
+, libdisplay-info
 
 , enableXWayland ? true
 , xwayland ? null
@@ -71,6 +72,7 @@ let
         xorg.xcbutilimage
         xorg.xcbutilrenderutil
         xorg.xcbutilwm
+        hwdata
       ]
       ++ lib.optional finalAttrs.enableXWayland xwayland
       ++ extraBuildInputs;
@@ -122,6 +124,14 @@ rec {
       substituteInPlace backend/drm/meson.build \
         --replace /usr/share/hwdata/ ${hwdata}/share/hwdata/
     '';
+  };
+
+  wlroots_0_17 = generic {
+    version = "0.17.0";
+    hash = "sha256-VUrnSG4UAAH0cBy15lG0w8RernwegD6lkOdLvWU3a4c=";
+    extraBuildInputs = [
+      libdisplay-info
+    ];
   };
 
   wlroots = wlroots_0_16;
