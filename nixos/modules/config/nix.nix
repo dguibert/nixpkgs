@@ -115,7 +115,7 @@ let
           set -e
           set +o pipefail
           NIX_CONF_DIR=$PWD \
-            ${cfg.package}/bin/nix show-config ${optionalString (isNixAtLeast "2.3pre") "--no-net"} \
+            ${cfg.package}/bin/nix config show ${optionalString (isNixAtLeast "2.3pre") "--no-net"} \
               ${optionalString (isNixAtLeast "2.4pre") "--option experimental-features nix-command"} \
             |& sed -e 's/^warning:/error:/' \
             | (! grep '${if cfg.checkAllErrors then "^error:" else "^error: unknown setting"}')
