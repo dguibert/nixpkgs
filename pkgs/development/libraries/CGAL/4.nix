@@ -1,14 +1,14 @@
 { lib, stdenv, fetchFromGitHub, fetchpatch, cmake, boost, gmp, mpfr }:
 
 stdenv.mkDerivation rec {
-  version = "4.14.2";
+  version = "5.5.2";
   pname = "cgal";
 
   src = fetchFromGitHub {
     owner = "CGAL";
     repo = "releases";
     rev = "CGAL-${version}";
-    sha256 = "1p1xyws2s9h2c8hlkz1af4ix48qma160av24by6lcm8al1g44pca";
+    sha256 = "sha256-olMPT/8Q0bf+rooJoNc0k8NrO//O7z0yqBoP8KX39yQ=";
   };
 
   patches = [
