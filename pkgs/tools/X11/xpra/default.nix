@@ -68,13 +68,13 @@ let
   '';
 in buildPythonApplication rec {
   pname = "xpra";
-  version = "4.4.6";
+  version = "5.0.4";
 
   src = fetchFromGitHub {
     owner = "Xpra-org";
     repo = "xpra";
     rev = "v${version}";
-    hash = "sha256-TWu9BQTP0v2LRB6OffJ/raFhTc/aultmtIFlTohCN/o=";
+    hash = "sha256-IfKPnswXpmL0Kg9REXKf3KVI3a1Is9nQYm0IHC5W0zI=";
   };
 
 
