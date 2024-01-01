@@ -1,1 +1,9 @@
 base github/master
+
+merge dg/mopidy-update
+merge dg/sanoid-frequent
+merge dg/singularity-withnixdb
+merge dg/migratefs
+merge dg/prometheus-slurm
+
+merge pu
