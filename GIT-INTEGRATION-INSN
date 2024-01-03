@@ -1,4 +1,4 @@
-base github/master
+base refs/remotes/github/master
 
 merge dg/mopidy-update
 merge dg/sanoid-frequent
