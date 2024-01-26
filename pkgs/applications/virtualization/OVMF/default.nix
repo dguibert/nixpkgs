@@ -59,7 +59,7 @@ edk2.mkDerivation projectDscPath (finalAttrs: {
     ++ lib.optionals fdSize4MB ["-D FD_SIZE_4MB"]
     ++ lib.optionals httpSupport [ "-D NETWORK_HTTP_ENABLE=TRUE" "-D NETWORK_HTTP_BOOT_ENABLE=TRUE" ]
     ++ lib.optionals tlsSupport [ "-D NETWORK_TLS_ENABLE=TRUE" ]
-    ++ lib.optionals tpmSupport [ "-D TPM_ENABLE" "-D TPM2_ENABLE" "-D TPM2_CONFIG_ENABLE"];
+    ++ lib.optionals tpmSupport [ "-D TPM2_ENABLE" "-D TPM2_CONFIG_ENABLE"];
 
   buildConfig = if debug then "DEBUG" else "RELEASE";
   env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.cc.isClang "-Qunused-arguments";
