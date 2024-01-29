@@ -8,5 +8,3 @@ merge dg/prometheus-slurm
 merge misc
 
   Various commits that need to be separated for PR submissions.
-
-merge dg/update-super-slicer-beta
