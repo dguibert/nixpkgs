@@ -62,6 +62,18 @@ with lib;
         default = [];
       };
 
+      gshadow = mkOption {
+        type = types.listOf types.str;
+        description = lib.mdDoc ''
+          List of gshadow entries to configure in {file}`/etc/nsswitch.conf`.
+
+          Note that "files" is always prepended.
+
+          This option only takes effect if nscd is enabled.
+        '';
+        default = [];
+      };
+
       hosts = mkOption {
         type = types.listOf types.str;
         description = lib.mdDoc ''
@@ -112,6 +124,7 @@ with lib;
       passwd:    ${concatStringsSep " " config.system.nssDatabases.passwd}
       group:     ${concatStringsSep " " config.system.nssDatabases.group}
       shadow:    ${concatStringsSep " " config.system.nssDatabases.shadow}
+      gshadow:    ${concatStringsSep " " config.system.nssDatabases.gshadow}
 
       hosts:     ${concatStringsSep " " config.system.nssDatabases.hosts}
       networks:  files
@@ -126,6 +139,7 @@ with lib;
       passwd = mkBefore [ "files" ];
       group = mkBefore [ "files" ];
       shadow = mkBefore [ "files" ];
+      gshadow = mkBefore [ "files" ];
       hosts = mkMerge [
         (mkOrder 998 [ "files" ])
         (mkOrder 1499 [ "dns" ])

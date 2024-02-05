@@ -494,6 +494,12 @@ in
       group = (mkMerge [
         (mkAfter [ "[success=merge] systemd" ]) # need merge so that NSS won't stop at file-based groups
       ]);
+      shadow = (mkMerge [
+        (mkAfter [ "systemd" ])
+      ]);
+      gshadow = (mkMerge [
+        (mkAfter [ "systemd" ])
+      ]);
     };
 
     environment.systemPackages = [ cfg.package ];
