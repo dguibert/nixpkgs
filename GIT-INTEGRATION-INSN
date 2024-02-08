@@ -10,3 +10,5 @@ merge misc
   Various commits that need to be separated for PR submissions.
 
 merge dg/ovmf-tpm2
+
+merge dg/nsswitch-shadow-systemd
