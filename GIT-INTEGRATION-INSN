@@ -14,3 +14,5 @@ merge dg/ovmf-tpm2
 merge dg/nsswitch-shadow-systemd
 
 . nix run nixpkgs#gh pr checkout 290768
+
+merge dg/step-cli-update
