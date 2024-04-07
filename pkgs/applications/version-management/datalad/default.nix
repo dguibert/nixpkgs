@@ -13,6 +13,10 @@ python3.pkgs.buildPythonApplication rec {
 
   nativeBuildInputs = [ installShellFiles git ];
 
+  postUnpack = ''
+    sed -i -e "s@'chardet>=3.0.4, <5.0.0'@'chardet'@" $sourceRoot/setup.py
+  '';
+
   propagatedBuildInputs = with python3.pkgs; [
     # core
     platformdirs
@@ -27,9 +31,10 @@ python3.pkgs.buildPythonApplication rec {
     looseversion
     setuptools
     git-annex
+    typing-extensions
 
     # downloaders-extra
-    # requests-ftp # not in nixpkgs yet
+    requests-ftp
 
     # downloaders
     boto

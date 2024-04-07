@@ -13025,6 +13025,8 @@ self: super: with self; {
 
   requests-file = callPackage ../development/python-modules/requests-file { };
 
+  requests-ftp = callPackage ../development/python-modules/requests-ftp { };
+
   requests-futures = callPackage ../development/python-modules/requests-futures { };
 
   requests-http-signature = callPackage ../development/python-modules/requests-http-signature { };
@@ -13868,6 +13870,8 @@ self: super: with self; {
   slpp = callPackage ../development/python-modules/slpp { };
 
   slugid = callPackage ../development/python-modules/slugid { };
+
+  slvs = callPackage ../development/python-modules/slvs { };
 
   sly = callPackage ../development/python-modules/sly { };
 
