@@ -364,6 +364,10 @@
   ./services/audio/spotifyd.nix
   ./services/audio/squeezelite.nix
   ./services/audio/tts.nix
+  ./services/audio/wyoming/faster-whisper.nix
+  ./services/audio/wyoming/openwakeword.nix
+  ./services/audio/wyoming/piper.nix
+  ./services/audio/upmpdcli.nix
   ./services/audio/ympd.nix
   ./services/backup/automysqlbackup.nix
   ./services/backup/bacula.nix
