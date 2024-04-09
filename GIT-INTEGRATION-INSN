@@ -1,1 +1,18 @@
-base github/master
+base refs/remotes/github/master
+
+merge dg/mopidy-update
+merge dg/sanoid-frequent
+merge dg/singularity-withnixdb
+merge dg/migratefs
+merge dg/prometheus-slurm
+merge misc
+
+  Various commits that need to be separated for PR submissions.
+
+merge dg/ovmf-tpm2
+
+merge dg/nsswitch-shadow-systemd
+
+. nix run nixpkgs#gh pr checkout 290768
+
+merge dg/step-cli-update
