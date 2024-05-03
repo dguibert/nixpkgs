@@ -138,8 +138,8 @@ in
         message = "Option services.klipper.group is not set when services.klipper.user is specified.";
       }
       {
-        assertion = cfg.settings != null -> foldl (a: b: a && b) true (mapAttrsToList (mcu: _: mcu != null -> (hasAttrByPath [ "${mcu}" "serial" ] cfg.settings)) cfg.firmwares);
-        message = "Option services.klipper.settings.$mcu.serial must be set when settings.klipper.firmware.$mcu is specified";
+        assertion = cfg.settings != null -> foldl (a: b: a && b) true (mapAttrsToList (mcu: _: mcu != null -> (hasAttrByPath [ "${mcu}" "serial" ] cfg.settings) || (hasAttrByPath [ "${mcu}" "canbus_uuid" ] cfg.settings)) cfg.firmwares);
+        message = "Option services.klipper.settings.$mcu.serial (or services.klipper.settings.$mcu.canbus_uuid ) must be set when settings.klipper.firmware.$mcu is specified";
       }
       {
         assertion = (cfg.configFile != null) != (cfg.settings != null);
