@@ -18,3 +18,5 @@ merge dg/nsswitch-shadow-systemd
 merge dg/step-cli-update
 
 merge dg/klipper-canbus
+
+merge dg/haproxy-transparent
