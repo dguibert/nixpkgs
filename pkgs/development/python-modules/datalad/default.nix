@@ -162,6 +162,11 @@ buildPythonPackage (finalAttrs: {
     "test_get_subdatasets"
     "test_gitrepo_save_all"
     "test_ria_postclonecfg"
+
+    ## need internet access
+    #"test_clone_crcns"
+    #"test_clone_datasets_root"
+    #"test_download_ftp"
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     # pbcopy not found
