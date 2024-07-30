@@ -202,6 +202,7 @@ buildPythonPackage rec {
     # need internet access
     "test_clone_crcns"
     "test_clone_datasets_root"
+    "test_download_ftp"
     "test_reckless"
     "test_autoenabled_remote_msg"
     "test_ria_http_storedataladorg"
