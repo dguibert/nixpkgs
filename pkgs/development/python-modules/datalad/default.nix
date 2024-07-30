@@ -151,6 +151,11 @@ buildPythonPackage (finalAttrs: {
     "test_save_hierarchy"
     "test_recurse_existing"
     "test_source_candidate_subdataset"
+
+    ## need internet access
+    #"test_clone_crcns"
+    #"test_clone_datasets_root"
+    #"test_download_ftp"
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     # pbcopy not found
