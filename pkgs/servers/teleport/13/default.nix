@@ -12,6 +12,6 @@ import ../generic.nix (args // {
   };
   extPatches = [
     # https://github.com/NixOS/nixpkgs/issues/120738
-    ../tsh.patch
+    ../tsh_13.patch
   ];
 })
