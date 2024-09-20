@@ -9,6 +9,13 @@
 }@args:
 let
   f = args: rec {
+    teleport_13 = import ./13 (
+      args
+      // {
+        wasm-bindgen-cli = wasm-bindgen-cli_0_2_92;
+        buildGoModule = buildGo122Module;
+      }
+    );
     # wasm-bindgen-cli version must match the version of wasm-bindgen in Cargo.lock
     teleport_15 = import ./15 (
       args
