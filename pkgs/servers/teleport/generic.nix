@@ -203,7 +203,7 @@ buildGoModule rec {
   patches = extPatches ++ [
     ./0001-fix-add-nix-path-to-exec-env.patch
     ./rdpclient.patch
-    ./tsh.patch
+    (if lib.versionAtLeast version "16" then ./tsh_16.patch else if lib.versionAtLeast version "14" then ./tsh.patch else null)
   ];
 
   # Reduce closure size for client machines
