@@ -20,3 +20,5 @@ merge dg/klipper-canbus
 merge dg/haproxy-transparent
 
 merge dg/datalad
+
+merge dg/revert-teleport-13
