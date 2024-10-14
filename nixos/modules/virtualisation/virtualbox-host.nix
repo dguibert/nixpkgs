@@ -112,7 +112,6 @@ in
         "VBoxNetNAT"
         "VBoxVolInfo"
       ] ++ (lib.optionals (!cfg.headless) [
-        "VBoxSDL"
         "VirtualBoxVM"
       ]);
     in lib.mkIf cfg.enableHardening
