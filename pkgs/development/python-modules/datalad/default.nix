@@ -26,6 +26,8 @@
   keyring,
   msgpack,
   requests,
+  # downloaders-extra
+  requests-ftp,
   # publish
   python-gitlab,
   # misc
@@ -95,7 +97,7 @@ buildPythonPackage rec {
       git-annex
 
       # downloaders-extra
-      # requests-ftp # not in nixpkgs yet
+      requests-ftp
 
       # downloaders
       boto3
@@ -200,6 +202,7 @@ buildPythonPackage rec {
     # need internet access
     "test_clone_crcns"
     "test_clone_datasets_root"
+    "test_download_ftp"
     "test_reckless"
     "test_autoenabled_remote_msg"
     "test_ria_http_storedataladorg"
