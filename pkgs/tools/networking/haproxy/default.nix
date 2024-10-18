@@ -54,6 +54,7 @@ in stdenv.mkDerivation (finalAttrs: {
     "SSL_INC=${lib.getDev sslPkg}/include"
     "SSL_LIB=${lib.getDev sslPkg}/lib"
     "USE_QUIC=yes"
+    "USE_TPROXY=1"
   ] ++ lib.optionals (sslLibrary == "openssl") [
     "USE_QUIC_OPENSSL_COMPAT=yes"
   ] ++ lib.optionals (sslLibrary == "wolfssl") [
@@ -69,6 +70,7 @@ in stdenv.mkDerivation (finalAttrs: {
   ] ++ lib.optionals stdenv.hostPlatform.isLinux [
     "USE_SYSTEMD=yes"
     "USE_GETADDRINFO=1"
+    "USE_LINUX_TPROXY=1"
   ] ++ lib.optionals withPrometheusExporter [
     "USE_PROMEX=yes"
   ] ++ [ "CC=${stdenv.cc.targetPrefix}cc" ];
