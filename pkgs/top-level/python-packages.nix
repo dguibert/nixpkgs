@@ -14503,7 +14503,7 @@ self: super: with self; {
 
   slugid = callPackage ../development/python-modules/slugid { };
 
-  py-slvs = callPackage ../development/python-modules/py-slvs { };
+  slvs = callPackage ../development/python-modules/slvs { };
 
   sly = callPackage ../development/python-modules/sly { };
 
