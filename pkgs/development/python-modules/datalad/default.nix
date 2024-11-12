@@ -216,6 +216,11 @@ buildPythonPackage rec {
     "test_get_versioned_url_anon"
     "test_install_recursive_github"
     "test_failed_install_multiple"
+    
+    #FAILED datalad/core/local/tests/test_save.py::test_subsuperdataset_save - datalad.runner.exception.CommandError: CommandError: 'git -c diff.ignoreSub...
+    #>   /nix/store/901c80rlps5q05bnjk1sj4zaz5k736nc-python3-3.12.7/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=1439) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    #   >     self.pid = os.fork()
+    "test_subsuperdataset_save"
 
     # pbcopy not found
     "test_wtf"
