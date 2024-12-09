@@ -33,6 +33,7 @@ let
     { hyprscroller = import ./hyprscroller.nix; }
     { hyprspace = import ./hyprspace.nix; }
     { hyprsplit = import ./hyprsplit.nix; }
+    { split-monitor-workspaces = import ./split-monitor-workspaces.nix; }
     (import ./hyprland-plugins.nix)
   ];
 in
