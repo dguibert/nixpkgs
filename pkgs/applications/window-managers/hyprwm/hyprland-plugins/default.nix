@@ -9,7 +9,7 @@ let
   mkHyprlandPlugin =
     hyprland:
     args@{ pluginName, ... }:
-    stdenv.mkDerivation (
+    hyprland.stdenv.mkDerivation (
       args
       // {
         pname = "${pluginName}";
