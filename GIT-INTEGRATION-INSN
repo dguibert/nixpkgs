@@ -24,3 +24,5 @@ merge dg/datalad
 merge dg/revert-teleport-13
 
 merge dg/split-monitor-workpaces
+
+merge dg/rag-crawler
