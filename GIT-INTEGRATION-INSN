@@ -17,8 +17,6 @@ merge dg/nsswitch-shadow-systemd
 
 merge dg/klipper-canbus
 
-merge dg/haproxy-transparent
-
 merge dg/datalad
 
 merge dg/split-monitor-workpaces
