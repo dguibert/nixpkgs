@@ -1,6 +1,10 @@
 base refs/remotes/github/master
 
-merge dg/mopidy-update
+. merge dg/mopidy-update
+  replaced by
+
+merge dg/upmpdcli
+
 merge dg/sanoid-frequent
 merge dg/singularity-withnixdb
 merge dg/migratefs
