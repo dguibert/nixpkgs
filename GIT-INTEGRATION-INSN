@@ -26,3 +26,7 @@ merge dg/datalad
 merge dg/split-monitor-workpaces
 
 merge dg/rag-crawler
+
+merge fix/json-schema-for-humans-click-8.2.1
+
+  nix run nixpkgs#gh pr checkout 456410
