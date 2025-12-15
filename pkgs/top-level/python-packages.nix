@@ -15117,6 +15117,8 @@ self: super: with self; {
 
   python-can = callPackage ../development/python-modules/python-can { };
 
+  python-casacore = callPackage ../development/python-modules/python-casacore { };
+
   python-cinderclient = callPackage ../development/python-modules/python-cinderclient { };
 
   python-citybikes = callPackage ../development/python-modules/python-citybikes { };

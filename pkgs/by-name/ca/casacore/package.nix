@@ -14,6 +14,7 @@
   fftwFloat,
   readline,
   gsl,
+  python3Packages
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -43,6 +44,8 @@ stdenv.mkDerivation (finalAttrs: {
     fftwFloat
     readline
     gsl
+    python3Packages.numpy
+    python3Packages.boost
   ];
 
   enableParallelBuilding = true;
@@ -51,7 +54,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   cmakeFlags = [
     (lib.cmakeBool "ENABLE_SHARED" (!stdenv.hostPlatform.isStatic))
-    (lib.cmakeBool "BUILD_PYTHON3" false) # TODO: If/when we package python-casacore, this will change
+    (lib.cmakeBool "BUILD_PYTHON3" true)
+    (lib.cmakeFeature "Python3_EXECUTABLE" "${lib.getExe python3Packages.python}")
   ];
 
   meta = {
