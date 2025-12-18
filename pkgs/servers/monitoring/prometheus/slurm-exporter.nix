@@ -1,6 +1,6 @@
-{ stdenv, lib, buildGoPackage, fetchFromGitHub, slurm }:
+{ stdenv, lib, buildGoModule, fetchFromGitHub, slurm }:
 
-buildGoPackage rec {
+buildGoModule rec {
   pname = "prometheus-slurm-exporter";
   version = "0.20";
 
