@@ -16,7 +16,9 @@
   bashInteractive,
   runtimeShell,
   singularity,
-  storeDir ? builtins.storeDir
+  storeDir ? builtins.storeDir,
+  nix,
+  closureInfo,
 }:
 # WARNING: this API is unstable and may be subject to backwards-incompatible changes in the future.
 let
@@ -41,8 +43,6 @@ let
     done;
   '';
 
-in
-{
   defaultSingularity = singularity;
 in
 lib.makeExtensible (final: {
