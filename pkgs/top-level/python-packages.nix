@@ -16322,6 +16322,8 @@ self: super: with self; {
 
   requests-file = callPackage ../development/python-modules/requests-file { };
 
+  requests-ftp = callPackage ../development/python-modules/requests-ftp { };
+
   requests-futures = callPackage ../development/python-modules/requests-futures { };
 
   requests-gssapi = callPackage ../development/python-modules/requests-gssapi { };
