@@ -2622,6 +2622,8 @@ with pkgs;
 
   frostwire-bin = callPackage ../applications/networking/p2p/frostwire/frostwire-bin.nix { };
 
+  fuse-migratefs = callPackage ../tools/filesystems/fuse-migratefs { };
+
   uniscribe = callPackage ../tools/text/uniscribe { };
 
   gandi-cli = python3Packages.callPackage ../tools/networking/gandi-cli { };
