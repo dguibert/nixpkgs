@@ -1,8 +1,12 @@
 {
   lib,
   buildNpmPackage,
+  nodejs_20,
   fetchFromGitHub,
 }:
+let
+  nodejs = nodejs_20;
+in
 
 buildNpmPackage rec {
   pname = "mainsail";
@@ -16,6 +20,8 @@ buildNpmPackage rec {
   };
 
   npmDepsHash = "sha256-iDRnHc/P4fjXmD9WQhe93eC/6EntlcLebJ5HPQCpa7Q=";
+
+  inherit nodejs;
 
   # Prevent Cypress binary download.
   CYPRESS_INSTALL_BINARY = 0;
