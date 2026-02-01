@@ -8857,6 +8857,7 @@ with pkgs;
     callPackage ../servers/monitoring/prometheus/postgres-exporter.nix
       { };
   prometheus-process-exporter = callPackage ../servers/monitoring/prometheus/process-exporter.nix { };
+  prometheus-slurm-exporter = callPackage ../servers/monitoring/prometheus/slurm-exporter.nix { };
   prometheus-pve-exporter = callPackage ../servers/monitoring/prometheus/pve-exporter.nix { };
   prometheus-redis-exporter = callPackage ../servers/monitoring/prometheus/redis-exporter.nix { };
   prometheus-rabbitmq-exporter =
