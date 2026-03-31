@@ -14,7 +14,6 @@
   libxcrypt,
   makeWrapper,
   pkg-config,
-  autoreconfHook,
   pkgsBuildBuild,
   readline,
   writeScript,
@@ -50,8 +49,7 @@ builder rec {
   nativeBuildInputs = [
     makeWrapper
     pkg-config
-  ]
-  ++ lib.optional (!lib.systems.equals stdenv.hostPlatform stdenv.buildPlatform) autoreconfHook;
+  ];
 
   buildInputs = [
     libffi
@@ -88,12 +86,6 @@ builder rec {
   patches = [
     ./eai_system.patch
   ]
-  # Fix cross-compilation, can be removed at next release (as well as the autoreconfHook)
-  # Include this only conditionally so we don't have to run the autoreconfHook for the native build.
-  ++ lib.optional (!lib.systems.equals stdenv.hostPlatform stdenv.buildPlatform) (fetchpatch {
-    url = "https://cgit.git.savannah.gnu.org/cgit/guile.git/patch/?id=c117f8edc471d3362043d88959d73c6a37e7e1e9";
-    hash = "sha256-GFwJiwuU8lT1fNueMOcvHh8yvA4HYHcmPml2fY/HSjw=";
-  })
   ++ lib.optional (coverageAnalysis != null) ./gcov-file-name.patch
   ++ lib.optional stdenv.hostPlatform.isDarwin (fetchpatch {
     url = "https://gitlab.gnome.org/GNOME/gtk-osx/raw/52898977f165777ad9ef169f7d4818f2d4c9b731/patches/guile-clocktime.patch";
