@@ -952,6 +952,7 @@ with pkgs;
     name = "use-old-cxx-abi-hook";
   } ../build-support/setup-hooks/use-old-cxx-abi.sh;
 
+
   validatePkgConfig = makeSetupHook {
     name = "validate-pkg-config";
     propagatedBuildInputs = [
@@ -959,6 +960,8 @@ with pkgs;
       pkg-config
     ];
   } ../build-support/setup-hooks/validate-pkg-config.sh;
+
+  isDrvBroken = callPackage ../build-support/is-drv-broken {};
 
   #package writers
   writers = callPackage ../build-support/writers { };
