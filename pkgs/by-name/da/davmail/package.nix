@@ -50,6 +50,8 @@ stdenv.mkDerivation (finalAttrs: {
     jre'
   ];
 
+  env.ANT_OPTS = "-Dfile.encoding=utf8";
+
   installPhase = ''
     runHook preInstall
 
