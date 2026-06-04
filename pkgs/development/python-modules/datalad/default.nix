@@ -46,18 +46,19 @@
   p7zip,
   curl,
   httpretty,
+  giturlparse,
 }:
 
 buildPythonPackage (finalAttrs: {
   pname = "datalad";
-  version = "1.3.4";
+  version = "1.5.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "datalad";
     repo = "datalad";
     tag = finalAttrs.version;
-    hash = "sha256-5PAHHN+dgMAxqUZn3vXWsoesw3lQMy6Q8nUJYa4SofM=";
+    hash = "sha256-rkPEbbcOfdlEcJ9gE6KcC7WTD6uNzfViZ7Ot0VHsenY=";
   };
 
   postPatch = ''
@@ -167,6 +168,7 @@ buildPythonPackage (finalAttrs: {
     git-annex
     curl
     httpretty
+    giturlparse
   ];
 
   pytestFlags = [
