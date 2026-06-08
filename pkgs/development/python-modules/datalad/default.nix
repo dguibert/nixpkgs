@@ -179,6 +179,7 @@ buildPythonPackage (finalAttrs: {
   pytestFlags = [
     # Deprecated in 3.13. Use exc_type_str instead.
     "-Wignore::DeprecationWarning"
+    "datalad/tests"
   ];
 
   # Tests use ports on localhost
