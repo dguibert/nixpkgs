@@ -117,6 +117,7 @@ let
         "scaphandre"
         "script"
         "shelly"
+        "slurm"
         "smartctl"
         "smokeping"
         "snmp"
