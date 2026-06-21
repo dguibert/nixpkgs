@@ -15,6 +15,7 @@ let
       localSystem
       crossSystem
       overlays
+      crossOverlays
       ;
     # Remove config.replaceStdenv to ensure termination.
     config = removeAttrs config [ "replaceStdenv" ];
