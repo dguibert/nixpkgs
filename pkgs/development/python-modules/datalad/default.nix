@@ -46,6 +46,7 @@
   p7zip,
   curl,
   httpretty,
+  giturlparse,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -167,6 +168,7 @@ buildPythonPackage (finalAttrs: {
     git-annex
     curl
     httpretty
+    giturlparse
   ];
 
   pytestFlags = [
