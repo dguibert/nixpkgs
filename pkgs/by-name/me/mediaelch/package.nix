@@ -22,22 +22,17 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "mediaelch";
-  version = "2.12.0";
+  version = "2.12.0-unstable-2026-06-18";
 
   src = fetchFromGitHub {
     owner = "Komet";
     repo = "MediaElch";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-m2d4lnyD8HhhqovMdeG36dMK+4kJA7rlPHE2tlhfevo=";
+    rev = "f97abde6f13322f53de5e756c430c4b6b9571dc2";
+    hash = "sha256-k1FN7A0dcygbWxZJhrvNAD2kFNOYAh4KCAACDKaaXpM=";
     fetchSubmodules = true;
   };
 
   patches = [
-    # fix from: https://github.com/Komet/MediaElch/pull/1878
-    (fetchpatch {
-      url = "https://github.com/Komet/MediaElch/commit/dbea12fbf2c1fe603819392aa2a181cffa168548.patch";
-      hash = "sha256-Lv6rvjKbRNr5XrdZhPyw4S4RRCOnfAGhWgcSLo0gqS8=";
-    })
   ];
 
   nativeBuildInputs = [
