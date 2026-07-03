@@ -28,3 +28,10 @@ merge dg/rag-crawler
 merge fix/json-schema-for-humans-click-8.2.1
 
   nix run nixpkgs#gh pr checkout 456410
+
+exec git cherry-pick 7f16249b26ac #(HEAD -> pu, origin/pu) mediaelch: 2.12.0 -> 2.12.0-unstable-2026-06-18
+exec git cherry-pick ea6a60d9a23c #fix "stdenv: drop redundant crossOverlays defaults"
+exec git cherry-pick cf398b596e37 #datalad: 1.5.0 -> 1.6.0
+exec git cherry-pick 33768442f490 #datalad: set pytest root dir
+exec git cherry-pick f9150b92b48b #davmail: force UTF-8 encoding
+exec git cherry-pick b171225adc12 #datalad: 1.3.4 -> 1.5.0
