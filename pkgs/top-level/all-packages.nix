@@ -916,6 +916,7 @@ with pkgs;
     meta.license = lib.licenses.mit;
   } ../build-support/setup-hooks/use-old-cxx-abi.sh;
 
+
   validatePkgConfig = makeSetupHook {
     name = "validate-pkg-config";
     propagatedBuildInputs = [
@@ -924,6 +925,8 @@ with pkgs;
     ];
     meta.license = lib.licenses.mit;
   } ../build-support/setup-hooks/validate-pkg-config.sh;
+
+  isDrvBroken = callPackage ../build-support/is-drv-broken {};
 
   #package writers
   writers = callPackage ../build-support/writers { };
