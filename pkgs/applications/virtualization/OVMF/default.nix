@@ -154,7 +154,6 @@ edk2.mkDerivation projectDscPath (finalAttrs: {
     ]
     ++ lib.optionals tlsSupport [ "-D NETWORK_TLS_ENABLE=TRUE" ]
     ++ lib.optionals tpmSupport [
-      "-D TPM_ENABLE"
       "-D TPM2_ENABLE"
       "-D TPM2_CONFIG_ENABLE"
     ];
