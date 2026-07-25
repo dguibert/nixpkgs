@@ -117,6 +117,7 @@ let
         "sabnzbd"
         "script"
         "shelly"
+        "slurm"
         "smartctl"
         "smokeping"
         "snmp"
