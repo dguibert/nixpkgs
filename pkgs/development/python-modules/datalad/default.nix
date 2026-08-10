@@ -26,6 +26,8 @@
   keyring,
   msgpack,
   requests,
+  # downloaders-extra
+  requests-ftp,
   # publish
   python-gitlab,
   # misc
@@ -44,18 +46,19 @@
   p7zip,
   curl,
   httpretty,
+  giturlparse,
 }:
 
 buildPythonPackage (finalAttrs: {
   pname = "datalad";
-  version = "1.3.4";
+  version = "1.6.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "datalad";
     repo = "datalad";
     tag = finalAttrs.version;
-    hash = "sha256-5PAHHN+dgMAxqUZn3vXWsoesw3lQMy6Q8nUJYa4SofM=";
+    hash = "sha256-e+N9MWXZwLekMtPYoqpnUC+BEiXnE0VtW8IU+cj4kYA=";
   };
 
   postPatch = ''
@@ -101,7 +104,7 @@ buildPythonPackage (finalAttrs: {
       requests
     ];
     downloaders-extra = [
-      # requests-ftp # not in nixpkgs yet
+      requests-ftp
     ];
     publish = [ python-gitlab ];
     misc = [
@@ -149,6 +152,11 @@ buildPythonPackage (finalAttrs: {
     "test_save_hierarchy"
     "test_recurse_existing"
     "test_source_candidate_subdataset"
+
+    ## need internet access
+    #"test_clone_crcns"
+    #"test_clone_datasets_root"
+    #"test_download_ftp"
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     # pbcopy not found
@@ -165,11 +173,13 @@ buildPythonPackage (finalAttrs: {
     git-annex
     curl
     httpretty
+    giturlparse
   ];
 
   pytestFlags = [
     # Deprecated in 3.13. Use exc_type_str instead.
     "-Wignore::DeprecationWarning"
+    "datalad/tests"
   ];
 
   # Tests use ports on localhost
