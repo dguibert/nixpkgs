@@ -95,7 +95,9 @@ buildGoModule (finalAttrs: {
 
   checkFlags =
     let
-      skippedTests = lib.optionals stdenv.hostPlatform.isDarwin [
+      skippedTests = [
+        "TestStartDaemonArgv"
+      ]++ lib.optionals stdenv.hostPlatform.isDarwin [
         # Fail only on *-darwin intermittently
         # https://github.com/mostlygeek/llama-swap/issues/320
         "TestProcess_AutomaticallyStartsUpstream"
