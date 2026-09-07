@@ -2008,6 +2008,8 @@ with pkgs;
 
   frostwire-bin = callPackage ../applications/networking/p2p/frostwire/frostwire-bin.nix { };
 
+  fuse-migratefs = callPackage ../tools/filesystems/fuse-migratefs { };
+
   uniscribe = callPackage ../tools/text/uniscribe { };
 
   inherit (callPackages ../tools/filesystems/garage { })
