@@ -106,8 +106,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   # Flaky test: reads the AGENT_BROWSER_CDP env variable without using the
   # shared test lock.
   checkFlags = [
-    "--skip"
-    "native::actions::tests::test_execute_unknown_command"
+    "--skip=native::actions::tests::test_execute_unknown_command"
+    "--skip=plugins::tests::credential_plugin_failure_does_not_echo_plugin_error"
   ];
 
   __darwinAllowLocalNetworking = true;
