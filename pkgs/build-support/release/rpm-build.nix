@@ -22,7 +22,7 @@ vmTools.buildRPM (
         . ${./functions.sh}
         propagateImageName
         src=$(findTarball $src)
-      '';
+      '' + (args.preBuild or "");
 
       postInstall = ''
         declare -a rpms rpmNames
