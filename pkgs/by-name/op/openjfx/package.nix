@@ -99,7 +99,10 @@ stdenv.mkDerivation {
           hash = "sha256-p2vRy8jA/JJBGCC5irV3gGbcJqChFNi+ViMeQ1wjtU0=";
         })
       ]
-  );
+  )
+  ++ [
+    ./cmake4-linked-into-quoting.patch
+  ];
 
   nativeBuildInputs = [
     gradle_8
