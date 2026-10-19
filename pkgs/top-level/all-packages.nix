@@ -1952,6 +1952,8 @@ with pkgs;
 
   frostwire-bin = callPackage ../applications/networking/p2p/frostwire/frostwire-bin.nix { };
 
+  fuse-migratefs = callPackage ../tools/filesystems/fuse-migratefs { };
+
   inherit (callPackages ../tools/filesystems/garage { })
     garage
     garage_1
