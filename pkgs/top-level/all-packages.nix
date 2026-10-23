@@ -1931,6 +1931,8 @@ with pkgs;
     mkFranzDerivation = callPackage ../applications/networking/instant-messengers/franz/generic.nix { };
   };
 
+  fuse-migratefs = callPackage ../tools/filesystems/fuse-migratefs { };
+
   inherit (callPackages ../tools/filesystems/garage { })
     garage
     garage_1
