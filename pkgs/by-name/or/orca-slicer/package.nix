@@ -290,6 +290,7 @@ clangStdenv.mkDerivation (finalAttrs: {
     (lib.cmakeFeature "LIBNOISE_INCLUDE_DIR" "${libnoise}/include")
     (lib.cmakeFeature "LIBNOISE_LIBRARY_RELEASE" "${libnoise}/lib/libnoise-static.a")
     (lib.cmakeFeature "Python3_EXECUTABLE" (lib.getExe python312))
+    (lib.cmakeFeature "ORCA_BUNDLED_UV_EXECUTABLE" (lib.getExe uv))
     "-Wno-dev"
   ];
 
