@@ -7,9 +7,9 @@
   cmake,
   pkg-config,
   wrapGAppsHook3,
-  boost186,
+  boost183,
   cereal,
-  cgal_5,
+  cgal,
   curl,
   dbus,
   draco,
@@ -29,7 +29,7 @@
   libpng,
   mpfr,
   nlopt,
-  opencascade-occt_7_6,
+  opencascade-occt,
   openvdb,
   opencv,
   systemdLibs,
@@ -40,6 +40,13 @@
   libnoise,
   withSystemd ? clangStdenv.hostPlatform.isLinux,
   withNvidiaGLWorkaround ? false,
+  libdatachannel,
+  python312,
+  solvespace,
+  assimp,
+  libsysprof-capture,
+  pcre2,
+  uv,
 }:
 let
   wxGTK' =
@@ -56,20 +63,74 @@ let
           "--enable-secretstore"
         ];
       });
+
+  solvespace' = solvespace.overrideAttrs (o: {
+    src = fetchFromGitHub {
+      owner = "JacobStoren";
+      repo = "SolveSpaceLib";
+      rev = "4d8704523e4bf212fadf5189f92484244f670fea";
+      hash = "sha256-xe6J+cnOUWLo5561CskQlR+3Co8FriCupc8l1lhhocA=";
+    };
+    postPatch = ''
+      cp -v ${orca_src}/deps/SLVS/CMakeLists.txt.in CMakeLists.txt
+    '';
+  });
+
+  wxinspector = clangStdenv.mkDerivation (finalAttrs: {
+    pname = "wxinspector";
+    version = "1.0.0";
+
+    src = fetchFromGitHub {
+      owner = "Noisyfox";
+      repo = "wxInspector";
+      tag = "v${finalAttrs.version}";
+      hash = "sha256-AQbV2vAGJXatAXwLAxhWVXTdKqxj2v0THexQyKbroJw=";
+    };
+
+    nativeBuildInputs = [
+      cmake
+      pkg-config
+      wxGTK'
+    ];
+
+    buildInputs = [
+      wxGTK'
+      gtk3
+    ];
+
+    cmakeFlags = [
+      (lib.cmakeFeature "CMAKE_CXX_FLAGS" "-DwxDEBUG_LEVEL=0")
+      (lib.cmakeBool "CMAKE_POSITION_INDEPENDENT_CODE" true)
+    ];
+
+    meta = {
+      description = "Widget and layout inspection tool for wxWidgets applications";
+      homepage = "https://github.com/Noisyfox/wxInspector";
+      license = with lib.licenses; [
+        lgpl2Plus
+        wxWindowsException31
+      ];
+      platforms = lib.platforms.linux;
+    };
+  });
+
+  version = "2.5.0-alpha";
+  orca_src = fetchFromGitHub {
+    owner = "OrcaSlicer";
+    repo = "OrcaSlicer";
+    tag = "v${version}";
+    hash = "sha256-U8TLtC2OU0z7TUIW2shQ9ShuT2S5x0q0KO2OM4kpzew=";
+  };
+
 in
 # Build with clang even on Linux, because GCC uses absolutely obscene amounts of memory
 # on this particular code base (OOM with 32GB memory and --cores 16 on GCC, succeeds
 # with --cores 32 on clang).
 clangStdenv.mkDerivation (finalAttrs: {
   pname = "orca-slicer";
-  version = "2.4.2";
 
-  src = fetchFromGitHub {
-    owner = "OrcaSlicer";
-    repo = "OrcaSlicer";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-gUwLC0XkeohEdL0EScdOrA8MWXGuR8kUfezoQsk9i/A=";
-  };
+  inherit version;
+  src = orca_src;
 
   __structuredAttrs = true;
   strictDeps = true;
@@ -83,7 +144,7 @@ clangStdenv.mkDerivation (finalAttrs: {
 
   buildInputs = [
     binutils
-    (boost186.override {
+    (boost183.override {
       enableShared = true;
       enableStatic = false;
       extraFeatures = [
@@ -92,9 +153,9 @@ clangStdenv.mkDerivation (finalAttrs: {
         "filesystem"
       ];
     })
-    boost186.dev
+    boost183.dev
     cereal
-    cgal_5
+    cgal
     curl
     dbus
     draco
@@ -116,7 +177,7 @@ clangStdenv.mkDerivation (finalAttrs: {
     libpng
     mpfr
     nlopt
-    opencascade-occt_7_6
+    opencascade-occt
     openvdb
     onetbb
     webkitgtk_4_1
@@ -124,6 +185,14 @@ clangStdenv.mkDerivation (finalAttrs: {
     libx11
     opencv.cxxdev
     libnoise
+    libdatachannel
+    python312
+    solvespace'
+    assimp
+    wxinspector
+    libsysprof-capture
+    pcre2
+    uv
   ]
   ++ lib.optionals withSystemd [ systemdLibs ]
   ++ finalAttrs.checkInputs;
@@ -135,23 +204,11 @@ clangStdenv.mkDerivation (finalAttrs: {
     ./patches/dont-link-opencv-world-orca.patch
     # The changeset from https://github.com/OrcaSlicer/OrcaSlicer/pull/7650, can be removed when that PR gets merged
     # Allows disabling the update nag screen
-    (fetchpatch {
-      name = "pr-7650-configurable-update-check.patch";
-      url = "https://github.com/OrcaSlicer/OrcaSlicer/commit/300df7c99b0a2173f645c8bf40e8758eb5f2c486.patch";
-      hash = "sha256-hgQeagPhS3aNQoFSq0S+Ch60ygm81uHMIvGopw/AZT8=";
-    })
-
-    # some patches are required for linux kernel 7.2.9 / Mesa 26.2.4 or else some GL stuff crashes
-    (fetchpatch {
-      name = "pr-15873-fix-slice-crash.patch";
-      url = "https://github.com/OrcaSlicer/OrcaSlicer/commit/42009cf385381216d86b724c2c8532a497463b61.patch";
-      hash = "sha256-9GpG8S6PgaAylW/sI3mriRdZ+2sck381pVewN6xVNmE=";
-    })
-    (fetchpatch {
-      name = "pr-16109-fix-toolpath-freeze.patch";
-      url = "https://github.com/OrcaSlicer/OrcaSlicer/commit/36fb9905e5f99fc2bb1a1beef51c1acb9866c7dc.patch";
-      hash = "sha256-zijJ47O1H8x37uz0oxSqvPwvpIKFjAPb3kjEtW0wp/Y=";
-    })
+    #(fetchpatch {
+    #  name = "pr-7650-configurable-update-check.patch";
+    #  url = "https://github.com/OrcaSlicer/OrcaSlicer/commit/300df7c99b0a2173f645c8bf40e8758eb5f2c486.patch";
+    #  hash = "sha256-hgQeagPhS3aNQoFSq0S+Ch60ygm81uHMIvGopw/AZT8=";
+    #})
 
     # Pick https://github.com/prusa3d/PrusaSlicer/pull/14207 to remove unused and insecure ilmbase dependency
     ./patches/no-ilmbase.patch
@@ -186,7 +243,7 @@ clangStdenv.mkDerivation (finalAttrs: {
 
     NIX_LDFLAGS = toString [
       (lib.optionalString withSystemd "-ludev")
-      "-L${boost186}/lib"
+      "-L${boost183}/lib"
       "-lboost_log"
       "-lboost_log_setup"
     ];
@@ -196,6 +253,16 @@ clangStdenv.mkDerivation (finalAttrs: {
     sed -i 's|nlopt_cxx|nlopt|g' cmake/modules/FindNLopt.cmake
     sed -i 's|"libnoise/noise.h"|"noise/noise.h"|' src/libslic3r/PerimeterGenerator.cpp
     sed -i 's|"libnoise/noise.h"|"noise/noise.h"|' src/libslic3r/Feature/FuzzySkin/FuzzySkin.cpp
+    sed -i 's|libnoise/module|noise/module|' src/libslic3r/Feature/FuzzySkin/FuzzySkin.cpp
+    sed -i 's|e.what()|e.GetMessageString()|g' src/libslic3r/CAD/GeometryEngine.cpp
+
+    sed -i 's|3.12.13|${python312.version}|' CMakeLists.txt
+    sed -i 's|orcaslicer_copy_sos|#&|' src/CMakeLists.txt
+    # FHS builds use the system Python rather than a bundled runtime, so
+    # skip staging the upstream bundled Python runtime into the build tree.
+    sed -i '/copy_directory.*CMAKE_PREFIX_PATH.*libpython/s/^/#/' src/CMakeLists.txt
+    # The FHS package links against system FFmpeg instead of bundling FFmpeg 6.
+    sed -i '/install(FILES .*LIBRARY_FILES.*CMAKE_INSTALL_PREFIX.*bin/s/^/#/' CMakeLists.txt
   ''
   # Fix build with wxWidgets 3.3.4
   # https://github.com/OrcaSlicer/OrcaSlicer/pull/16370
@@ -216,6 +283,7 @@ clangStdenv.mkDerivation (finalAttrs: {
     (lib.cmakeBool "ORCA_VERSION_CHECK_DEFAULT" false)
     (lib.cmakeFeature "LIBNOISE_INCLUDE_DIR" "${libnoise}/include")
     (lib.cmakeFeature "LIBNOISE_LIBRARY_RELEASE" "${libnoise}/lib/libnoise-static.a")
+    (lib.cmakeFeature "Python3_EXECUTABLE" (lib.getExe python312))
     "-Wno-dev"
   ];
 
