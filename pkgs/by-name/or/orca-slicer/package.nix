@@ -122,6 +122,12 @@ let
     hash = "sha256-U8TLtC2OU0z7TUIW2shQ9ShuT2S5x0q0KO2OM4kpzew=";
   };
 
+  # Keep OpenVDB on Boost 1.83 to match Orca Slicer's Boost ABI and avoid
+  # linking against two different Boost versions.
+  openvdb' = openvdb.override {
+    boost = boost183;
+  };
+
 in
 # Build with clang even on Linux, because GCC uses absolutely obscene amounts of memory
 # on this particular code base (OOM with 32GB memory and --cores 16 on GCC, succeeds
@@ -178,7 +184,7 @@ clangStdenv.mkDerivation (finalAttrs: {
     mpfr
     nlopt
     opencascade-occt
-    openvdb
+    openvdb'
     onetbb
     webkitgtk_4_1
     wxGTK'
