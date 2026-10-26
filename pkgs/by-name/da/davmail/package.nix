@@ -32,7 +32,8 @@ stdenv.mkDerivation (finalAttrs: {
   buildPhase = ''
     runHook preBuild
 
-    ant prepare-dist
+    export ANT_OPTS=-Dfile.encoding=UTF-8
+    ant -Dfile.encoding=UTF-8 prepare-dist
     sed -i -e '/^JAVA_OPTS/d' ./dist/davmail
 
     runHook postBuild
