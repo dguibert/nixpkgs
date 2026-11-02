@@ -1,0 +1,47 @@
+{
+  "name": "rag-crawler",
+  "version": "1.6.0",
+  "author": "sigoden <sigoden@gmail.com>",
+  "description": "Crawl a website to generate knowledge file for RAG",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": "dist/bin.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm run clean && npm run build",
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "keywords": [
+    "crawler",
+    "llm",
+    "RAG",
+    "website"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sigoden/rag-crawler"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/turndown": "^5.0.5",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.1.1",
+    "cheerio": "^1.0.0",
+    "commander": "^13.1.0",
+    "https-proxy-agent": "^7.0.6",
+    "node-fetch": "^3.3.2",
+    "rag-crawler": "^1.6.0",
+    "turndown": "^7.2.0"
+  }
+}
