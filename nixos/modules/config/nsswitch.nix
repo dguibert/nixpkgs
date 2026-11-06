@@ -62,6 +62,18 @@
         default = [ ];
       };
 
+      gshadow = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        description = ''
+          List of gshadow entries to configure in {file}`/etc/nsswitch.conf`.
+
+          Note that "files" is always prepended.
+
+          This option only takes effect if nscd is enabled.
+        '';
+        default = [ ];
+      };
+
       sudoers = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         description = ''
@@ -148,6 +160,7 @@
       passwd:    ${lib.concatStringsSep " " config.system.nssDatabases.passwd}
       group:     ${lib.concatStringsSep " " config.system.nssDatabases.group}
       shadow:    ${lib.concatStringsSep " " config.system.nssDatabases.shadow}
+      gshadow:   ${lib.concatStringsSep " " config.system.nssDatabases.gshadow}
       sudoers:   ${lib.concatStringsSep " " config.system.nssDatabases.sudoers}
 
       hosts:     ${lib.concatStringsSep " " config.system.nssDatabases.hosts}
@@ -166,6 +179,7 @@
       passwd = lib.mkBefore [ "files" ];
       group = lib.mkBefore [ "files" ];
       shadow = lib.mkBefore [ "files" ];
+      gshadow = lib.mkBefore [ "files" ];
       sudoers = lib.mkBefore [ "files" ];
       hosts = lib.mkMerge [
         (lib.mkOrder 998 [ "files" ])
