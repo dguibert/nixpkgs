@@ -46,6 +46,7 @@ lib.makeOverridable (
         privateTmp ? false,
         chdirToPwd ? true,
         dieWithParent ? true,
+        nixStore ? "/nix",
         ...
       }@args:
       let
@@ -298,7 +299,7 @@ lib.makeOverridable (
               ${optionalString unshareUts "--unshare-uts"}
               ${optionalString unshareCgroup "--unshare-cgroup"}
               ${optionalString dieWithParent "--die-with-parent"}
-              --bind /nix /nix
+              --ro-bind ${nixStore} ${nixStore}
               ${optionalString privateTmp "--tmpfs /tmp"}
               # Our glibc will look for the cache in its own path in `/nix/store`.
               # As such, we need a cache to exist there, because pressure-vessel
