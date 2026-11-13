@@ -317,6 +317,8 @@ clangStdenv.mkDerivation (finalAttrs: {
 
   postInstall = ''
     rm $out/LICENSE.txt
+    # The plugin loader requires a Python home, not just a linked libpython.
+    ln -s ${python312} $out/share/OrcaSlicer/python
   '';
 
   meta = {
