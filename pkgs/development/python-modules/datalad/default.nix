@@ -26,6 +26,8 @@
   keyring,
   msgpack,
   requests,
+  # downloaders-extra
+  requests-ftp,
   # publish
   python-gitlab,
   # misc
@@ -109,7 +111,7 @@ buildPythonPackage (finalAttrs: {
       requests
     ];
     downloaders-extra = [
-      # requests-ftp # not in nixpkgs yet
+      requests-ftp
     ];
     publish = [ python-gitlab ];
     misc = [
@@ -160,6 +162,11 @@ buildPythonPackage (finalAttrs: {
     "test_get_subdatasets"
     "test_gitrepo_save_all"
     "test_ria_postclonecfg"
+
+    ## need internet access
+    #"test_clone_crcns"
+    #"test_clone_datasets_root"
+    #"test_download_ftp"
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     # pbcopy not found
@@ -181,6 +188,7 @@ buildPythonPackage (finalAttrs: {
   pytestFlags = [
     # Deprecated in 3.13. Use exc_type_str instead.
     "-Wignore::DeprecationWarning"
+    "datalad/tests"
   ];
 
   # Tests use ports on localhost
