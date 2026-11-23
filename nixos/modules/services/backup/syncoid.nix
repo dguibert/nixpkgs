@@ -380,6 +380,8 @@ in
                   c.sshKey
                 ]
                 ++ c.extraArgs
+                ++ (lib.optionals (c.sendOptions != "") [ "--sendoptions" c.sendOptions ])
+                ++ (lib.optionals (c.recvOptions != "") [ "--recvoptions" c.recvOptions ])
                 ++ [
                   "--sendoptions"
                   c.sendOptions
