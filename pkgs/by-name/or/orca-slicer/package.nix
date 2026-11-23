@@ -114,12 +114,12 @@ let
     };
   });
 
-  version = "2.5.1";
+  version = "2.5.2";
   orca_src = fetchFromGitHub {
     owner = "OrcaSlicer";
     repo = "OrcaSlicer";
     tag = "v${version}";
-    hash = "sha256-jT6kD8vdHkdwdzomrOG2q5s39Wme894lGPZvS7P+Pkw=";
+    hash = "sha256-OESLJGturzi1kwR9+Rje/md/dUFHo/kMxa0/2NIoG/Q=";
   };
 
   # Keep OpenVDB on Boost 1.83 to match Orca Slicer's Boost ABI and avoid
